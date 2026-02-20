@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>multimedia main comps</title>
+    <style>
+            header{
+            padding: 10px;
+            margin: 0px;
+            background-color: darkblue;
+            color: white;
+            font-style: italic;
+            font-family: "italic",cursive;
+            font-weight: bolder;
+            font-size: 36px;
+            text-align: center; 
+            }
+            #p{
+            padding: 20px;
+            margin: 0px;
+            background-color: green;
+            color: lightblue;   
+            font-style: italic;
+            font-family: "italic",cursive;
+            font-weight: bolder;
+            font-size: 18px;
+            text-align: center; 
+            }
+            main{
+            padding: 8px;
+            background-color: lightblue;
+            color: green;
+            font-style: oblique;
+            font-family: broadway;
+            font-weight: light;
+            font-size: 18px;
+            }
+            h2#h2{
+                padding: 8px;
+                background-color: pink;
+                color: purple;
+                font-style: oblique;
+                font-family: algerian;
+                font-weight: bold;
+                font-size: 24px;
+                text-align: center; 
+                }
+                a{
+            color: white;
+            background-color: purple;
+            padding: 8px;
+            font-style: oblique;
+            font-family: comic;
+            text-decoration: none;
+          }
+          body{
+            background-color: lightgray;
+          }
+    </style>
+</head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-SV4NF938ZR"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-SV4NF938ZR');
+</script>
+<body>
+    <header>
+        <h1>multimedia main comps</h1>
+        <p>in this chapter you are going to :- 
+            <ul>
+                <li>what is multimedia</li>
+                <li>video element </li>
+                <li>audio element</li>
+                <li>embed element</li>
+                <li>object element</li>
+                <li>track element</li>
+            </ul>
+        </p>
+    </header>
+    <main>
+      <section>
+        <h2 id="h2">what is multimedia</h2>
+        <p>multimedia is the use of different types of media to convey information or entertainment. it can include text, images, audio, video, and interactive elements. multimedia is often used in education, advertising, and entertainment to create engaging and interactive experiences for users.</p>
+      </section>
+      <section>
+        <h2 id="h2">video element</h2>
+        <p>the video element is used to embed video content in a web page. it allows you to specify the source of the video, as well as various attributes such as controls, autoplay, and loop. the video element is supported by most modern web browsers and can be used to display a wide range of video formats.</p>
+        <ul>
+            <p>use of all attributes in it :-</p>
+            <li>src: Specifies the URL of the video file.</li>
+            <li>controls: Displays native browser controls (play, pause, volume, etc.).</li>
+            <li>autoplay: Causes the video to start playing automatically as soon as it can. Note: Most browsers require muted for autoplay to work.</li>
+            <li>muted: Silences the audio output of the video by default.</li>
+            <li>loop: Causes the video to automatically restart from the beginning when it finishes.</li>
+            <li>poster: Sets an image URL to be shown while the video is downloading or until the user clicks play.</li>
+            <li>preload: Hints to the browser how to load data: none (no buffering), metadata (load duration/dimensions), or auto (load whole file).</li>
+            <li>playsinline: A boolean attribute that forces the video to play within the browser viewport on mobile, rather than forcing fullscreen. </li>
+        </ul>
+        <pre>
+            <code>
+                &lt;video src="video.mp4" controls autoplay muted loop poster="poster.jpg" preload="auto" playsinline&gt;
+                    Your browser does not support the video tag.
+                &lt;/video&gt;
+            </code>
+        </pre>
+      </section>
+        <section>
+            <h2 id="h2">audio element</h2>
+            <p>the audio element is used to embed audio content in a web page. it allows you to specify the source of the audio, as well as various attributes such as controls, autoplay, and loop. the audio element is supported by most modern web browsers and can be used to play a wide range of audio formats.</p>
+            <ul>
+                <p>use of all attributes in it :-</p>
+                <li>src: Specifies the URL of the audio file.</li>
+                <li>controls: Displays native browser controls (play, pause, volume, etc.).</li>
+                <li>autoplay: Causes the audio to start playing automatically as soon as it can. Note: Most browsers require muted for autoplay to work.</li>
+                <li>muted: Silences the audio output by default.</li>
+                <li>loop: Causes the audio to automatically restart from the beginning when it finishes.</li>
+                <li>preload: Hints to the browser how to load data: none (no buffering), metadata (load duration), or auto (load whole file).</li>
+            </ul>
+            <pre>
+                <code>
+                    &lt;audio src="audio.mp3" controls autoplay muted loop preload="auto"&gt;
+                        Your browser does not support the audio tag.
+                    &lt;/audio&gt;
+                </code>
+            </pre>
+        </section>
+        <section>
+            <h2 id="h2">embed element</h2>
+            <p>the embed element is used to embed external content, such as multimedia or interactive applications, into a web page. it can be used to embed a wide range of content types, including videos, audio files, flash animations, and more. the embed element is supported by most modern web browsers and can be used to enhance the user experience on a web page.</p>
+                <ul>
+                    <p>use of all attributes in it :-</p>
+                    <li>src: Specifies the URL of the resource to be embedded.</li>
+                    <li>type: Specifies the MIME type of the resource being embedded.</li>
+                    <li>width: Sets the width of the embedded content.</li>
+                    <li>height: Sets the height of the embedded content.</li>
+                    <li>name: Assigns a name to the embedded content, which can be used for scripting or referencing.</li>
+                </ul>
+            <pre>
+                <code>
+                    &lt;embed src="content.swf" type="application/x-shockwave-flash" width="400" height="300"&gt;
+                </code>
+            </pre>
+        </section>
+        <section>
+            <h2 id="h2">object element</h2>
+            <p>the object element is used to embed external content, such as multimedia or interactive applications, into a web page. it can be used to embed a wide range of content types, including videos, audio files, flash animations, and more. the object element is supported by most modern web browsers and can be used to enhance the user experience on a web page.</p>
+            <ul>
+                <p>use of all attributes in it :-</p>
+                <li>data: Specifies the URL of the resource to be embedded.</li>
+                <li>type: Specifies the MIME type of the resource being embedded.</li>
+                <li>width: Sets the width of the embedded content.</li>
+                <li>height: Sets the height of the embedded content.</li>
+                <li>name: Assigns a name to the object, which can be used for scripting or referencing.</li>
+                <li>form: Associates the object with a form element, allowing it to submit data as part of a form submission.</li> 
+            </ul>
+            <pre>
+                <code>
+                    &lt;object data="content.swf" type="application/x-shockwave-flash" width="400" height="300"&gt;
+                        &lt;param name="movie" value="content.swf"&gt;
+                    &lt;/object&gt;
+                </code>
+            </pre>
+        </section>
+        <section>
+            <h2 id="h2">track element</h2>
+            <p>the track element is used to specify text tracks for media elements like video and audio. it allows you to provide subtitles, captions, or other types of text-based information that can be displayed alongside the media content. the track element is supported by most modern web browsers and can be used to improve accessibility and user experience for multimedia content.</p>
+            <ul>
+                <p>use of all attributes in it :-</p>
+                <li>src: Specifies the URL of the track file (e.g., subtitles or captions).</li>
+                <li>kind: Defines the type of text track (e.g., subtitles, captions, descriptions, chapters, or metadata).</li>
+                <li>srclang: Specifies the language of the track text using a BCP 47 language tag (e.g., "en" for English).</li>
+                <li>label: Provides a user-readable title for the track, which can be displayed in media controls.</li>
+                <li>default: A boolean attribute that indicates whether this track should be enabled by default when the media is loaded.</li>
+            </ul>
+            <pre>
+                <code>
+                    &lt;video src="video.mp4" controls&gt;
+                        &lt;track src="subtitles.vtt" kind="subtitles" srclang="en" label="English"&gt;
+                    &lt;/video&gt;
+                </code>
+            </pre>
+        </section>
+    </main>
+        <footer>
+            <nav>
+                <a href="forms3.html">&lt;previous</a>
+                <a href="word.html" style="float: right;">next&gt;</a>
+            </nav>
+        </footer>
+</body>
+</html>

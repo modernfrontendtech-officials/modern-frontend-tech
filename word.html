@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>modern front end academy</title>
+    <title>word</title>
     <style>
-         header{
+        header{
             padding: 10px;
             margin: 0px;
             background-color: darkblue;
@@ -46,7 +46,7 @@
                 font-size: 24px;
                 text-align: center; 
                 }
-            a{
+                a{
             color: white;
             background-color: purple;
             padding: 8px;
@@ -69,17 +69,48 @@
 </script>
 <body>
     <header>
-        <h1>hello everyone welcome to modern front end academy!</h1>
-        <p id="p">this website is made for teaching html for free</p>
+        <h1>word</h1>
+        <p>in this chapter you are going to learn :-</p>
+        <ul>
+            <li>how to add wordbreaks in html?</li>
+            <li>how to write asian texts in a english or other languages html file</li>
+        </ul>
     </header>
     <main>
         <section>
-            <h2 id="h2">
-                what is this made completely free?
-            </h2>
-            <p>This website is completely free because I want to help people and save them from the struggle i faced to learn html </p>
-            <a href="whatishtml.html">our html course</a>
+            <h2>how to add wordbreaks in html?</h2>
+            <p>to add wordbreaks in html you can use the &lt;wbr&gt; tag, this tag is used to specify where in a text it would be ok to add a line-break if needed.</p>
+            <pre>
+                <code>
+                    this is a long word that might need a &lt;wbr&gt;wordbreak
+                </code>
+            </pre>
+        </section>
+        <section>
+            <h2>how to write asian texts in a english or other languages html file</h2>
+            <p>to write asian texts in a english or other languages html file you can use the &lt;ruby&gt; tag, this tag is used to display ruby annotations, which are small text annotations that are typically used to provide pronunciation or other information about a character or word.</p>
+            <pre>
+                <code>
+                    &lt;ruby&gt;
+                        漢 &lt;rp&gt;(kan)&lt;/rp&gt;&lt;rt&gt;かん&lt;/rt&gt;&lt;rp&gt;(kan)&lt;/rp&gt;
+                        字 &lt;rp&gt;(ji)&lt;/rp&gt;&lt;rt&gt;じ&lt;/rt&gt;&lt;rp&gt;(ji)&lt;/rp&gt;
+                    &lt;/ruby&gt;
+                </code>
+            </pre>
+             <p>the above code will display the following text with ruby annotations:</p>
+                <pre>
+                    <ruby>
+                        漢 <rp>(kan)</rp><rt>かん</rt><rp>(kan)</rp>
+                        字 <rp>(ji)</rp><rt>じ</rt><rp>(ji)</rp>
+                    </ruby>
+                </pre>
         </section>
     </main>
+    <footer>
+        <nav>
+            <a href="multimedia.html">&lt;previous</a>
+            <a href="index.html" style="float: right;">go to home!</a>
+        </nav>
+    </footer>
 </body>
 </html>
