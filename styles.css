@@ -31,7 +31,7 @@ body.nav-open {
 /* buttons used to open/close nav */
 button#open,
 button#close {
-  background-color: gray;
+  background-color: rgb(233, 14, 225);
   color: white;
   padding: 8px;
   font-size: 16px;

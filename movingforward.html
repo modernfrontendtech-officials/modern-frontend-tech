@@ -5,52 +5,60 @@
         <title>movingforward</title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <style>
-            header,h1.biggest{
-            padding: 10px;
-            margin: 0px;
-            background-color: darkblue;
+        <link rel="icon" type="image/x-icon" href="favicon.ico">
+       <style>
+        header{
+        padding: 10px;
+        margin: 0px;
+        background-color: rgb(191, 177, 21);
+        color: white;
+        font-style: italic;
+        font-family: "italic",cursive;
+        font-weight: bolder;
+        font-size: 36px;
+        text-align: center; 
+        }
+        .p{
+        padding: 20px;
+        margin: 0px;
+        background-color: rgb(13, 239, 115);
+        color: rgb(229, 255, 0);
+        font-style: italic;
+        font-family: "italic",cursive;
+        font-weight: bold;
+        font-size: 18px;
+        text-align: center; 
+        }
+        article{
+        padding: 8px;
+        background-color: rgb(0, 255, 251);
+        color: rgb(85, 0, 255);
+        font-style: oblique;
+        font-family: comic;
+        font-weight: light;
+        font-size: 18px;
+        }
+        h2{
+        padding: 8px;
+        background-color: rgb(255, 0, 0);
+        color: rgb(255, 255, 0);
+        font-style: oblique;
+        font-family: algerian;
+        font-weight: bold;
+        font-size: 24px;
+        text-align: center;
+        }
+        #open{
+            padding: 8px;
+            background-color: rgb(233, 14, 225);
             color: white;
-            font-style: italic;
-            font-family: "italic",cursive;
-            font-weight: bolder;
-            font-size: 36px;
-            text-align: center;  
-            }
-            p.first,ul.only{
-            padding: 20px;
-            margin: 0px;
-            background-color: green;
-            color: lightblue;
-            font-style: italic;
-            font-family: "italic",cursive;
-            font-weight: bolder;
-            font-size: 18px;
-            text-align: center;   
-            }
-            h2.odd{
-            padding: 8px;
-            background-color: pink;
-            color: purple;
             font-style: oblique;
-            font-family: algerian;
-            font-weight: bold;
-            font-size: 24px;
-            text-align: center;  
-            }
-            article{
-            padding: 8px;
-            background-color: lightblue;
-            color: green;
-            font-style: oblique;
-            font-family: broadway;
-            font-weight: light;
-            font-size: 18px;
-            }
-            body{
-            background-color: lightgray;
-          }
-          #nav{
+            font-family: comic;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+        }
+        #yt{
             color: white;
             background-color: purple;
             padding: 8px;
@@ -58,7 +66,10 @@
             font-family: comic;
             text-decoration: none;
           }
-        </style>
+          body{
+            background-color: lightgray;
+          }
+    </style>
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9222968440622686"
      crossorigin="anonymous"></script>
     <link rel="stylesheet" href="styles.css">
@@ -106,9 +117,9 @@
             <a href="multimedia.html" class="nav-link">multimedia</a>
             <a href="word.html" class="nav-link">word</a>
                     <a href="chatbot.html" class="nav-link">HTML Chatbot</a></nav>
-            <h1 class="biggest">Images,Hyperlink,Comment and text formatting</h1>
-            <p class="first">in this chapter,you are going to learn</p>
-            <ul class="only">
+            <h1>Images,Hyperlink,Comment and text formatting</h1>
+            <p id="p">in this chapter,you are going to learn</p>
+            <ul id="p">
                 <li>Images in html</li>
                 <li>Hyperlinks in html</li>
                 <li>Comments in html</li>
@@ -116,7 +127,7 @@
             </ul>
         </header>
         <article>
-            <h2 class="odd">images in html</h2>
+            <h2 class="heading">images in html</h2>
             <p>to add images in html we use <b>&lt;img/&gt</b><br>
             it has two <b><i>attributes</i></b> :-<br> 
             1. src-In this src attribute we write the url of image between the double quotation marks.<br>
@@ -128,7 +139,7 @@
             <p>attributes adds information to the elements in html</p>
         </article>
         <article>
-            <h2 class="odd">hyperlinks in html</h2>
+            <h2 class="heading">hyperlinks in html</h2>
             <p>to add hyperlinks in html we use <b>&lt;a&gt;&lt;/a&gt;</b><br>
             it has two attributes:-<br> 
            1. href- This attribute gives the link to add the hyperlink<br>
@@ -142,7 +153,7 @@
            <a href="www.wikipedia.com" alt="_blank">wikipedia</a>
         </article>
         <article>
-            <h2 class="odd">text formatting in html</h2>
+            <h2 class="heading">text formatting in html</h2>
             <p>for identation in html we use these :-<br> 
             &lt;b&gt;Defines bold text.Let's see it's result: <b>n</b><br>
             &lt;em&gt;Defines emphasized text.Let's see it's result: <em>n</em><br> 
@@ -157,7 +168,7 @@
             </p>
         </article>
         <article>
-            <h2 class="odd">comments in html</h2>
+            <h2 class="heading">comments in html</h2>
             <p>we can add comments in html by doing this :-&lt;!--comment--&gt;<br>
             we use it for :--comment:- <br>
             1.Documentation: Explaining what specific parts of the code do.<br>
@@ -176,7 +187,7 @@
                             <a href="chatbot.html" class="nav-link">HTML Chatbot</a></nav>
         </footer>
     <script src="nav.js"></script>
-    <a href="https://www.youtube.com/@modern-academy7">our youtube channel</a>
+    <a href="https://www.youtube.com/@modern-academy7"id="yt">our youtube channel</a>
 
 
 </html>
