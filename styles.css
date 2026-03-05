@@ -49,3 +49,12 @@ a.nav-link {
 a.nav-link:hover {
   background-color: darkmagenta;
 }
+#name{
+            font-style: italic;
+            font-family: "italic",cursive;
+            font-weight: bolder;
+            font-size: 10px;
+            text-align: left;
+            float: left;
+            color: black;
+          }
