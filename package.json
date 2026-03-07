@@ -1,13 +1,14 @@
 {
-  "name": "learnhtmlforfree-ai-chatbot",
+  "name": "learnhtmlforfree",
   "version": "1.0.0",
   "private": true,
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "server:bg": "run-auth-server.cmd"
   },
   "dependencies": {
-    "dotenv": "^16.4.7",
-    "express": "^4.21.2"
+    "express": "^4.21.2",
+    "sql.js": "^1.14.1"
   }
 }

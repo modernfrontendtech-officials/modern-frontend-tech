@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Auth - Modern Front End Tech</title>
+  <style>
+    :root {
+      --bg: #f3f4f6;
+      --card: #ffffff;
+      --text: #111827;
+      --accent: #2563eb;
+      --border: #d1d5db;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 20px;
+    }
+    .wrap {
+      width: 100%;
+      max-width: 900px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+    }
+    h1 {
+      margin: 0 0 8px;
+      font-size: 1.35rem;
+    }
+    p {
+      margin: 0 0 14px;
+    }
+    label {
+      display: block;
+      margin: 10px 0 6px;
+      font-weight: 600;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.95rem;
+    }
+    button {
+      margin-top: 14px;
+      width: 100%;
+      border: none;
+      background: var(--accent);
+      color: #fff;
+      padding: 11px;
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .status {
+      margin-top: 10px;
+      min-height: 20px;
+      font-size: 0.9rem;
+    }
+    .ok { color: #166534; }
+    .err { color: #b91c1c; }
+    .home {
+      text-decoration: none;
+      color: var(--accent);
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="card">
+      <h1>Create Account</h1>
+      <p>Sign up with your name, email and password.</p>
+      <form id="signup-form">
+        <label for="signup-name">Name</label>
+        <input id="signup-name" name="name" required>
+
+        <label for="signup-email">Email</label>
+        <input id="signup-email" name="email" type="email" required>
+
+        <label for="signup-password">Password</label>
+        <input id="signup-password" name="password" type="password" minlength="6" required>
+
+        <button type="submit">Sign Up</button>
+      </form>
+      <div id="signup-status" class="status"></div>
+    </section>
+
+    <section class="card">
+      <h1>Sign In</h1>
+      <p>Use your registered email and password.</p>
+      <form id="signin-form">
+        <label for="signin-email">Email</label>
+        <input id="signin-email" name="email" type="email" required>
+
+        <label for="signin-password">Password</label>
+        <input id="signin-password" name="password" type="password" required>
+
+        <button type="submit">Sign In</button>
+      </form>
+      <div id="signin-status" class="status"></div>
+    </section>
+  </div>
+
+  <div id="server-hint" class="status"></div>
+
+  <script src="nav.js"></script>
+  <script>
+    const SERVER_HINT = document.getElementById("server-hint");
+    const isHttp = window.location.protocol === "http:" || window.location.protocol === "https:";
+    const isSameServer = isHttp && window.location.port === "3000";
+    const host = ["localhost", "127.0.0.1"].includes(window.location.hostname)
+      ? window.location.hostname
+      : "localhost";
+    const API_BASE = isSameServer ? "" : `http://${host}:3000`;
+
+    if (window.location.protocol === "file:") {
+      SERVER_HINT.textContent =
+        "Open http://localhost:3000/auth.html or keep the Node server running on port 3000.";
+      SERVER_HINT.className = "status err";
+    }
+
+    async function parseApiResponse(response) {
+      const contentType = (response.headers.get("content-type") || "").toLowerCase();
+      if (contentType.includes("application/json")) {
+        try {
+          return await response.json();
+        } catch {
+          return { message: response.ok ? "Request completed." : "Invalid JSON response." };
+        }
+      }
+
+      const text = (await response.text()).trim();
+      if (response.status === 404) {
+        return { message: "API endpoint not found. Open the page from the Node server on port 3000." };
+      }
+      if (text.startsWith("<!DOCTYPE") || text.startsWith("<html")) {
+        return { message: "Server returned HTML instead of JSON." };
+      }
+      return { message: text || (response.ok ? "Request completed." : "Request failed.") };
+    }
+
+    async function checkServer() {
+      try {
+        const response = await fetch(`${API_BASE}/api/health`, { cache: "no-store" });
+        const data = await parseApiResponse(response);
+        if (!response.ok) throw new Error(data.message || "Health check failed");
+        SERVER_HINT.textContent = `Connected to Node API. Database: ${data.db}`;
+        SERVER_HINT.className = "status ok";
+      } catch (error) {
+        if (!SERVER_HINT.textContent || SERVER_HINT.classList.contains("ok")) {
+          SERVER_HINT.textContent =
+            `Node API unreachable at ${API_BASE || window.location.origin}. Start it with npm start.`;
+          SERVER_HINT.className = "status err";
+        }
+      }
+    }
+
+    async function submitForm(formId, endpoint, statusId) {
+      const form = document.getElementById(formId);
+      const status = document.getElementById(statusId);
+
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        status.textContent = "Processing...";
+        status.className = "status";
+
+        const formData = new FormData(form);
+        const payload = Object.fromEntries(formData.entries());
+
+        try {
+          const response = await fetch(`${API_BASE}${endpoint}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+          });
+          const data = await parseApiResponse(response);
+          status.textContent = data.message || "Done.";
+          status.className = response.ok ? "status ok" : "status err";
+          if (response.ok) {
+            form.reset();
+            if (window.siteAuth?.setAuthenticated) {
+              window.siteAuth.setAuthenticated({
+                email: payload.email || "",
+                name: payload.name || ""
+              });
+            }
+            window.location.href = "index.html";
+          }
+        } catch {
+          status.textContent = `Network error. Could not reach ${API_BASE || window.location.origin}.`;
+          status.className = "status err";
+          SERVER_HINT.textContent =
+            `Node API unreachable at ${API_BASE || window.location.origin}. Start it with npm start.`;
+          SERVER_HINT.className = "status err";
+        }
+      });
+    }
+
+    submitForm("signup-form", "/api/signup", "signup-status");
+    submitForm("signin-form", "/api/signin", "signin-status");
+    checkServer();
+  </script>
+</body>
+</html>

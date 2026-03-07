@@ -253,6 +253,8 @@ ClientBin/
 *.dbproj.schemaview
 *.jfm
 *.pfx
+data/*.db
+data/auth-db.json
 *.publishsettings
 orleans.codegen.cs
 
