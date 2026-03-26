@@ -124,6 +124,7 @@
     const isFile = window.location.protocol === "file:";
     const isLocalPreviewHost = ["localhost", "127.0.0.1"].includes(window.location.hostname);
     const isLocalApiHost = isLocalPreviewHost && window.location.port === "3000";
+    const isLocalPreview = isFile || (isLocalPreviewHost && !isLocalApiHost);
 
     function normalizeApiBase(value) {
       if (!value) return "";
@@ -136,7 +137,7 @@
     }
 
     const apiOverride = normalizeApiBase(new URLSearchParams(window.location.search).get("api"));
-    if (apiOverride) {
+    if (isLocalPreview && apiOverride) {
       try {
         window.localStorage.setItem("mft_api_base", apiOverride);
       } catch {
@@ -145,19 +146,21 @@
     }
 
     let savedApiBase = "";
-    try {
-      savedApiBase = normalizeApiBase(window.localStorage.getItem("mft_api_base"));
-    } catch {
-      savedApiBase = "";
+    if (isLocalPreview) {
+      try {
+        savedApiBase = normalizeApiBase(window.localStorage.getItem("mft_api_base"));
+      } catch {
+        savedApiBase = "";
+      }
     }
 
-    const API_BASE = savedApiBase || apiOverride || (isFile || (isLocalPreviewHost && !isLocalApiHost)
-      ? `${window.location.protocol}//${window.location.hostname || "localhost"}:3000`
-      : "");
+    const API_BASE = isLocalPreview
+      ? (savedApiBase || apiOverride || `${window.location.protocol}//${window.location.hostname || "localhost"}:3000`)
+      : "";
 
-    if (isFile) {
+    if (isLocalPreview) {
       SERVER_HINT.textContent =
-        "Open http://localhost:3000/auth.html locally, or open the deployed site on Vercel.";
+        "Local preview mode detected. Open the deployed site to use the Vercel API directly.";
       SERVER_HINT.className = "status err";
     }
 
