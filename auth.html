@@ -189,8 +189,8 @@
         const response = await fetch(`${API_BASE}/api/health`, { cache: "no-store" });
         const data = await parseApiResponse(response);
         if (!response.ok) throw new Error(data.message || "Health check failed");
-        SERVER_HINT.textContent = `Connected to ${data.runtime || "app"} API. Storage: ${data.storage || "unknown"}.`;
-        SERVER_HINT.className = "status ok";
+        SERVER_HINT.textContent = "";
+        SERVER_HINT.className = "status";
       } catch (error) {
         if (!SERVER_HINT.textContent || SERVER_HINT.classList.contains("ok")) {
           SERVER_HINT.textContent =
