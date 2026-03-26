@@ -121,16 +121,43 @@
   <script src="nav.js"></script>
   <script>
     const SERVER_HINT = document.getElementById("server-hint");
-    const isHttp = window.location.protocol === "http:" || window.location.protocol === "https:";
-    const isSameServer = isHttp && window.location.port === "3000";
-    const host = ["localhost", "127.0.0.1"].includes(window.location.hostname)
-      ? window.location.hostname
-      : "localhost";
-    const API_BASE = isSameServer ? "" : `http://${host}:3000`;
+    const isFile = window.location.protocol === "file:";
+    const isLocalPreviewHost = ["localhost", "127.0.0.1"].includes(window.location.hostname);
+    const isLocalApiHost = isLocalPreviewHost && window.location.port === "3000";
 
-    if (window.location.protocol === "file:") {
+    function normalizeApiBase(value) {
+      if (!value) return "";
+      try {
+        const url = new URL(value);
+        return url.origin;
+      } catch {
+        return "";
+      }
+    }
+
+    const apiOverride = normalizeApiBase(new URLSearchParams(window.location.search).get("api"));
+    if (apiOverride) {
+      try {
+        window.localStorage.setItem("mft_api_base", apiOverride);
+      } catch {
+        // Ignore storage failures and continue.
+      }
+    }
+
+    let savedApiBase = "";
+    try {
+      savedApiBase = normalizeApiBase(window.localStorage.getItem("mft_api_base"));
+    } catch {
+      savedApiBase = "";
+    }
+
+    const API_BASE = savedApiBase || apiOverride || (isFile || (isLocalPreviewHost && !isLocalApiHost)
+      ? `${window.location.protocol}//${window.location.hostname || "localhost"}:3000`
+      : "");
+
+    if (isFile) {
       SERVER_HINT.textContent =
-        "Open http://localhost:3000/auth.html or keep the Node server running on port 3000.";
+        "Open http://localhost:3000/auth.html locally, or open the deployed site on Vercel.";
       SERVER_HINT.className = "status err";
     }
 
@@ -146,7 +173,7 @@
 
       const text = (await response.text()).trim();
       if (response.status === 404) {
-        return { message: "API endpoint not found. Open the page from the Node server on port 3000." };
+        return { message: "API endpoint not found. Run the local server or deploy the api folder to Vercel." };
       }
       if (text.startsWith("<!DOCTYPE") || text.startsWith("<html")) {
         return { message: "Server returned HTML instead of JSON." };
@@ -159,12 +186,12 @@
         const response = await fetch(`${API_BASE}/api/health`, { cache: "no-store" });
         const data = await parseApiResponse(response);
         if (!response.ok) throw new Error(data.message || "Health check failed");
-        SERVER_HINT.textContent = `Connected to Node API. Database: ${data.db}`;
+        SERVER_HINT.textContent = `Connected to ${data.runtime || "app"} API. Storage: ${data.storage || "unknown"}.`;
         SERVER_HINT.className = "status ok";
       } catch (error) {
         if (!SERVER_HINT.textContent || SERVER_HINT.classList.contains("ok")) {
           SERVER_HINT.textContent =
-            `Node API unreachable at ${API_BASE || window.location.origin}. Start it with npm start.`;
+            `API unreachable at ${API_BASE || window.location.origin}. Run npm start locally or open the deployed Vercel site.`;
           SERVER_HINT.className = "status err";
         }
       }
@@ -195,8 +222,8 @@
             form.reset();
             if (window.siteAuth?.setAuthenticated) {
               window.siteAuth.setAuthenticated({
-                email: payload.email || "",
-                name: payload.name || ""
+                email: data.user?.email || payload.email || "",
+                name: data.user?.name || payload.name || ""
               });
             }
             window.location.href = "index.html";
@@ -205,7 +232,7 @@
           status.textContent = `Network error. Could not reach ${API_BASE || window.location.origin}.`;
           status.className = "status err";
           SERVER_HINT.textContent =
-            `Node API unreachable at ${API_BASE || window.location.origin}. Start it with npm start.`;
+            `API unreachable at ${API_BASE || window.location.origin}. Run npm start locally or open the deployed Vercel site.`;
           SERVER_HINT.className = "status err";
         }
       });
