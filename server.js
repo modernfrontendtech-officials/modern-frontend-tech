@@ -3,6 +3,8 @@ const path = require("node:path");
 const {
   applyCorsHeaders,
   handleHealthRequest,
+  handleHtmlAssistantRequest,
+  handleHtmlAssistantStatusRequest,
   handleSigninRequest,
   handleSignupRequest,
   sendJson
@@ -15,6 +17,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.all("/api/health", handleHealthRequest);
+app.all("/api/html-assistant-status", handleHtmlAssistantStatusRequest);
+app.all("/api/html-assistant", handleHtmlAssistantRequest);
 app.all("/api/signup", handleSignupRequest);
 app.all("/api/signin", handleSigninRequest);
 
@@ -30,5 +34,5 @@ app.use((err, req, res, next) => {
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
-  console.log("Vercel-compatible API routes are available at /api/health, /api/signup, and /api/signin");
+  console.log("Vercel-compatible API routes are available at /api/health, /api/html-assistant-status, /api/html-assistant, /api/signup, and /api/signin");
 });

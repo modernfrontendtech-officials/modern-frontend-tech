@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML final exam</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico"> 
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <button id="open">open <br>
+            navigation bar</button>
+        <nav id="site-nav">
+            <button id="close">close <br>
+                navigation bar</button><br><br>
+            <a href="index.html" class="nav-link">home</a>
+            <a href="editor.html" class="nav-link">text editor</a>
+            <a href="whatishtml.html" class="nav-link">our html course</a>
+            <a href="exam.html" class="nav-link">html exam</a>
+        </nav>
+        <img src="favicon.ico" alt="logo" height="75px" style="float: left;">
+        <p id="name">modern front end tech</p>
+        <h1>html certification exam</h1>
+        <p id="p">Students get 180 minutes to fix 60 broken HTML problems across 20 lesson groups. Scores below 50% fail, 50% to 79.99% earn an Intermediate certificate, and 80% or more earn a Professional certificate.</p>
+    </header>
+
+    <main class="exam-page">
+        <section class="exam-hero">
+            <div>
+                <span class="label">Certification</span>
+                <h2>Repair broken HTML under exam conditions</h2>
+                <p>This is a full exam, not a quick quiz. Each problem starts with broken code, and many questions now require several repairs before the HTML becomes valid.</p>
+            </div>
+            <div class="exam-rule-grid">
+                <article class="exam-rule-card">
+                    <strong>180 minutes</strong>
+                    <p>A countdown starts as soon as the student begins the attempt.</p>
+                </article>
+                <article class="exam-rule-card">
+                    <strong>60 problems</strong>
+                    <p>There are 3 repair tasks from each of the 20 lesson groups.</p>
+                </article>
+                <article class="exam-rule-card">
+                    <strong>Auto grading</strong>
+                    <p>Every answer is checked against a corrected HTML solution when the exam is submitted.</p>
+                </article>
+                <article class="exam-rule-card">
+                    <strong>Certificates</strong>
+                    <p>Passing students receive a certificate level based on the percentage they earn.</p>
+                </article>
+            </div>
+        </section>
+
+        <section class="exam-start-card" id="exam-start-card">
+            <h2>Start exam</h2>
+            <p>Enter the student name before starting. Progress and time are saved in this browser so accidental refreshes do not erase the attempt.</p>
+            <form id="exam-start-form" class="exam-start-form">
+                <label for="student-name">Student name</label>
+                <input id="student-name" name="student-name" type="text" maxlength="80" placeholder="Enter full name" required>
+                <div class="exam-start-actions">
+                    <button type="submit" id="start-exam-button">start exam</button>
+                    <button type="button" class="secondary-action" id="reset-attempt-button">clear saved attempt</button>
+                </div>
+                <p id="exam-start-status" class="exam-start-status"></p>
+            </form>
+        </section>
+
+        <section class="exam-shell hidden" id="exam-shell">
+            <aside class="exam-sidebar">
+                <div class="exam-sidebar-card exam-sticky">
+                    <span class="label">Exam status</span>
+                    <h2 id="candidate-heading">Candidate</h2>
+                    <p class="exam-candidate" id="candidate-name-display"></p>
+                    <div class="exam-stat-list">
+                        <div>
+                            <span>Time left</span>
+                            <strong id="timer-display">03:00:00</strong>
+                        </div>
+                        <div>
+                            <span>Edited problems</span>
+                            <strong id="answered-display">0 / 60</strong>
+                        </div>
+                        <div>
+                            <span>Lesson groups</span>
+                            <strong>20</strong>
+                        </div>
+                    </div>
+                    <div class="exam-sidebar-actions">
+                        <button type="button" id="submit-exam-button">submit exam</button>
+                        <button type="button" class="secondary-action" id="restart-exam-button">start fresh</button>
+                    </div>
+                    <p class="quiet-note" id="save-status">Your work is saved automatically in this browser.</p>
+                </div>
+            </aside>
+
+            <section class="exam-content">
+                <div class="exam-problem-summary">
+                    <h2>Exam instructions</h2>
+                    <ul>
+                        <li>Read each repair goal carefully before editing the broken snippet. Some tasks contain multiple mistakes.</li>
+                        <li>Keep the answer focused on the problem shown. You may need to repair more than one tag or attribute.</li>
+                        <li>The exam submits automatically when the countdown reaches zero.</li>
+                    </ul>
+                </div>
+                <div id="exam-problem-container" class="exam-problem-container"></div>
+            </section>
+        </section>
+
+        <section class="exam-results hidden" id="exam-results">
+            <span class="label">Final result</span>
+            <h2 id="result-heading">Exam result</h2>
+            <p id="result-summary"></p>
+            <div class="exam-result-grid">
+                <article class="exam-result-card">
+                    <span>Score</span>
+                    <strong id="result-score">0 / 60</strong>
+                </article>
+                <article class="exam-result-card">
+                    <span>Percentage</span>
+                    <strong id="result-percent">0%</strong>
+                </article>
+                <article class="exam-result-card">
+                    <span>Status</span>
+                    <strong id="result-status">Fail</strong>
+                </article>
+                <article class="exam-result-card">
+                    <span>Certificate</span>
+                    <strong id="result-certificate">None</strong>
+                </article>
+            </div>
+
+            <div class="certificate-card hidden" id="certificate-card">
+                <div class="certificate-ornaments" aria-hidden="true">
+                    <svg class="certificate-medal" viewBox="0 0 120 120" role="presentation">
+                        <circle cx="60" cy="50" r="28" fill="#f6c65b"></circle>
+                        <circle cx="60" cy="50" r="18" fill="#fff2bf"></circle>
+                        <path d="M48 78 L38 112 L60 98 L82 112 L72 78 Z" fill="#d96b34"></path>
+                        <path d="M52 40 L57 50 L69 51 L60 59 L62 71 L52 65 L42 71 L44 59 L35 51 L47 50 Z" fill="#d48216"></path>
+                    </svg>
+                    <svg class="certificate-ribbon" viewBox="0 0 220 120" role="presentation">
+                        <rect x="0" y="22" width="220" height="50" rx="25" fill="rgba(255,255,255,0.12)"></rect>
+                        <circle cx="110" cy="47" r="28" fill="#ffe6a8"></circle>
+                        <circle cx="110" cy="47" r="18" fill="#fff7dd"></circle>
+                        <path d="M102 42 L108 48 L120 36" fill="none" stroke="#c2542d" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"></path>
+                    </svg>
+                    <svg class="certificate-medal" viewBox="0 0 120 120" role="presentation">
+                        <circle cx="60" cy="50" r="28" fill="#f6c65b"></circle>
+                        <circle cx="60" cy="50" r="18" fill="#fff2bf"></circle>
+                        <path d="M48 78 L38 112 L60 98 L82 112 L72 78 Z" fill="#2d7fb4"></path>
+                        <path d="M52 40 L57 50 L69 51 L60 59 L62 71 L52 65 L42 71 L44 59 L35 51 L47 50 Z" fill="#d48216"></path>
+                    </svg>
+                </div>
+                <div class="certificate-topline">Modern Front End Tech</div>
+                <h3 id="certificate-title">Intermediate certificate</h3>
+                <p class="certificate-kicker">Awarded for successfully completing the HTML repair examination</p>
+                <p class="certificate-candidate-name" id="certificate-name"></p>
+                <p class="certificate-copy">This certifies that the candidate named above attempted and passed the exam by demonstrating practical skill in fixing broken HTML structures under timed conditions.</p>
+                <div class="certificate-meta">
+                    <div>
+                        <span>Exam score</span>
+                        <strong id="certificate-score"></strong>
+                    </div>
+                    <div>
+                        <span>Certificate level</span>
+                        <strong id="certificate-level"></strong>
+                    </div>
+                    <div>
+                        <span>Date</span>
+                        <strong id="certificate-date"></strong>
+                    </div>
+                    <div>
+                        <span>Certificate ID</span>
+                        <strong id="certificate-id"></strong>
+                    </div>
+                </div>
+                <div class="certificate-signoff">
+                    <div class="certificate-signature-block">
+                        <p class="certificate-signature-name">Divyansh</p>
+                        <p class="certificate-signature-label">Owner signature</p>
+                    </div>
+                </div>
+                <div class="certificate-actions">
+                    <button type="button" id="print-certificate-button">print certificate</button>
+                    <button type="button" class="secondary-action" id="download-certificate-button">download certificate</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="nav.js"></script>
+    <script>
+        const EXAM_STORAGE_KEY = "mft_html_exam_state_v1";
+        const EXAM_DURATION_MINUTES = 180;
+        const EXAM_DURATION_MS = EXAM_DURATION_MINUTES * 60 * 1000;
+        const VOID_ELEMENTS = new Set(["area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"]);
+
+        const lessonGroups = [
+            {
+                lesson: "Lesson 1: HTML basics",
+                problems: [
+                    { prompt: "This starter snippet has more than one broken tag. Fix all heading and paragraph tags so the structure is valid.", broken: `<h1>Welcome to HTML<h2>Start here</h3><p>Build your first page</div>`, solution: `<h1>Welcome to HTML</h1><h2>Start here</h2><p>Build your first page</p>` },
+                    { prompt: "Repair this text-formatting snippet so the bold text stays inside the paragraph and all tags close correctly.", broken: `<p>HTML gives <b>structure to web pages.</p></strong>`, solution: `<p>HTML gives <b>structure to web pages.</b></p>` },
+                    { prompt: "Fix the wrapper and child tags so this intro card contains a heading and paragraph correctly.", broken: `<div><h2>Topics<h2><p>Tags and text</div>`, solution: `<div><h2>Topics</h2><p>Tags and text</p></div>` }
+                ]
+            },
+            {
+                lesson: "Lesson 2: First code",
+                problems: [
+                    { prompt: "Repair the document so the title, body, and html elements all close properly.", broken: `<html><head><title>My Page<title></head><body><h1>My Page</h1>`, solution: `<html><head><title>My Page</title></head><body><h1>My Page</h1></body></html>` },
+                    { prompt: "Fix the card snippet so the paragraph and button both close correctly inside the section.", broken: `<section><h2>First project</h2><p>Create your first page<button>Start now</section>`, solution: `<section><h2>First project</h2><p>Create your first page</p><button>Start now</button></section>` },
+                    { prompt: "Repair this article so the heading, paragraph, and article structure are all complete.", broken: `<article><h1>Practice page</h1><p>Write code every day</article>`, solution: `<article><h1>Practice page</h1><p>Write code every day</p></article>` }
+                ]
+            },
+            {
+                lesson: "Lesson 3: Comments and text formatting",
+                problems: [
+                    { prompt: "Fix both the HTML comment syntax and the strong tag in this snippet.", broken: `<!- important note --><p><strong>Read the task carefully</b></p>`, solution: `<!-- important note --><p><strong>Read the task carefully</strong></p>` },
+                    { prompt: "Repair the mark and emphasis nesting so the highlighted text is valid HTML.", broken: `<p><mark>Important <em>revision point</mark></em></p>`, solution: `<p><mark>Important <em>revision point</em></mark></p>` },
+                    { prompt: "Fix the superscript and small-text tags so this formula line is valid.", broken: `<p>Area in cm<sup>2</sub> <small>approx<small></p>`, solution: `<p>Area in cm<sup>2</sup> <small>approx</small></p>` }
+                ]
+            },
+            {
+                lesson: "Lesson 4: HTML structure",
+                problems: [
+                    { prompt: "Repair this page shell so head, body, and main are all placed and closed correctly.", broken: `<html lang="en"><head><meta charset="UTF-8"><title>Doc</title><body><main><p>Hello</p></body></html>`, solution: `<html lang="en"><head><meta charset="UTF-8"><title>Doc</title></head><body><main><p>Hello</p></main></body></html>` },
+                    { prompt: "Fix the layout structure so header, main, and section all close correctly.", broken: `<body><header><h1>Guide</h1><main><section><p>Start learning</p></section></body>`, solution: `<body><header><h1>Guide</h1></header><main><section><p>Start learning</p></section></main></body>` },
+                    { prompt: "Repair the page so the aside and footer are inside the body correctly.", broken: `<html lang="en"><head><title>Course</title></head><body><aside><p>Tips</p><footer>End</footer></html>`, solution: `<html lang="en"><head><title>Course</title></head><body><aside><p>Tips</p></aside><footer>End</footer></body></html>` }
+                ]
+            },
+            {
+                lesson: "Lesson 5: Quotation and citation",
+                problems: [
+                    { prompt: "Fix every broken tag in this blockquote so the paragraph and citation render correctly.", broken: `<blockquote cite="https://example.com"><p>Practice daily<p><cite>Coach</blockquote>`, solution: `<blockquote cite="https://example.com"><p>Practice daily</p><cite>Coach</cite></blockquote>` },
+                    { prompt: "Repair the inline quote and paragraph so the sentence structure is valid.", broken: `<p>Teacher said <q>Keep building</blockquote></p>`, solution: `<p>Teacher said <q>Keep building</q></p>` },
+                    { prompt: "Fix the figure so the figcaption and cite wrap the author correctly.", broken: `<figure><blockquote>Never stop learning</blockquote><figcaption><cite>Modern Front End Tech</figure>`, solution: `<figure><blockquote>Never stop learning</blockquote><figcaption><cite>Modern Front End Tech</cite></figcaption></figure>` }
+                ]
+            },
+            {
+                lesson: "Lesson 6: Links",
+                problems: [
+                    { prompt: "This navigation block has multiple broken links. Fix all href and closing-tag mistakes.", broken: `<nav><a herf="index.html">Home</a><a href="exam.html">Exam<a></nav>`, solution: `<nav><a href="index.html">Home</a><a href="exam.html">Exam</a></nav>` },
+                    { prompt: "Repair this call-to-action link so target, nesting, and closing tags are correct.", broken: `<a href="contact.html" target="blank"><strong>Contact team</a></strong>`, solution: `<a href="contact.html" target="_blank"><strong>Contact team</strong></a>` },
+                    { prompt: "Fix the paragraph and anchor tags so the guide link is valid.", broken: `<p><a href="guide.html#lists">Read the lists guide<p>`, solution: `<p><a href="guide.html#lists">Read the lists guide</a></p>` }
+                ]
+            },
+            {
+                lesson: "Lesson 7: Images",
+                problems: [
+                    { prompt: "Repair this figure so the image attributes and figcaption tags are all correct.", broken: `<figure><img scr="card.png" atl="Student card"><figcaption>Student card</figure>`, solution: `<figure><img src="card.png" alt="Student card"><figcaption>Student card</figcaption></figure>` },
+                    { prompt: "Fix the responsive picture snippet by correcting the source-set attribute and the fallback image alt text.", broken: `<picture><source media="(min-width: 700px)" scrset="large.jpg"><img src="small.jpg" atl="Desk setup"></picture>`, solution: `<picture><source media="(min-width: 700px)" srcset="large.jpg"><img src="small.jpg" alt="Desk setup"></picture>` },
+                    { prompt: "Repair the gallery snippet so the second image has alt text and the paragraph closes correctly.", broken: `<div class="gallery"><img src="one.jpg" alt="One"><img src="two.jpg"><p>Gallery preview</div>`, solution: `<div class="gallery"><img src="one.jpg" alt="One"><img src="two.jpg" alt="Two"><p>Gallery preview</p></div>` }
+                ]
+            },
+            {
+                lesson: "Lesson 8: Favicon",
+                problems: [
+                    { prompt: "Fix this favicon link by correcting both the relation and file-path attribute.", broken: `<head><link rel="favion" type="image/x-icon" src="favicon.ico"><title>Site</title></head>`, solution: `<head><link rel="icon" type="image/x-icon" href="favicon.ico"><title>Site</title></head>` },
+                    { prompt: "Repair the PNG favicon link so the file path and sizes attribute are both correct.", broken: `<head><link rel="icon" type="image/png" hre="favicon-32.png" size="32x32"></head>`, solution: `<head><link rel="icon" type="image/png" href="favicon-32.png" sizes="32x32"></head>` },
+                    { prompt: "Fix this head snippet so the icon link closes properly and keeps the correct file path.", broken: `<head><link rel="apple-touch-icon" href="apple-touch.png"><link rel="icon" href="favicon.ico"</head>`, solution: `<head><link rel="apple-touch-icon" href="apple-touch.png"><link rel="icon" href="favicon.ico"></head>` }
+                ]
+            },
+            {
+                lesson: "Lesson 9: Title",
+                problems: [
+                    { prompt: "Repair the page title so the title tag closes correctly before the metadata continues.", broken: `<head><title>HTML Exam<title><meta charset="UTF-8"></head>`, solution: `<head><title>HTML Exam</title><meta charset="UTF-8"></head>` },
+                    { prompt: "Fix this page shell so the title closes correctly before the body starts.", broken: `<head><title>Student Portal</head><body><h1>Portal</h1></body>`, solution: `<head><title>Student Portal</title></head><body><h1>Portal</h1></body>` },
+                    { prompt: "Repair the misspelled title tags in this head snippet.", broken: `<head><titel>Practice and Revision</titel><meta name="description" content="Study page"></head>`, solution: `<head><title>Practice and Revision</title><meta name="description" content="Study page"></head>` }
+                ]
+            },
+            {
+                lesson: "Lesson 10: Table",
+                problems: [
+                    { prompt: "Fix all broken table cells and row tags in this score table.", broken: `<table><thead><tr><th>Name</th><th>Score</th></tr></thead><tbody><tr><td>Ana<td>91</td></tr><tr><td>Ben</td><td>84</td></tbody></table>`, solution: `<table><thead><tr><th>Name</th><th>Score</th></tr></thead><tbody><tr><td>Ana</td><td>91</td></tr><tr><td>Ben</td><td>84</td></tr></tbody></table>` },
+                    { prompt: "Repair this table so the caption closes properly and the header row stays valid.", broken: `<table><caption>Scores<caption><tr><th>Name</th><th>Marks</th></tr><tr><td>Ana</td><td>91</td></tr></table>`, solution: `<table><caption>Scores</caption><tr><th>Name</th><th>Marks</th></tr><tr><td>Ana</td><td>91</td></tr></table>` },
+                    { prompt: "Fix the last row of this table so every cell and row closes correctly.", broken: `<table><tr><th>Topic</th><th>Level</th></tr><tr><td>Lists</td><td>Beginner</td></tr><tr><td>Forms<td>Intermediate</table>`, solution: `<table><tr><th>Topic</th><th>Level</th></tr><tr><td>Lists</td><td>Beginner</td></tr><tr><td>Forms</td><td>Intermediate</td></tr></table>` }
+                ]
+            },
+            {
+                lesson: "Lesson 11: Lists",
+                problems: [
+                    { prompt: "Repair this nested list so all list items and nested lists close correctly.", broken: `<ul><li>HTML<ul><li>Tags<li>Elements</ul></li><li>CSS</li></ul>`, solution: `<ul><li>HTML<ul><li>Tags</li><li>Elements</li></ul></li><li>CSS</li></ul>` },
+                    { prompt: "Fix this ordered list so every step and nested list item closes correctly.", broken: `<ol><li>Plan<li>Build<ul><li>Write HTML<li>Test page</ul></li><li>Review</li></ol>`, solution: `<ol><li>Plan</li><li>Build<ul><li>Write HTML</li><li>Test page</li></ul></li><li>Review</li></ol>` },
+                    { prompt: "Repair the definition list so every term and description is paired correctly.", broken: `<dl><dt>HTML<dd>Markup language<dt>CSS</dt><dd>Styling language</dl>`, solution: `<dl><dt>HTML</dt><dd>Markup language</dd><dt>CSS</dt><dd>Styling language</dd></dl>` }
+                ]
+            },
+            {
+                lesson: "Lesson 12: Block and inline elements",
+                problems: [
+                    { prompt: "Fix the nesting so the inline tags stay inside the div in the correct order.", broken: `<div>Card title: <span><strong>HTML basics</span></strong></div>`, solution: `<div>Card title: <span><strong>HTML basics</strong></span></div>` },
+                    { prompt: "Repair the inline code example so the emphasis and code tags close in the right order.", broken: `<p>Read <em>carefully <code>&lt;section&gt;</em></code></p>`, solution: `<p>Read <em>carefully <code>&lt;section&gt;</code></em></p>` },
+                    { prompt: "Fix this badge snippet so the span closes before the wrapper div closes.", broken: `<div><span>Inline badge</div></span><p>Below text</p>`, solution: `<div><span>Inline badge</span></div><p>Below text</p>` }
+                ]
+            },
+            {
+                lesson: "Lesson 13: Divs, classes, and ids",
+                problems: [
+                    { prompt: "Repair the wrapper so the class name is correct and the paragraph closes inside the card.", broken: `<div classs="card" id="profile-card"><h3>Profile</h3><p>Student bio</div>`, solution: `<div class="card" id="profile-card"><h3>Profile</h3><p>Student bio</p></div>` },
+                    { prompt: "Fix the grid snippet so both class and id attributes are written correctly.", broken: `<section class="card-grid"><div clas="card" idd="summary"><h2>Summary</h2></div></section>`, solution: `<section class="card-grid"><div class="card" id="summary"><h2>Summary</h2></div></section>` },
+                    { prompt: "Repair the nested card layout so both div elements close correctly and the class name is valid.", broken: `<div class="cards"><div classs="card"><p class="lead">Intro text</p></div><div class="card"><p>Next step</div>`, solution: `<div class="cards"><div class="card"><p class="lead">Intro text</p></div><div class="card"><p>Next step</p></div></div>` }
+                ]
+            },
+            {
+                lesson: "Lesson 14: Buttons and iframes",
+                problems: [
+                    { prompt: "Fix the button snippet so the type value is correct and the span closes properly.", broken: `<section><button type="buton"><span>Save draft</button></section>`, solution: `<section><button type="button"><span>Save draft</span></button></section>` },
+                    { prompt: "Repair this iframe by correcting the source attribute and the closing tag.", broken: `<iframe scr="https://example.com" title="Example site"><iframe>`, solution: `<iframe src="https://example.com" title="Example site"></iframe>` },
+                    { prompt: "Fix both button types in this action bar so the markup is valid.", broken: `<div class="actions"><button type="submit">Finish</button><button type="reseet">Clear</button></div>`, solution: `<div class="actions"><button type="submit">Finish</button><button type="reset">Clear</button></div>` }
+                ]
+            },
+            {
+                lesson: "Lesson 15: Everything in head",
+                problems: [
+                    { prompt: "Repair this head block by fixing the charset value and the viewport content syntax.", broken: `<head><meta charset="UTF=8"><meta name="viewport" content="width=device-width initial-scale=1.0"><title>Exam</title></head>`, solution: `<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Exam</title></head>` },
+                    { prompt: "Fix the stylesheet link so the relation and file path attributes are both correct.", broken: `<head><link ref="stylesheet" herf="styles.css"><title>Page</title></head>`, solution: `<head><link rel="stylesheet" href="styles.css"><title>Page</title></head>` },
+                    { prompt: "Repair the external script tag so the source attribute, defer attribute, and closing tag are correct.", broken: `<script scr="nav.js" deffer></style>`, solution: `<script src="nav.js" defer><\/script>` }
+                ]
+            },
+            {
+                lesson: "Lesson 16: Computer code",
+                problems: [
+                    { prompt: "Fix the preformatted code block so the code tag stays inside the pre tag.", broken: `<pre><code>&lt;h1&gt;Hello&lt;/h1&gt;</pre></code>`, solution: `<pre><code>&lt;h1&gt;Hello&lt;/h1&gt;</code></pre>` },
+                    { prompt: "Repair this shortcut line so the paragraph and second keyboard tag are complete.", broken: `<p>Press <kbd>Ctrl</kbd> + <kbd>S<p>`, solution: `<p>Press <kbd>Ctrl</kbd> + <kbd>S</kbd></p>` },
+                    { prompt: "Fix the sample-output snippet so the sample tag and paragraph both close correctly.", broken: `<p><samp>Saved successfully</code></p>`, solution: `<p><samp>Saved successfully</samp></p>` }
+                ]
+            },
+            {
+                lesson: "Lesson 17: Semantics",
+                problems: [
+                    { prompt: "Repair this semantic layout so header, main, and footer all use correct tags.", broken: `<heder><h1>Course</h1></heder><main><p>Practice tasks</p><footer>End of page</footer>`, solution: `<header><h1>Course</h1></header><main><p>Practice tasks</p></main><footer>End of page</footer>` },
+                    { prompt: "Fix the article snippet so the section and paragraph close in the correct order.", broken: `<article><header><h2>Lesson</h2></header><section><p>Practice now</section></article>`, solution: `<article><header><h2>Lesson</h2></header><section><p>Practice now</p></section></article>` },
+                    { prompt: "Repair the navigation so both links close before the nav ends.", broken: `<nav><a href="index.html">Home</a><a href="exam.html">Exam</nav>`, solution: `<nav><a href="index.html">Home</a><a href="exam.html">Exam</a></nav>` }
+                ]
+            },
+            {
+                lesson: "Lesson 18: HTML symbols",
+                problems: [
+                    { prompt: "Replace every unsafe symbol in this sentence with the correct HTML entity.", broken: `<p>5 < 9 & 3 > 1</p>`, solution: `<p>5 &lt; 9 &amp; 3 &gt; 1</p>` },
+                    { prompt: "Repair both entities in this copyright and currency line.", broken: `<p>&copy 2026 Course fee: &euro 25</p>`, solution: `<p>&copy; 2026 Course fee: &euro; 25</p>` },
+                    { prompt: "Fix the quote entities in this sentence so both entity references are complete.", broken: `<p>&quotHTML&quot is often called the language of structure &amp learning</p>`, solution: `<p>&quot;HTML&quot; is often called the language of structure &amp; learning</p>` }
+                ]
+            },
+            {
+                lesson: "Lesson 19: Canvas",
+                problems: [
+                    { prompt: "Repair this canvas so the width value, height attribute, and closing tag are all correct.", broken: `<canvas id="pad" width="30O" heigth="150"></canva>`, solution: `<canvas id="pad" width="300" height="150"></canvas>` },
+                    { prompt: "Fix this section so the canvas closes correctly and the fallback text stays inside it.", broken: `<section><canvas id="chart" width="400" height="200">Charts not supported<section>`, solution: `<section><canvas id="chart" width="400" height="200">Charts not supported</canvas></section>` },
+                    { prompt: "Repair the game area so the canvas tag and paragraph both close correctly.", broken: `<div><canvas id="game" width="500" height="250"></canavs><p>Game area</div>`, solution: `<div><canvas id="game" width="500" height="250"></canvas><p>Game area</p></div>` }
+                ]
+            },
+            {
+                lesson: "Lesson 20: Forms",
+                problems: [
+                    { prompt: "Fix this sign-up form so the label, required attribute, and form closing tag are all correct.", broken: `<form><label for="email">Email<label><input type="email" id="email" name="email" requierd><form>`, solution: `<form><label for="email">Email</label><input type="email" id="email" name="email" required></form>` },
+                    { prompt: "Repair the select field so the label and both option tags close correctly.", broken: `<form><label for="level">Level</label><select id="level" name="level"><option>Beginner<option>Intermediate</option></select></form>`, solution: `<form><label for="level">Level</label><select id="level" name="level"><option>Beginner</option><option>Intermediate</option></select></form>` },
+                    { prompt: "Fix this fieldset so the legend, first input, and fieldset all close correctly.", broken: `<form><fieldset><legend>Contact details<legend><input type="text" name="name"><input type="tel" name="phone"></fieldset></form>`, solution: `<form><fieldset><legend>Contact details</legend><input type="text" name="name"><input type="tel" name="phone"></fieldset></form>` }
+                ]
+            }
+        ];
+
+        const problems = lessonGroups.flatMap((group, groupIndex) =>
+            group.problems.map((problem, problemIndex) => ({
+                id: `problem-${groupIndex + 1}-${problemIndex + 1}`,
+                lesson: group.lesson,
+                number: groupIndex * 3 + problemIndex + 1,
+                prompt: problem.prompt,
+                broken: problem.broken,
+                solution: problem.solution
+            }))
+        );
+
+        if (problems.length !== 60) {
+            throw new Error(`Expected 60 exam problems but found ${problems.length}.`);
+        }
+
+        const startCard = document.getElementById("exam-start-card");
+        const examShell = document.getElementById("exam-shell");
+        const resultsSection = document.getElementById("exam-results");
+        const problemContainer = document.getElementById("exam-problem-container");
+        const startForm = document.getElementById("exam-start-form");
+        const studentNameInput = document.getElementById("student-name");
+        const startStatus = document.getElementById("exam-start-status");
+        const candidateNameDisplay = document.getElementById("candidate-name-display");
+        const timerDisplay = document.getElementById("timer-display");
+        const answeredDisplay = document.getElementById("answered-display");
+        const saveStatus = document.getElementById("save-status");
+        const submitExamButton = document.getElementById("submit-exam-button");
+        const restartExamButton = document.getElementById("restart-exam-button");
+        const resetAttemptButton = document.getElementById("reset-attempt-button");
+        const resultHeading = document.getElementById("result-heading");
+        const resultSummary = document.getElementById("result-summary");
+        const resultScore = document.getElementById("result-score");
+        const resultPercent = document.getElementById("result-percent");
+        const resultStatus = document.getElementById("result-status");
+        const resultCertificate = document.getElementById("result-certificate");
+        const certificateCard = document.getElementById("certificate-card");
+        const certificateTitle = document.getElementById("certificate-title");
+        const certificateName = document.getElementById("certificate-name");
+        const certificateScore = document.getElementById("certificate-score");
+        const certificateLevel = document.getElementById("certificate-level");
+        const certificateDate = document.getElementById("certificate-date");
+        const certificateId = document.getElementById("certificate-id");
+        const printCertificateButton = document.getElementById("print-certificate-button");
+        const downloadCertificateButton = document.getElementById("download-certificate-button");
+
+        let timerInterval = null;
+        let examState = readState();
+
+        function createEmptyState() {
+            return {
+                studentName: "",
+                startedAt: null,
+                deadlineAt: null,
+                submittedAt: null,
+                submitted: false,
+                answers: {},
+                grading: null,
+                certificateId: ""
+            };
+        }
+
+        function readState() {
+            try {
+                const raw = window.localStorage.getItem(EXAM_STORAGE_KEY);
+                if (!raw) {
+                    return createEmptyState();
+                }
+
+                const parsed = JSON.parse(raw);
+                return {
+                    ...createEmptyState(),
+                    ...parsed,
+                    answers: { ...createEmptyState().answers, ...(parsed.answers || {}) },
+                    grading: parsed.grading || null
+                };
+            } catch {
+                return createEmptyState();
+            }
+        }
+
+        function saveState(message) {
+            try {
+                window.localStorage.setItem(EXAM_STORAGE_KEY, JSON.stringify(examState));
+                if (message) {
+                    saveStatus.textContent = message;
+                }
+            } catch {
+                saveStatus.textContent = "Browser storage is unavailable, but the exam is still running in this tab.";
+            }
+        }
+
+        function escapeHtml(value) {
+            return value
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;");
+        }
+
+        function normalizeRaw(value) {
+            return (value || "").replace(/\r\n/g, "\n").trim();
+        }
+
+        function formatTime(msRemaining) {
+            const safeMs = Math.max(0, msRemaining);
+            const totalSeconds = Math.floor(safeMs / 1000);
+            const hours = Math.floor(totalSeconds / 3600);
+            const minutes = Math.floor((totalSeconds % 3600) / 60);
+            const seconds = totalSeconds % 60;
+            return [hours, minutes, seconds].map((value) => String(value).padStart(2, "0")).join(":");
+        }
+
+        function formatDate(dateInput) {
+            return new Intl.DateTimeFormat("en-US", {
+                year: "numeric",
+                month: "long",
+                day: "numeric"
+            }).format(new Date(dateInput));
+        }
+
+        function buildCertificateId() {
+            const now = new Date();
+            const datePart = [
+                now.getFullYear(),
+                String(now.getMonth() + 1).padStart(2, "0"),
+                String(now.getDate()).padStart(2, "0")
+            ].join("");
+            const randomPart = Math.floor(Math.random() * 900000 + 100000);
+            return `MFT-HTML-${datePart}-${randomPart}`;
+        }
+
+        function escapeXml(value) {
+            return String(value)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&apos;");
+        }
+
+        function canonicalizeSnippet(snippet) {
+            const template = document.createElement("template");
+            template.innerHTML = normalizeRaw(snippet);
+            return Array.from(template.content.childNodes)
+                .map((node) => canonicalizeNode(node))
+                .filter(Boolean)
+                .join("");
+        }
+
+        function canonicalizeNode(node) {
+            if (node.nodeType === Node.TEXT_NODE) {
+                const text = node.textContent.replace(/\s+/g, " ").trim();
+                return text ? `#text(${text})` : "";
+            }
+
+            if (node.nodeType === Node.COMMENT_NODE) {
+                const comment = node.textContent.replace(/\s+/g, " ").trim();
+                return `#comment(${comment})`;
+            }
+
+            if (node.nodeType !== Node.ELEMENT_NODE) {
+                return "";
+            }
+
+            const tag = node.tagName.toLowerCase();
+            const attrs = Array.from(node.attributes)
+                .sort((left, right) => left.name.localeCompare(right.name))
+                .map((attribute) => `${attribute.name.toLowerCase()}="${attribute.value.replace(/\s+/g, " ").trim()}"`)
+                .join(" ");
+            const children = Array.from(node.childNodes)
+                .map((childNode) => canonicalizeNode(childNode))
+                .filter(Boolean)
+                .join("");
+            const openTag = attrs ? `<${tag} ${attrs}>` : `<${tag}>`;
+
+            if (VOID_ELEMENTS.has(tag)) {
+                return openTag;
+            }
+
+            return `${openTag}${children}</${tag}>`;
+        }
+
+        function isEdited(problem, answer) {
+            return normalizeRaw(answer) !== normalizeRaw(problem.broken);
+        }
+
+        function clearSavedAttempt() {
+            try {
+                window.localStorage.removeItem(EXAM_STORAGE_KEY);
+            } catch {
+                // Ignore storage errors and continue clearing the in-memory attempt.
+            }
+            examState = createEmptyState();
+            if (timerInterval) {
+                window.clearInterval(timerInterval);
+                timerInterval = null;
+            }
+            studentNameInput.value = "";
+            renderView();
+        }
+
+        function gradeExam() {
+            const details = problems.map((problem) => {
+                const answer = examState.answers[problem.id] || problem.broken;
+                return {
+                    id: problem.id,
+                    correct: canonicalizeSnippet(answer) === canonicalizeSnippet(problem.solution)
+                };
+            });
+
+            const correctCount = details.filter((detail) => detail.correct).length;
+            const percentage = Number(((correctCount / problems.length) * 100).toFixed(2));
+            let status = "Fail";
+            let certificate = "None";
+
+            if (percentage >= 80) {
+                status = "Pass";
+                certificate = "Professional";
+            } else if (percentage >= 50) {
+                status = "Pass";
+                certificate = "Intermediate";
+            }
+
+            return { correctCount, percentage, status, certificate, details };
+        }
+
+        function renderProblems() {
+            problemContainer.innerHTML = lessonGroups.map((group, groupIndex) => {
+                const cards = group.problems.map((problem, problemIndex) => {
+                    const flatProblem = problems[groupIndex * 3 + problemIndex];
+                    const answer = examState.answers[flatProblem.id] || flatProblem.broken;
+
+                    return `
+                        <article class="exam-problem-card" id="${flatProblem.id}">
+                            <div class="exam-problem-head">
+                                <span class="exam-problem-number">Problem ${flatProblem.number}</span>
+                                <span class="exam-problem-lesson">${escapeHtml(group.lesson)}</span>
+                            </div>
+                            <h3>${escapeHtml(problem.prompt)}</h3>
+                            <div class="exam-snippet-grid">
+                                <div class="exam-snippet-panel">
+                                    <span>Broken code</span>
+                                    <pre><code>${escapeHtml(problem.broken)}</code></pre>
+                                </div>
+                                <label class="exam-answer-panel" for="answer-${flatProblem.id}">
+                                    <span>Student answer</span>
+                                    <textarea id="answer-${flatProblem.id}" data-problem-id="${flatProblem.id}" spellcheck="false">${escapeHtml(answer)}</textarea>
+                                </label>
+                            </div>
+                            <div class="exam-feedback hidden" id="feedback-${flatProblem.id}"></div>
+                        </article>
+                    `;
+                }).join("");
+
+                return `
+                    <section class="exam-lesson-group">
+                        <div class="exam-lesson-heading">
+                            <span class="label">3 problems</span>
+                            <h2>${escapeHtml(group.lesson)}</h2>
+                        </div>
+                        <div class="exam-problem-grid">
+                            ${cards}
+                        </div>
+                    </section>
+                `;
+            }).join("");
+
+            problemContainer.querySelectorAll("textarea[data-problem-id]").forEach((textarea) => {
+                textarea.addEventListener("input", (event) => {
+                    const problemId = event.target.dataset.problemId;
+                    examState.answers[problemId] = event.target.value;
+                    saveState("Progress saved.");
+                    updateDashboard();
+                });
+            });
+        }
+
+        function updateDashboard() {
+            const editedCount = problems.filter((problem) => isEdited(problem, examState.answers[problem.id] || problem.broken)).length;
+            answeredDisplay.textContent = `${editedCount} / 60`;
+            candidateNameDisplay.textContent = examState.studentName || "Unnamed student";
+            timerDisplay.textContent = examState.deadlineAt ? formatTime(examState.deadlineAt - Date.now()) : "03:00:00";
+        }
+
+        function startTimer() {
+            if (timerInterval) {
+                window.clearInterval(timerInterval);
+            }
+
+            timerInterval = window.setInterval(() => {
+                if (!examState.deadlineAt || examState.submitted) {
+                    window.clearInterval(timerInterval);
+                    timerInterval = null;
+                    return;
+                }
+
+                const remaining = examState.deadlineAt - Date.now();
+                timerDisplay.textContent = formatTime(remaining);
+
+                if (remaining <= 0) {
+                    submitExam(true);
+                }
+            }, 1000);
+        }
+
+        function setSubmittedReview() {
+            if (!examState.grading) {
+                return;
+            }
+
+            problems.forEach((problem) => {
+                const textarea = document.querySelector(`#answer-${problem.id}`);
+                const card = document.getElementById(problem.id);
+                const feedback = document.getElementById(`feedback-${problem.id}`);
+                const detail = examState.grading.details.find((item) => item.id === problem.id);
+
+                if (!textarea || !card || !feedback || !detail) {
+                    return;
+                }
+
+                textarea.disabled = true;
+                card.classList.toggle("is-correct", detail.correct);
+                card.classList.toggle("is-incorrect", !detail.correct);
+                feedback.classList.remove("hidden");
+                feedback.innerHTML = detail.correct
+                    ? `<strong>Correct.</strong> This repair matches the expected HTML solution.`
+                    : `<strong>Needs correction.</strong> Expected answer:<pre><code>${escapeHtml(problem.solution)}</code></pre>`;
+            });
+        }
+
+        function updateResults() {
+            if (!examState.grading) {
+                return;
+            }
+
+            const grading = examState.grading;
+            const passed = grading.status === "Pass";
+            resultHeading.textContent = passed ? "Exam completed" : "Exam completed - not passed";
+            resultSummary.textContent = passed
+                ? `${examState.studentName} completed the HTML exam with ${grading.correctCount} correct answers out of 60.`
+                : `${examState.studentName} completed the HTML exam with ${grading.correctCount} correct answers out of 60, which is below the 50% passing score.`;
+            resultScore.textContent = `${grading.correctCount} / 60`;
+            resultPercent.textContent = `${grading.percentage}%`;
+            resultStatus.textContent = grading.status;
+            resultCertificate.textContent = grading.certificate;
+
+            if (grading.certificate === "None") {
+                certificateCard.classList.add("hidden");
+            } else {
+                certificateCard.classList.remove("hidden");
+                certificateTitle.textContent = `${grading.certificate} certificate`;
+                certificateName.textContent = examState.studentName;
+                certificateScore.textContent = `${grading.correctCount} / 60 (${grading.percentage}%)`;
+                certificateLevel.textContent = grading.certificate;
+                certificateDate.textContent = formatDate(examState.submittedAt);
+                certificateId.textContent = examState.certificateId;
+            }
+        }
+
+        function buildCertificateSvg() {
+            const level = `${examState.grading.certificate} certificate`;
+            const scoreLine = `${examState.grading.correctCount} / 60 (${examState.grading.percentage}%)`;
+            const issuedDate = formatDate(examState.submittedAt);
+
+            return `
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="990" viewBox="0 0 1400 990" role="img" aria-labelledby="title desc">
+  <title id="title">${escapeXml(level)}</title>
+  <desc id="desc">Certificate awarded to ${escapeXml(examState.studentName)} for passing the Modern Front End Tech HTML exam.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#122c44"/>
+      <stop offset="58%" stop-color="#244666"/>
+      <stop offset="100%" stop-color="#c2542d"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fff3bf"/>
+      <stop offset="45%" stop-color="#f6c65b"/>
+      <stop offset="100%" stop-color="#d28d1b"/>
+    </linearGradient>
+    <linearGradient id="ribbonWarm" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ef8d49"/>
+      <stop offset="100%" stop-color="#b34723"/>
+    </linearGradient>
+    <linearGradient id="ribbonCool" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#5aa9d8"/>
+      <stop offset="100%" stop-color="#1f5c8a"/>
+    </linearGradient>
+  </defs>
+  <rect width="1400" height="990" fill="url(#bg)"/>
+  <rect x="36" y="36" width="1328" height="918" rx="38" fill="none" stroke="rgba(255,255,255,0.26)"/>
+  <rect x="84" y="84" width="1232" height="822" rx="30" fill="rgba(255,248,239,0.06)" stroke="rgba(255,255,255,0.12)"/>
+  <rect x="120" y="120" width="1160" height="750" rx="26" fill="none" stroke="rgba(255,255,255,0.14)"/>
+  <g transform="translate(128 110)">
+    <circle cx="72" cy="72" r="46" fill="url(#gold)"/>
+    <circle cx="72" cy="72" r="29" fill="#fff7dc"/>
+    <path d="M55 118 L42 170 L72 149 L102 170 L89 118 Z" fill="url(#ribbonWarm)"/>
+    <path d="M72 47 L79 61 L95 63 L83 74 L86 91 L72 83 L58 91 L61 74 L49 63 L65 61 Z" fill="#cb7e12"/>
+  </g>
+  <g transform="translate(1120 110)">
+    <circle cx="72" cy="72" r="46" fill="url(#gold)"/>
+    <circle cx="72" cy="72" r="29" fill="#fff7dc"/>
+    <path d="M55 118 L42 170 L72 149 L102 170 L89 118 Z" fill="url(#ribbonCool)"/>
+    <path d="M72 47 L79 61 L95 63 L83 74 L86 91 L72 83 L58 91 L61 74 L49 63 L65 61 Z" fill="#cb7e12"/>
+  </g>
+  <g transform="translate(465 120)">
+    <rect x="0" y="0" width="470" height="66" rx="33" fill="rgba(255,255,255,0.1)"/>
+    <circle cx="235" cy="33" r="26" fill="url(#gold)"/>
+    <circle cx="235" cy="33" r="16" fill="#fff7dc"/>
+    <path d="M224 31 L232 39 L248 22" fill="none" stroke="#c2542d" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <text x="700" y="180" text-anchor="middle" fill="#ffe6a8" font-size="24" font-family="Trebuchet MS, Gill Sans, sans-serif" letter-spacing="8">MODERN FRONT END TECH</text>
+  <text x="700" y="300" text-anchor="middle" fill="#fffef8" font-size="70" font-weight="700" font-family="Georgia, Times New Roman, serif">${escapeXml(level)}</text>
+  <text x="700" y="362" text-anchor="middle" fill="rgba(255,240,212,0.88)" font-size="24" font-family="Trebuchet MS, Gill Sans, sans-serif" letter-spacing="4">AWARDED FOR SUCCESSFULLY COMPLETING THE HTML REPAIR EXAMINATION</text>
+  <text x="700" y="470" text-anchor="middle" fill="#ffffff" font-size="64" font-weight="700" font-family="Georgia, Times New Roman, serif">${escapeXml(examState.studentName)}</text>
+  <text x="700" y="530" text-anchor="middle" fill="rgba(255,248,238,0.88)" font-size="28" font-family="Trebuchet MS, Gill Sans, sans-serif">This candidate attempted and passed the exam by fixing broken HTML under timed conditions.</text>
+  <rect x="185" y="620" width="300" height="110" rx="22" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.18)"/>
+  <rect x="550" y="620" width="300" height="110" rx="22" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.18)"/>
+  <rect x="915" y="620" width="300" height="110" rx="22" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.18)"/>
+  <text x="220" y="664" fill="#ffe6a8" font-size="22" font-family="Trebuchet MS, Gill Sans, sans-serif" letter-spacing="2">EXAM SCORE</text>
+  <text x="220" y="707" fill="#ffffff" font-size="34" font-weight="700" font-family="Trebuchet MS, Gill Sans, sans-serif">${escapeXml(scoreLine)}</text>
+  <text x="585" y="664" fill="#ffe6a8" font-size="22" font-family="Trebuchet MS, Gill Sans, sans-serif" letter-spacing="2">DATE</text>
+  <text x="585" y="707" fill="#ffffff" font-size="34" font-weight="700" font-family="Trebuchet MS, Gill Sans, sans-serif">${escapeXml(issuedDate)}</text>
+  <text x="950" y="664" fill="#ffe6a8" font-size="22" font-family="Trebuchet MS, Gill Sans, sans-serif" letter-spacing="2">CERTIFICATE ID</text>
+  <text x="950" y="707" fill="#ffffff" font-size="28" font-weight="700" font-family="Trebuchet MS, Gill Sans, sans-serif">${escapeXml(examState.certificateId)}</text>
+  <line x1="220" y1="830" x2="560" y2="830" stroke="rgba(255,255,255,0.42)" stroke-width="2"/>
+  <text x="220" y="868" fill="rgba(255,248,238,0.78)" font-size="22" font-family="Trebuchet MS, Gill Sans, sans-serif">Certification authority</text>
+  <text x="220" y="824" fill="#fffef8" font-size="34" font-weight="700" font-family="Georgia, Times New Roman, serif">Modern Front End Tech</text>
+  <line x1="885" y1="830" x2="1185" y2="830" stroke="rgba(255,255,255,0.42)" stroke-width="2"/>
+  <text x="885" y="810" fill="#fff7dd" font-size="54" font-family="Brush Script MT, Segoe Script, cursive">Divyansh</text>
+  <text x="885" y="868" fill="rgba(255,248,238,0.78)" font-size="22" font-family="Trebuchet MS, Gill Sans, sans-serif">Owner signature</text>
+</svg>`.trim();
+        }
+
+        function downloadCertificate() {
+            if (!examState.grading || examState.grading.certificate === "None") {
+                return;
+            }
+
+            const svg = buildCertificateSvg();
+            const blob = new Blob([svg], { type: "image/svg+xml;charset=utf-8" });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            const safeName = (examState.studentName || "student").trim().replace(/[^a-z0-9]+/gi, "-").replace(/^-+|-+$/g, "").toLowerCase() || "student";
+            link.href = url;
+            link.download = `${safeName}-${examState.grading.certificate.toLowerCase()}-html-certificate.svg`;
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            URL.revokeObjectURL(url);
+        }
+
+        function renderView() {
+            const hasStarted = Boolean(examState.startedAt && examState.deadlineAt);
+            const hasSubmitted = Boolean(examState.submitted && examState.grading);
+
+            studentNameInput.value = examState.studentName || "";
+            renderProblems();
+            updateDashboard();
+
+            if (!hasStarted) {
+                startCard.classList.remove("hidden");
+                examShell.classList.add("hidden");
+                resultsSection.classList.add("hidden");
+                startStatus.textContent = "No active attempt found.";
+                return;
+            }
+
+            startCard.classList.add("hidden");
+            examShell.classList.remove("hidden");
+
+            if (!hasSubmitted && Date.now() >= examState.deadlineAt) {
+                submitExam(true);
+                return;
+            }
+
+            if (hasSubmitted) {
+                resultsSection.classList.remove("hidden");
+                updateResults();
+                setSubmittedReview();
+                submitExamButton.disabled = true;
+                saveStatus.textContent = "Submitted attempt restored from browser storage.";
+                timerDisplay.textContent = "00:00:00";
+                if (timerInterval) {
+                    window.clearInterval(timerInterval);
+                    timerInterval = null;
+                }
+                return;
+            }
+
+            resultsSection.classList.add("hidden");
+            submitExamButton.disabled = false;
+            saveStatus.textContent = "Your work is saved automatically in this browser.";
+            startTimer();
+        }
+
+        function submitExam(fromTimer = false) {
+            if (examState.submitted) {
+                return;
+            }
+
+            if (!fromTimer) {
+                const confirmed = window.confirm("Submit this exam now? The attempt will be graded immediately.");
+                if (!confirmed) {
+                    return;
+                }
+            }
+
+            examState.submitted = true;
+            examState.submittedAt = new Date().toISOString();
+            examState.grading = gradeExam();
+            examState.certificateId = examState.grading.certificate === "None" ? "" : buildCertificateId();
+            saveState(fromTimer ? "Time ended. Exam submitted automatically." : "Exam submitted.");
+            renderView();
+            resultsSection.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+
+        startForm.addEventListener("submit", (event) => {
+            event.preventDefault();
+            const studentName = studentNameInput.value.trim();
+
+            if (!studentName) {
+                startStatus.textContent = "Please enter the student name before starting.";
+                return;
+            }
+
+            examState = createEmptyState();
+            examState.studentName = studentName;
+            examState.startedAt = new Date().toISOString();
+            examState.deadlineAt = Date.now() + EXAM_DURATION_MS;
+            problems.forEach((problem) => {
+                examState.answers[problem.id] = problem.broken;
+            });
+            saveState("Exam started.");
+            renderView();
+        });
+
+        submitExamButton.addEventListener("click", () => submitExam(false));
+
+        restartExamButton.addEventListener("click", () => {
+            const confirmed = window.confirm("Clear this saved exam attempt and start again?");
+            if (!confirmed) {
+                return;
+            }
+
+            clearSavedAttempt();
+            startStatus.textContent = "Saved attempt cleared. You can start a new exam now.";
+        });
+
+        resetAttemptButton.addEventListener("click", () => {
+            const confirmed = window.confirm("Remove any saved exam attempt from this browser?");
+            if (!confirmed) {
+                return;
+            }
+
+            clearSavedAttempt();
+            startStatus.textContent = "Saved attempt cleared.";
+        });
+
+        printCertificateButton.addEventListener("click", () => {
+            document.body.classList.add("print-certificate");
+            window.print();
+            window.setTimeout(() => {
+                document.body.classList.remove("print-certificate");
+            }, 300);
+        });
+
+        downloadCertificateButton.addEventListener("click", downloadCertificate);
+
+        renderView();
+    </script>
+</body>
+</html>

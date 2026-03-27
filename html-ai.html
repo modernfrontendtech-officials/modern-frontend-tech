@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML AI assistant</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <style>
+        header{
+        padding: 10px;
+        margin: 0px;
+        background-color: rgb(191, 177, 21);
+        color: white;
+        font-style: italic;
+        font-family: "italic",cursive;
+        font-weight: bolder;
+        font-size: 36px;
+        text-align: center;
+        }
+        #p{
+        padding: 20px;
+        margin: 0px;
+        background-color: rgb(13, 239, 115);
+        color: rgb(229, 255, 0);
+        font-style: italic;
+        font-family: "italic",cursive;
+        font-weight: bold;
+        font-size: 18px;
+        text-align: center;
+        }
+        main{
+        padding: 8px;
+        background-color: rgb(0, 255, 251);
+        color: rgb(85, 0, 255);
+        font-style: oblique;
+        font-family: comic;
+        font-weight: light;
+        font-size: 18px;
+        }
+        #open{
+            padding: 8px;
+            background-color: rgb(233, 14, 225);
+            color: white;
+            font-style: oblique;
+            font-family: comic;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+        }
+        a{
+            color: white;
+            background-color: purple;
+            padding: 8px;
+            font-style: oblique;
+            font-family: comic;
+            text-decoration: none;
+        }
+        body{
+            background-color: lightgray;
+        }
+    </style>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <button id="open">open <br>
+            navigation bar</button>
+        <nav id="site-nav">
+            <button id="close">close <br>
+                navigation bar</button><br><br>
+            <a href="index.html" class="nav-link">home</a>
+            <a href="editor.html" class="nav-link">text editor</a>
+            <a href="whatishtml.html" class="nav-link">our html course</a>
+            <a href="exam.html" class="nav-link">html exam</a>
+            <a href="html-ai.html" class="nav-link">html ai</a>
+        </nav>
+        <img src="favicon.ico" alt="logo" height="75px" style="float: left;">
+        <p id="name">modern front end tech</p>
+        <h1>ask our html ai chatbot</h1>
+        <p id="p">This chatbot uses a hosted Groq API route on your website, not a browser-exposed API key and not a local knowledge base.</p>
+    </header>
+
+    <main class="assistant-page">
+        <section class="assistant-intro-card">
+            <span class="label">Hosted AI</span>
+            <h2>Ask HTML questions any time</h2>
+            <p>Use this chatbot to ask about HTML tags, structure, semantics, forms, tables, media, accessibility, and markup mistakes. The page sends your question to the deployed `/api/html-assistant` route powered by Groq.</p>
+            <div class="assistant-connection-card" id="assistant-connection-card">
+                <span class="assistant-connection-dot" id="assistant-connection-dot"></span>
+                <div>
+                    <strong id="assistant-connection-title">Checking API connection...</strong>
+                    <p id="assistant-connection-copy">The page is testing whether the hosted AI route is configured and reachable.</p>
+                </div>
+            </div>
+            <div class="assistant-prompt-list">
+                <button type="button" class="assistant-prompt-chip" data-prompt="Explain the difference between semantic tags and generic div tags in HTML.">semantic tags vs div</button>
+                <button type="button" class="assistant-prompt-chip" data-prompt="How do I create an accessible form with labels and required fields in HTML?">accessible forms</button>
+                <button type="button" class="assistant-prompt-chip" data-prompt="Why does my image not show in HTML and how do I debug it?">image debugging</button>
+                <button type="button" class="assistant-prompt-chip" data-prompt="Show me a correct HTML table with caption, thead, tbody, and two rows.">table example</button>
+            </div>
+        </section>
+
+        <section class="assistant-chat-shell">
+            <div class="assistant-messages" id="assistant-messages" aria-live="polite">
+                <article class="assistant-message assistant-message-ai">
+                    <span class="assistant-message-role">HTML AI</span>
+                    <p>Ask me any HTML question and I will answer through the hosted Groq API route.</p>
+                </article>
+            </div>
+
+            <form id="assistant-form" class="assistant-form">
+                <label for="assistant-question">Your HTML question</label>
+                <textarea id="assistant-question" rows="5" maxlength="3000" placeholder="Example: Why is my anchor tag not opening in a new tab?"></textarea>
+                <div class="assistant-form-actions">
+                    <button type="submit" id="assistant-submit">ask html ai</button>
+                    <button type="button" class="secondary-action" id="assistant-clear">clear chat</button>
+                    <button type="button" class="secondary-action" id="assistant-recheck">recheck api</button>
+                </div>
+                <p id="assistant-status" class="assistant-status"></p>
+            </form>
+        </section>
+    </main>
+
+    <script src="nav.js"></script>
+    <script>
+        const CHAT_STORAGE_KEY = "mft_html_ai_chat_v2";
+        const form = document.getElementById("assistant-form");
+        const questionInput = document.getElementById("assistant-question");
+        const messages = document.getElementById("assistant-messages");
+        const status = document.getElementById("assistant-status");
+        const submitButton = document.getElementById("assistant-submit");
+        const clearButton = document.getElementById("assistant-clear");
+        const recheckButton = document.getElementById("assistant-recheck");
+        const quickPrompts = document.querySelectorAll(".assistant-prompt-chip");
+        const connectionCard = document.getElementById("assistant-connection-card");
+        const connectionDot = document.getElementById("assistant-connection-dot");
+        const connectionTitle = document.getElementById("assistant-connection-title");
+        const connectionCopy = document.getElementById("assistant-connection-copy");
+        let chatHistory = readChatHistory();
+
+        function escapeHtml(value) {
+            return value
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;");
+        }
+
+        function readChatHistory() {
+            try {
+                const raw = localStorage.getItem(CHAT_STORAGE_KEY);
+                if (!raw) return [];
+                const parsed = JSON.parse(raw);
+                return Array.isArray(parsed) ? parsed : [];
+            } catch {
+                return [];
+            }
+        }
+
+        function saveChatHistory() {
+            try {
+                localStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(chatHistory));
+            } catch {
+                status.textContent = "Chat works, but browser storage is unavailable.";
+            }
+        }
+
+        function setConnectionState(state, title, copy) {
+            connectionCard.dataset.state = state;
+            connectionTitle.textContent = title;
+            connectionCopy.textContent = copy;
+        }
+
+        function appendMessage(role, text) {
+            const article = document.createElement("article");
+            article.className = role === "user"
+                ? "assistant-message assistant-message-user"
+                : "assistant-message assistant-message-ai";
+
+            article.innerHTML = `
+                <span class="assistant-message-role">${role === "user" ? "You" : "HTML AI"}</span>
+                <p>${escapeHtml(text).replace(/\n/g, "<br>")}</p>
+            `;
+
+            messages.appendChild(article);
+            messages.scrollTop = messages.scrollHeight;
+        }
+
+        function renderChatHistory() {
+            messages.innerHTML = "";
+
+            if (!chatHistory.length) {
+                appendMessage("ai", "Ask me any HTML question and I will answer through the hosted Groq API route.");
+                return;
+            }
+
+            chatHistory.forEach((message) => {
+                appendMessage(message.role, message.text);
+            });
+        }
+
+        async function checkApiConnection() {
+            setConnectionState("checking", "Checking API connection...", "The page is testing whether the hosted AI route is configured and reachable.");
+
+            try {
+                const response = await fetch("/api/html-assistant-status");
+                const payload = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(payload.message || "The health route did not respond correctly.");
+                }
+
+                if (!payload.htmlAssistantConfigured) {
+                    setConnectionState("offline", "API route found, but AI is not configured", "Set GROQ_API_KEY on the deployed host or in a local .env/.env.local file so the assistant can answer.");
+                    status.textContent = "The chatbot page is ready, but the AI API key is missing.";
+                    return false;
+                }
+
+                setConnectionState("online", "API connected", `Hosted route is reachable and the HTML assistant is configured with ${payload.provider} / ${payload.htmlAssistantModel}.`);
+                status.textContent = "API connection looks good.";
+                return true;
+            } catch (error) {
+                setConnectionState("offline", "API connection failed", error.message || "The hosted API route could not be reached.");
+                status.textContent = "The API connection check failed.";
+                return false;
+            }
+        }
+
+        async function askAssistant(question) {
+            appendMessage("user", question);
+            chatHistory.push({ role: "user", text: question });
+            saveChatHistory();
+            status.textContent = "Thinking...";
+            submitButton.disabled = true;
+            questionInput.disabled = true;
+
+            try {
+                const response = await fetch("/api/html-assistant", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        question,
+                        history: chatHistory.slice(-12)
+                    })
+                });
+
+                const payload = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(payload.message || "The HTML assistant could not answer right now.");
+                }
+
+                appendMessage("ai", payload.answer);
+                chatHistory.push({ role: "assistant", text: payload.answer });
+                saveChatHistory();
+                status.textContent = payload.model
+                    ? `Answered by ${payload.model}.`
+                    : "Answer received.";
+                setConnectionState("online", "API connected", payload.model
+                    ? `Hosted route answered successfully with ${payload.model}.`
+                    : "Hosted route answered successfully.");
+            } catch (error) {
+                appendMessage("ai", error.message || "Something went wrong while calling the hosted API.");
+                chatHistory.push({ role: "assistant", text: error.message || "Something went wrong while calling the hosted API." });
+                saveChatHistory();
+                status.textContent = "The request failed.";
+                setConnectionState("offline", "API request failed", error.message || "The hosted AI route returned an error.");
+            } finally {
+                submitButton.disabled = false;
+                questionInput.disabled = false;
+                questionInput.focus();
+            }
+        }
+
+        form.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            const question = questionInput.value.trim();
+
+            if (!question) {
+                status.textContent = "Please enter an HTML question first.";
+                questionInput.focus();
+                return;
+            }
+
+            questionInput.value = "";
+            await askAssistant(question);
+        });
+
+        clearButton.addEventListener("click", () => {
+            chatHistory = [];
+            saveChatHistory();
+            renderChatHistory();
+            status.textContent = "Chat cleared.";
+            questionInput.focus();
+        });
+
+        recheckButton.addEventListener("click", () => {
+            checkApiConnection();
+        });
+
+        quickPrompts.forEach((button) => {
+            button.addEventListener("click", () => {
+                questionInput.value = button.dataset.prompt || "";
+                questionInput.focus();
+            });
+        });
+
+        questionInput.addEventListener("keydown", (event) => {
+            if ((event.ctrlKey || event.metaKey) && event.key === "Enter") {
+                event.preventDefault();
+                form.requestSubmit();
+            }
+        });
+
+        renderChatHistory();
+        checkApiConnection();
+    </script>
+</body>
+</html>
