@@ -383,6 +383,31 @@
     }
   }
 
+  function bindPressAction(element, handler) {
+    let lastHandledAt = 0;
+
+    function invoke(event) {
+      const now = Date.now();
+      if (now - lastHandledAt < 250) {
+        return;
+      }
+
+      lastHandledAt = now;
+      event.preventDefault();
+      event.stopPropagation();
+      handler();
+    }
+
+    element.addEventListener("click", invoke);
+    element.addEventListener("pointerup", (event) => {
+      if (event.pointerType === "mouse") {
+        return;
+      }
+
+      invoke(event);
+    });
+  }
+
   launcher.addEventListener("pointerdown", (event) => {
     if (event.button !== 0 && event.pointerType !== "touch") {
       return;
@@ -405,7 +430,7 @@
   launcher.addEventListener("pointerup", finishPointer);
   launcher.addEventListener("pointercancel", finishPointer);
 
-  closeButton.addEventListener("click", () => {
+  bindPressAction(closeButton, () => {
     setPanelOpen(false);
   });
 
@@ -417,7 +442,7 @@
     event.stopPropagation();
   });
 
-  clearButton.addEventListener("click", () => {
+  bindPressAction(clearButton, () => {
     state.chatHistory = [];
     saveChatHistory();
     renderChatHistory();
