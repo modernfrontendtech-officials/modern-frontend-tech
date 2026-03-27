@@ -31,8 +31,7 @@
         <div class="mft-ai-panel-identity">
           <div class="mft-ai-panel-avatar" aria-hidden="true">AI</div>
           <div>
-            <strong>HTML Study Buddy</strong>
-            <p class="mft-ai-connection" id="mft-ai-connection">Checking API...</p>
+            <strong>HTML Buddy</strong>
           </div>
         </div>
         <div class="mft-ai-panel-actions">
@@ -57,7 +56,6 @@
   const launcher = wrapper.querySelector(".mft-ai-launcher");
   const launcherDot = wrapper.querySelector(".mft-ai-launcher-dot");
   const panel = wrapper.querySelector(".mft-ai-panel");
-  const connection = wrapper.querySelector("#mft-ai-connection");
   const messages = wrapper.querySelector(".mft-ai-messages");
   const form = wrapper.querySelector(".mft-ai-form");
   const input = wrapper.querySelector("#mft-ai-input");
@@ -188,25 +186,18 @@
     }
 
     const viewport = getViewportBounds();
-    const buttonRect = launcher.getBoundingClientRect();
-    const panelWidth = Math.min(380, viewport.width - 24);
-    const panelHeight = Math.min(560, viewport.height - 24);
-    const preferredLeft = buttonRect.right - panelWidth;
-    const preferredTop = buttonRect.top - panelHeight - 16;
+    const isCompact = viewport.width <= 860;
+    const panelWidth = isCompact
+      ? viewport.width
+      : Math.max(320, Math.round(viewport.width * 0.2));
 
-    const left = clamp(preferredLeft, 12, viewport.width - panelWidth - 12);
-    let top = preferredTop;
-
-    if (top < 12) {
-      top = buttonRect.bottom + 16;
-    }
-
-    top = clamp(top, 12, viewport.height - panelHeight - 12);
+    const left = isCompact ? 0 : viewport.width - panelWidth;
 
     panel.style.left = `${left}px`;
-    panel.style.top = `${top}px`;
+    panel.style.top = "0";
     panel.style.width = `${panelWidth}px`;
-    panel.style.maxHeight = `${panelHeight}px`;
+    panel.style.height = `${viewport.height}px`;
+    panel.style.maxHeight = `${viewport.height}px`;
   }
 
   function setPanelOpen(isOpen) {
@@ -279,7 +270,7 @@
   function setConnectionState(kind, text) {
     state.apiState = kind;
     wrapper.dataset.connection = kind;
-    connection.textContent = text;
+    launcher.title = text;
     launcherDot.textContent = kind;
   }
 
@@ -416,6 +407,14 @@
 
   closeButton.addEventListener("click", () => {
     setPanelOpen(false);
+  });
+
+  panel.addEventListener("pointerdown", (event) => {
+    event.stopPropagation();
+  });
+
+  panel.addEventListener("click", (event) => {
+    event.stopPropagation();
   });
 
   clearButton.addEventListener("click", () => {
