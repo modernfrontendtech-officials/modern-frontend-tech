@@ -207,7 +207,8 @@
             {
                 lesson: "Lesson 2: First code",
                 problems: [
-                    { prompt: "Repair the document so the title, body, and html elements all close properly.", broken: `<html><head><title>My Page<title></head><body><h1>My Page</h1>`, solution: `<html><head><title>My Page</title></head><body><h1>My Page</h1></body></html>` },
+                    { prompt: "Repair the document so the title, body, and html elements all close properly.", broken: `<html><head><title>My Page<title></head><body><h1>My Page</h1>`, solution: `<html><head><title>My Page</title></head><body><h1>My Page</h1>
+</body></html>` },
                     { prompt: "Fix the card snippet so the paragraph and button both close correctly inside the section.", broken: `<section><h2>First project</h2><p>Create your first page<button>Start now</section>`, solution: `<section><h2>First project</h2><p>Create your first page</p><button>Start now</button></section>` },
                     { prompt: "Repair this article so the heading, paragraph, and article structure are all complete.", broken: `<article><h1>Practice page</h1><p>Write code every day</article>`, solution: `<article><h1>Practice page</h1><p>Write code every day</p></article>` }
                 ]
@@ -223,9 +224,14 @@
             {
                 lesson: "Lesson 4: HTML structure",
                 problems: [
-                    { prompt: "Repair this page shell so head, body, and main are all placed and closed correctly.", broken: `<html lang="en"><head><meta charset="UTF-8"><title>Doc</title><body><main><p>Hello</p></body></html>`, solution: `<html lang="en"><head><meta charset="UTF-8"><title>Doc</title></head><body><main><p>Hello</p></main></body></html>` },
-                    { prompt: "Fix the layout structure so header, main, and section all close correctly.", broken: `<body><header><h1>Guide</h1><main><section><p>Start learning</p></section></body>`, solution: `<body><header><h1>Guide</h1></header><main><section><p>Start learning</p></section></main></body>` },
-                    { prompt: "Repair the page so the aside and footer are inside the body correctly.", broken: `<html lang="en"><head><title>Course</title></head><body><aside><p>Tips</p><footer>End</footer></html>`, solution: `<html lang="en"><head><title>Course</title></head><body><aside><p>Tips</p></aside><footer>End</footer></body></html>` }
+                    { prompt: "Repair this page shell so head, body, and main are all placed and closed correctly.", broken: `<html lang="en"><head><meta charset="UTF-8"><title>Doc</title><body><main><p>Hello</p>
+</body></html>`, solution: `<html lang="en"><head><meta charset="UTF-8"><title>Doc</title></head><body><main><p>Hello</p></main>
+</body></html>` },
+                    { prompt: "Fix the layout structure so header, main, and section all close correctly.", broken: `<body><header><h1>Guide</h1><main><section><p>Start learning</p></section>
+</body>`, solution: `<body><header><h1>Guide</h1></header><main><section><p>Start learning</p></section></main>
+</body>` },
+                    { prompt: "Repair the page so the aside and footer are inside the body correctly.", broken: `<html lang="en"><head><title>Course</title></head><body><aside><p>Tips</p><footer>End</footer></html>`, solution: `<html lang="en"><head><title>Course</title></head><body><aside><p>Tips</p></aside><footer>End</footer>
+</body></html>` }
                 ]
             },
             {
@@ -264,7 +270,9 @@
                 lesson: "Lesson 9: Title",
                 problems: [
                     { prompt: "Repair the page title so the title tag closes correctly before the metadata continues.", broken: `<head><title>HTML Exam<title><meta charset="UTF-8"></head>`, solution: `<head><title>HTML Exam</title><meta charset="UTF-8"></head>` },
-                    { prompt: "Fix this page shell so the title closes correctly before the body starts.", broken: `<head><title>Student Portal</head><body><h1>Portal</h1></body>`, solution: `<head><title>Student Portal</title></head><body><h1>Portal</h1></body>` },
+                    { prompt: "Fix this page shell so the title closes correctly before the body starts.", broken: `<head><title>Student Portal</head><body><h1>Portal</h1>
+</body>`, solution: `<head><title>Student Portal</title></head><body><h1>Portal</h1>
+</body>` },
                     { prompt: "Repair the misspelled title tags in this head snippet.", broken: `<head><titel>Practice and Revision</titel><meta name="description" content="Study page"></head>`, solution: `<head><title>Practice and Revision</title><meta name="description" content="Study page"></head>` }
                 ]
             },
@@ -928,5 +936,6 @@
 
         renderView();
     </script>
+    <script src="ai-widget.js"></script>
 </body>
 </html>

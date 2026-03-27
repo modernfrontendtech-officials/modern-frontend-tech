@@ -80,11 +80,11 @@
         <p id="p">This chatbot uses a hosted Groq API route on your website, not a browser-exposed API key and not a local knowledge base.</p>
     </header>
 
-    <main class="assistant-page">
-        <section class="assistant-intro-card">
-            <span class="label">Hosted AI</span>
-            <h2>Ask HTML questions any time</h2>
-            <p>Use this chatbot to ask about HTML tags, structure, semantics, forms, tables, media, accessibility, and markup mistakes. The page sends your question to the deployed `/api/html-assistant` route powered by Groq.</p>
+    <main class="assistant-page assistant-layout">
+        <aside class="assistant-intro-card assistant-sidebar">
+            <span class="label">HTML Chat</span>
+            <h2>Your friendly HTML study buddy</h2>
+            <p>Ask beginner questions, debug broken tags, request examples, or keep a back-and-forth conversation while you learn. This page is meant to feel like a real chat, not a cold API tool.</p>
             <div class="assistant-connection-card" id="assistant-connection-card">
                 <span class="assistant-connection-dot" id="assistant-connection-dot"></span>
                 <div>
@@ -92,31 +92,50 @@
                     <p id="assistant-connection-copy">The page is testing whether the hosted AI route is configured and reachable.</p>
                 </div>
             </div>
-            <div class="assistant-prompt-list">
-                <button type="button" class="assistant-prompt-chip" data-prompt="Explain the difference between semantic tags and generic div tags in HTML.">semantic tags vs div</button>
-                <button type="button" class="assistant-prompt-chip" data-prompt="How do I create an accessible form with labels and required fields in HTML?">accessible forms</button>
-                <button type="button" class="assistant-prompt-chip" data-prompt="Why does my image not show in HTML and how do I debug it?">image debugging</button>
-                <button type="button" class="assistant-prompt-chip" data-prompt="Show me a correct HTML table with caption, thead, tbody, and two rows.">table example</button>
+            <div class="assistant-sidebar-block">
+                <h3>Try asking</h3>
+                <div class="assistant-prompt-list">
+                    <button type="button" class="assistant-prompt-chip" data-prompt="Explain the difference between semantic tags and generic div tags in HTML.">semantic tags vs div</button>
+                    <button type="button" class="assistant-prompt-chip" data-prompt="How do I create an accessible form with labels and required fields in HTML?">accessible forms</button>
+                    <button type="button" class="assistant-prompt-chip" data-prompt="Why does my image not show in HTML and how do I debug it?">image debugging</button>
+                    <button type="button" class="assistant-prompt-chip" data-prompt="Show me a correct HTML table with caption, thead, tbody, and two rows.">table example</button>
+                </div>
             </div>
-        </section>
+            <div class="assistant-sidebar-block assistant-sidebar-note">
+                <h3>Good for</h3>
+                <ul>
+                    <li>Fixing broken HTML</li>
+                    <li>Understanding tags and semantics</li>
+                    <li>Getting quick examples while you practice</li>
+                </ul>
+            </div>
+        </aside>
 
         <section class="assistant-chat-shell">
-            <div class="assistant-messages" id="assistant-messages" aria-live="polite">
-                <article class="assistant-message assistant-message-ai">
-                    <span class="assistant-message-role">HTML AI</span>
-                    <p>Ask me any HTML question and I will answer through the hosted Groq API route.</p>
-                </article>
-            </div>
-
-            <form id="assistant-form" class="assistant-form">
-                <label for="assistant-question">Your HTML question</label>
-                <textarea id="assistant-question" rows="5" maxlength="3000" placeholder="Example: Why is my anchor tag not opening in a new tab?"></textarea>
-                <div class="assistant-form-actions">
-                    <button type="submit" id="assistant-submit">ask html ai</button>
-                    <button type="button" class="secondary-action" id="assistant-clear">clear chat</button>
+            <div class="assistant-chat-topbar">
+                <div class="assistant-chat-profile">
+                    <div class="assistant-chat-profile-avatar" aria-hidden="true">AI</div>
+                    <div class="assistant-chat-profile-copy">
+                        <span class="assistant-chat-eyebrow">Live conversation</span>
+                        <h2>HTML AI Chat</h2>
+                        <p>Your HTML buddy is here for debugging, examples, and back-and-forth practice.</p>
+                    </div>
+                </div>
+                <div class="assistant-topbar-actions">
+                    <button type="button" class="secondary-action" id="assistant-clear">new chat</button>
                     <button type="button" class="secondary-action" id="assistant-recheck">recheck api</button>
                 </div>
-                <p id="assistant-status" class="assistant-status"></p>
+            </div>
+
+            <div class="assistant-messages" id="assistant-messages" aria-live="polite" role="log"></div>
+
+            <form id="assistant-form" class="assistant-form">
+                <label for="assistant-question">Message HTML AI</label>
+                <textarea id="assistant-question" rows="4" maxlength="3000" placeholder="Type your HTML question here... ask naturally, like you would in a real chat."></textarea>
+                <div class="assistant-form-actions">
+                    <p id="assistant-status" class="assistant-status">Press Ctrl + Enter to send quickly.</p>
+                    <button type="submit" id="assistant-submit">send message</button>
+                </div>
             </form>
         </section>
     </main>
@@ -171,15 +190,28 @@
             connectionCopy.textContent = copy;
         }
 
-        function appendMessage(role, text) {
+        function formatTime(value) {
+            return new Date(value).toLocaleTimeString([], {
+                hour: "numeric",
+                minute: "2-digit"
+            });
+        }
+
+        function appendMessage(role, text, createdAt = new Date().toISOString()) {
             const article = document.createElement("article");
             article.className = role === "user"
                 ? "assistant-message assistant-message-user"
                 : "assistant-message assistant-message-ai";
 
             article.innerHTML = `
-                <span class="assistant-message-role">${role === "user" ? "You" : "HTML AI"}</span>
-                <p>${escapeHtml(text).replace(/\n/g, "<br>")}</p>
+                <div class="assistant-message-avatar">${role === "user" ? "You" : "AI"}</div>
+                <div class="assistant-message-card">
+                    <div class="assistant-message-meta">
+                        <span class="assistant-message-role">${role === "user" ? "You" : "HTML AI"}</span>
+                        <time class="assistant-message-time">${formatTime(createdAt)}</time>
+                    </div>
+                    <p>${escapeHtml(text).replace(/\n/g, "<br>")}</p>
+                </div>
             `;
 
             messages.appendChild(article);
@@ -190,12 +222,12 @@
             messages.innerHTML = "";
 
             if (!chatHistory.length) {
-                appendMessage("ai", "Ask me any HTML question and I will answer through the hosted Groq API route.");
+                appendMessage("ai", "Hey, I am your HTML study buddy. Ask me to explain tags, debug markup, or show examples and we will work through it together.");
                 return;
             }
 
             chatHistory.forEach((message) => {
-                appendMessage(message.role, message.text);
+                appendMessage(message.role, message.text, message.createdAt || new Date().toISOString());
             });
         }
 
@@ -227,10 +259,11 @@
         }
 
         async function askAssistant(question) {
-            appendMessage("user", question);
-            chatHistory.push({ role: "user", text: question });
+            const sentAt = new Date().toISOString();
+            appendMessage("user", question, sentAt);
+            chatHistory.push({ role: "user", text: question, createdAt: sentAt });
             saveChatHistory();
-            status.textContent = "Thinking...";
+            status.textContent = "HTML AI is thinking...";
             submitButton.disabled = true;
             questionInput.disabled = true;
 
@@ -252,20 +285,23 @@
                     throw new Error(payload.message || "The HTML assistant could not answer right now.");
                 }
 
-                appendMessage("ai", payload.answer);
-                chatHistory.push({ role: "assistant", text: payload.answer });
+                const repliedAt = new Date().toISOString();
+                appendMessage("ai", payload.answer, repliedAt);
+                chatHistory.push({ role: "assistant", text: payload.answer, createdAt: repliedAt });
                 saveChatHistory();
                 status.textContent = payload.model
-                    ? `Answered by ${payload.model}.`
-                    : "Answer received.";
+                    ? `Replied with ${payload.model}.`
+                    : "Reply received.";
                 setConnectionState("online", "API connected", payload.model
                     ? `Hosted route answered successfully with ${payload.model}.`
                     : "Hosted route answered successfully.");
             } catch (error) {
-                appendMessage("ai", error.message || "Something went wrong while calling the hosted API.");
-                chatHistory.push({ role: "assistant", text: error.message || "Something went wrong while calling the hosted API." });
+                const failedReply = error.message || "Something went wrong while calling the hosted API.";
+                const failedAt = new Date().toISOString();
+                appendMessage("ai", failedReply, failedAt);
+                chatHistory.push({ role: "assistant", text: failedReply, createdAt: failedAt });
                 saveChatHistory();
-                status.textContent = "The request failed.";
+                status.textContent = "The message failed.";
                 setConnectionState("offline", "API request failed", error.message || "The hosted AI route returned an error.");
             } finally {
                 submitButton.disabled = false;
@@ -292,7 +328,7 @@
             chatHistory = [];
             saveChatHistory();
             renderChatHistory();
-            status.textContent = "Chat cleared.";
+            status.textContent = "Started a fresh chat.";
             questionInput.focus();
         });
 
@@ -317,5 +353,6 @@
         renderChatHistory();
         checkApiConnection();
     </script>
+    <script src="ai-widget.js"></script>
 </body>
 </html>
