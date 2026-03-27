@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>html text editor</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <style>
+        header{
+        padding: 10px;
+        margin: 0px;
+        background-color: rgb(191, 177, 21);
+        color: white;
+        font-style: italic;
+        font-family: "italic",cursive;
+        font-weight: bolder;
+        font-size: 36px;
+        text-align: center; 
+        }
+        #p{
+        padding: 20px;
+        margin: 0px;
+        background-color: rgb(13, 239, 115);
+        color: rgb(229, 255, 0);
+        font-style: italic;
+        font-family: "italic",cursive;
+        font-weight: bold;
+        font-size: 18px;
+        text-align: center; 
+        }
+        main{
+        padding: 8px;
+        background-color: rgb(0, 255, 251);
+        color: rgb(85, 0, 255);
+        font-style: oblique;
+        font-family: comic;
+        font-weight: light;
+        font-size: 18px;
+        }
+        h2#h2{
+        padding: 8px;
+        background-color: rgb(255, 0, 0);
+        color: rgb(255, 255, 0);
+        font-style: oblique;
+        font-family: algerian;
+        font-weight: bold;
+        font-size: 24px;
+        text-align: center;
+        }
+        #open{
+            padding: 8px;
+            background-color: rgb(233, 14, 225);
+            color: white;
+            font-style: oblique;
+            font-family: comic;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+        }
+        a{
+            color: white;
+            background-color: purple;
+            padding: 8px;
+            font-style: oblique;
+            font-family: comic;
+            text-decoration: none;
+          }
+          body{
+            background-color: lightgray;
+          }
+    </style>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <button id="open">open <br>
+            navigation bar</button>
+        <nav id="site-nav">
+            <button id="close">close <br>
+                navigation bar</button><br><br>
+            <a href="index.html" class="nav-link">home</a>
+            <a href="editor.html" class="nav-link">text editor</a>
+            <a href="whatishtml.html" class="nav-link">what is html?</a>
+            <a href="firstcode.html" class="nav-link">first code</a>
+            <a href="movingforward.html" class="nav-link">Images,Hyperlink,Comment and text formatting</a>
+            <a href="htmlstructure.html" class="nav-link">html structure</a>
+            <a href="quotationandcitiation.html" class="nav-link">quotation and citation</a>
+            <a href="links.html" class="nav-link">links</a>
+            <a href="images.html" class="nav-link">images</a>
+            <a href="favicon.html" class="nav-link">favicon</a>
+            <a href="title.html" class="nav-link">title</a>
+            <a href="table.html" class="nav-link">table</a>
+            <a href="lists.html" class="nav-link">lists</a>
+            <a href="block&inline.html" class="nav-link">block and inline elements</a>
+            <a href="divs,classes,ids.html" class="nav-link">divs,classes and ids</a>
+            <a href="buttons,iframes.html" class="nav-link">buttons and iframes</a>
+            <a href="everythinginhead.html" class="nav-link">everything in head</a>
+            <a href="computercode.html" class="nav-link">computer code</a>
+            <a href="senmantics.html" class="nav-link">semantics</a>
+            <a href="htmlsymbols.html" class="nav-link">html symbols</a>
+            <a href="canvas.html" class="nav-link">canvas</a>
+            <a href="fromspart1.html" class="nav-link">forms part 1</a>
+            <a href="forms2.html" class="nav-link">forms part 2</a>
+            <a href="forms3.html" class="nav-link">forms part 3</a>
+            <a href="multimedia.html" class="nav-link">multimedia</a>
+            <a href="word.html" class="nav-link">word</a>
+        </nav>
+        <img src="favicon.ico" alt="logo" height="75px" style="float: left;">
+        <p id="name">modern front end tech</p>
+        <h1>practice html inside your own text editor</h1>
+        <p id="p">Write HTML, CSS, and JavaScript in one place and see the result live without leaving your website.</p>
+    </header>
+
+    <main class="editor-page">
+        <section class="editor-shell">
+            <section class="editor-panel">
+                <h2>write your code</h2>
+                <p class="editor-intro">Use the editor like a sandbox. Your latest code is saved in this browser automatically.</p>
+                <div class="editor-grid">
+                    <div class="editor-field">
+                        <label for="html-code">HTML</label>
+                        <textarea id="html-code" spellcheck="false"></textarea>
+                    </div>
+                    <div class="editor-field">
+                        <label for="css-code">CSS</label>
+                        <textarea id="css-code" spellcheck="false"></textarea>
+                    </div>
+                    <div class="editor-field">
+                        <label for="js-code">JavaScript</label>
+                        <textarea id="js-code" spellcheck="false"></textarea>
+                    </div>
+                    <div class="editor-toolbar">
+                        <button type="button" id="run-code">run code</button>
+                        <button type="button" id="reset-code" class="secondary-action">reset sample</button>
+                        <button type="button" id="download-code" class="secondary-action">download html</button>
+                    </div>
+                    <p id="editor-status" class="editor-status"></p>
+                </div>
+            </section>
+
+            <section class="editor-preview-panel">
+                <h2>live result</h2>
+                <p>The preview updates when you run the code. Try changing the heading, colors, and button text first.</p>
+                <iframe id="preview-frame" class="editor-preview-frame" title="Code preview" sandbox="allow-scripts"></iframe>
+            </section>
+        </section>
+
+        <section class="editor-help">
+            <h2>how to use it</h2>
+            <div class="editor-help-grid">
+                <article class="editor-tip">
+                    <strong>Start with HTML</strong>
+                    <p>Write tags in the first box and press <code>run code</code> to see the structure appear in the preview.</p>
+                </article>
+                <article class="editor-tip">
+                    <strong>Add CSS next</strong>
+                    <p>Use the CSS box to style your headings, paragraphs, buttons, and layouts without touching the lesson pages.</p>
+                </article>
+                <article class="editor-tip">
+                    <strong>Use JavaScript when ready</strong>
+                    <p>Try simple button clicks and text changes in the JavaScript box when you want interactivity.</p>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <script src="nav.js"></script>
+    <script>
+        const STORAGE_KEY = "mft_editor_state_v1";
+        const defaultState = {
+            html: `<section class="card">\n  <p class="eyebrow">My first live project</p>\n  <h1>Hello from Modern Front End Tech</h1>\n  <p>I am learning HTML by writing real code inside my own editor.</p>\n  <button id="hello-btn">Click me</button>\n  <p id="message"></p>\n</section>`,
+            css: `body {\n  margin: 0;\n  min-height: 100vh;\n  display: grid;\n  place-items: center;\n  background: linear-gradient(135deg, #fff8e7, #e4f0ff);\n  font-family: Arial, sans-serif;\n}\n\n.card {\n  width: min(92vw, 420px);\n  padding: 28px;\n  border-radius: 24px;\n  background: white;\n  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.16);\n}\n\n.eyebrow {\n  font-size: 12px;\n  font-weight: 700;\n  letter-spacing: 0.14em;\n  text-transform: uppercase;\n  color: #c2410c;\n}\n\nh1 {\n  margin-bottom: 12px;\n  color: #0f172a;\n}\n\np {\n  color: #334155;\n}\n\nbutton {\n  padding: 12px 18px;\n  border: none;\n  border-radius: 999px;\n  background: #ea580c;\n  color: white;\n  cursor: pointer;\n}`,
+            js: `const button = document.getElementById("hello-btn");\nconst message = document.getElementById("message");\n\nbutton.addEventListener("click", () => {\n  message.textContent = "Nice. You just made your page interactive.";\n});`
+        };
+
+        const htmlInput = document.getElementById("html-code");
+        const cssInput = document.getElementById("css-code");
+        const jsInput = document.getElementById("js-code");
+        const frame = document.getElementById("preview-frame");
+        const status = document.getElementById("editor-status");
+        const runButton = document.getElementById("run-code");
+        const resetButton = document.getElementById("reset-code");
+        const downloadButton = document.getElementById("download-code");
+
+        function readState() {
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY);
+                if (!raw) return defaultState;
+                return { ...defaultState, ...JSON.parse(raw) };
+            } catch {
+                return defaultState;
+            }
+        }
+
+        function saveState() {
+            const state = {
+                html: htmlInput.value,
+                css: cssInput.value,
+                js: jsInput.value
+            };
+
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+                status.textContent = "Saved in this browser.";
+            } catch {
+                status.textContent = "Preview works, but browser storage is unavailable.";
+            }
+        }
+
+        function buildDocument() {
+            return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>${cssInput.value}</style>
+</head>
+<body>
+${htmlInput.value}
+<script>
+${jsInput.value}
+<\/script>
+</body>
+</html>`;
+        }
+
+        function runPreview() {
+            frame.srcdoc = buildDocument();
+            saveState();
+            status.textContent = "Preview updated.";
+        }
+
+        function resetEditor() {
+            htmlInput.value = defaultState.html;
+            cssInput.value = defaultState.css;
+            jsInput.value = defaultState.js;
+            runPreview();
+            status.textContent = "Sample code restored.";
+        }
+
+        function downloadDocument() {
+            const blob = new Blob([buildDocument()], { type: "text/html" });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = "modern-frontend-tech-editor.html";
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            URL.revokeObjectURL(url);
+            status.textContent = "HTML file downloaded.";
+        }
+
+        const initialState = readState();
+        htmlInput.value = initialState.html;
+        cssInput.value = initialState.css;
+        jsInput.value = initialState.js;
+        runPreview();
+
+        runButton.addEventListener("click", runPreview);
+        resetButton.addEventListener("click", resetEditor);
+        downloadButton.addEventListener("click", downloadDocument);
+
+        [htmlInput, cssInput, jsInput].forEach((input) => {
+            input.addEventListener("input", saveState);
+            input.addEventListener("keydown", (event) => {
+                if ((event.ctrlKey || event.metaKey) && event.key === "Enter") {
+                    event.preventDefault();
+                    runPreview();
+                }
+            });
+        });
+    </script>
+    <script src="sekai-widget.js"></script>
+</body>
+</html>
