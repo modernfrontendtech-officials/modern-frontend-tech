@@ -229,7 +229,7 @@
                 name: data.user?.name || payload.name || ""
               });
             }
-            // Save auth token for forum system
+            // Save auth token for the site session.
             if (data.user) {
               const authToken = btoa(JSON.stringify({
                 id: data.user.id,
@@ -238,8 +238,7 @@
               }));
               localStorage.setItem("auth", authToken);
             }
-            // Redirect to forum
-            window.location.href = "forum.html";
+            window.location.href = "index.html";
           }
         } catch {
           status.textContent = `Network error. Could not reach ${API_BASE || window.location.origin}.`;
