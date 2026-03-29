@@ -47,15 +47,53 @@ async function readJsonBody(req) {
   }
 }
 
+function parseRequest(req) {
+  const protocol = req.headers?.["x-forwarded-proto"] || "http";
+  const host = req.headers?.host || "localhost";
+  const parsedUrl = new URL(req.url, `${protocol}://${host}`);
+  const pathname = parsedUrl.pathname.replace(/\/+$/, "");
+
+  return {
+    parsedUrl,
+    parts: pathname.split("/").filter(Boolean)
+  };
+}
+
 function getAuthUser(req) {
-  const auth = req.headers?.authorization?.replace("Bearer ", "") || req.cookies?.auth;
+  const authHeader = req.headers?.authorization || "";
+  const auth = authHeader.startsWith("Bearer ")
+    ? authHeader.slice("Bearer ".length)
+    : req.cookies?.auth;
+
   if (!auth) throw new Error("Unauthorized");
 
   try {
     const decoded = JSON.parse(Buffer.from(auth, "base64").toString("utf-8"));
+    if (!decoded?.id || !decoded?.name) {
+      throw new Error("Invalid auth token");
+    }
     return decoded;
   } catch {
     throw new Error("Invalid auth token");
+  }
+}
+
+function getStatusCode(error) {
+  if (error?.code === "CONFIG_ERROR") return 500;
+
+  switch (error.message) {
+    case "Unauthorized":
+    case "Invalid auth token":
+      return 401;
+    case "Post not found":
+    case "Comment not found":
+    case "Endpoint not found":
+      return 404;
+    default:
+      if (error.message?.startsWith("Invalid ")) {
+        return 400;
+      }
+      return 400;
   }
 }
 
@@ -69,11 +107,11 @@ async function handleForumRequest(req, res) {
   }
 
   try {
-    const parts = req.url.split("/").filter(Boolean);
+    const { parsedUrl, parts } = parseRequest(req);
 
     // GET /api/forum/posts
     if (req.method === "GET" && parts[1] === "forum" && parts[2] === "posts" && !parts[3]) {
-      const category = req.url.includes("?") ? new URLSearchParams(req.url.split("?")[1]).get("category") : null;
+      const category = parsedUrl.searchParams.get("category");
       const posts = await getPosts(category);
       return sendJson(res, 200, { posts });
     }
@@ -141,7 +179,13 @@ async function handleForumRequest(req, res) {
     if (req.method === "POST" && parts[1] === "forum" && parts[2] === "messages") {
       const user = getAuthUser(req);
       const body = await readJsonBody(req);
-      const message = await sendMessage(user.id, user.name, body.recipientId, body.content);
+      const message = await sendMessage(
+        user.id,
+        user.name,
+        body.recipientId,
+        body.recipientName,
+        body.content
+      );
       return sendJson(res, 201, { message });
     }
 
@@ -162,8 +206,7 @@ async function handleForumRequest(req, res) {
 
     sendJson(res, 404, { error: "Endpoint not found" });
   } catch (error) {
-    const status = error.message === "Unauthorized" ? 401 : error.message === "Invalid auth token" ? 401 : 400;
-    sendJson(res, status, { error: error.message });
+    sendJson(res, getStatusCode(error), { error: error.message });
   }
 }
 

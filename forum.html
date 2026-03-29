@@ -555,7 +555,7 @@
 <body>
   <div class="container">
     <header>
-      <h1>🚀 Frontend Dev Community</h1>
+      <h1>Frontend Dev Community</h1>
       <div class="user-info">
         <span class="user-name" id="userName">Guest</span>
         <button class="logout-btn" onclick="logout()">Logout</button>
@@ -565,8 +565,8 @@
     <div class="layout">
       <div class="main-content">
         <div class="tab-navigation">
-          <button class="tab-btn active" onclick="switchTab('forum')">Forum</button>
-          <button class="tab-btn" onclick="switchTab('messages')">Messages</button>
+          <button class="tab-btn active" onclick="switchTab('forum', this)">Forum</button>
+          <button class="tab-btn" onclick="switchTab('messages', this)">Messages</button>
         </div>
 
         <!-- Forum Tab -->
@@ -617,12 +617,12 @@
         <div class="sidebar-widget">
           <h3>Categories</h3>
           <div class="category-list">
-            <div class="category-item" onclick="filterByCategory(null)">All Posts</div>
-            <div class="category-item" onclick="filterByCategory('html')">HTML</div>
-            <div class="category-item" onclick="filterByCategory('css')">CSS</div>
-            <div class="category-item" onclick="filterByCategory('javascript')">JavaScript</div>
-            <div class="category-item" onclick="filterByCategory('react')">React</div>
-            <div class="category-item" onclick="filterByCategory('help')">Help</div>
+            <div class="category-item active" onclick="filterByCategory(null, this)">All Posts</div>
+            <div class="category-item" onclick="filterByCategory('html', this)">HTML</div>
+            <div class="category-item" onclick="filterByCategory('css', this)">CSS</div>
+            <div class="category-item" onclick="filterByCategory('javascript', this)">JavaScript</div>
+            <div class="category-item" onclick="filterByCategory('react', this)">React</div>
+            <div class="category-item" onclick="filterByCategory('help', this)">Help</div>
           </div>
         </div>
 
@@ -630,7 +630,7 @@
           <h3>Your Stats</h3>
           <div style="font-size: 13px; color: #666; line-height: 1.8;">
             <div>Posts: <strong id="userPostCount">0</strong></div>
-            <div>Comments: <strong id="userCommentCount">0</strong></div>
+            <div>Unread messages: <strong id="userCommentCount">0</strong></div>
           </div>
         </div>
       </div>
@@ -645,15 +645,113 @@
     let currentConversation = null;
     let messages = [];
 
+    const isFile = window.location.protocol === "file:";
+    const isLocalPreviewHost = ["localhost", "127.0.0.1"].includes(window.location.hostname);
+    const isLocalApiHost = isLocalPreviewHost && window.location.port === "3000";
+    const isLocalPreview = isFile || (isLocalPreviewHost && !isLocalApiHost);
+
+    function normalizeApiBase(value) {
+      if (!value) return "";
+      try {
+        return new URL(value).origin;
+      } catch {
+        return "";
+      }
+    }
+
+    const apiOverride = normalizeApiBase(new URLSearchParams(window.location.search).get("api"));
+    if (isLocalPreview && apiOverride) {
+      try {
+        localStorage.setItem("mft_api_base", apiOverride);
+      } catch {
+        // Ignore storage failures.
+      }
+    }
+
+    let savedApiBase = "";
+    if (isLocalPreview) {
+      try {
+        savedApiBase = normalizeApiBase(localStorage.getItem("mft_api_base"));
+      } catch {
+        savedApiBase = "";
+      }
+    }
+
+    const API_BASE = isLocalPreview
+      ? (savedApiBase || apiOverride || `${window.location.protocol}//${window.location.hostname || "localhost"}:3000`)
+      : "";
+
     // Initialize
     document.addEventListener("DOMContentLoaded", () => {
       checkAuthAndInit();
     });
 
+    function redirectToAuth() {
+      localStorage.removeItem("auth");
+      const suffix = apiOverride || savedApiBase
+        ? `?api=${encodeURIComponent(apiOverride || savedApiBase)}`
+        : "";
+      window.location.href = `auth.html${suffix}`;
+    }
+
+    async function parseApiResponse(response) {
+      const contentType = (response.headers.get("content-type") || "").toLowerCase();
+      if (contentType.includes("application/json")) {
+        try {
+          return await response.json();
+        } catch {
+          return { error: "Invalid JSON response." };
+        }
+      }
+
+      const text = (await response.text()).trim();
+      if (response.status === 404) {
+        return { error: "API endpoint not found. Run npm start locally or deploy the API routes." };
+      }
+      if (text.startsWith("<!DOCTYPE") || text.startsWith("<html")) {
+        return { error: "Server returned HTML instead of JSON." };
+      }
+      return { error: text || "Request failed." };
+    }
+
+    async function forumFetch(path, options = {}) {
+      const headers = {
+        ...(options.headers || {}),
+        Authorization: `Bearer ${localStorage.getItem("auth") || ""}`
+      };
+
+      if (options.body && !headers["Content-Type"]) {
+        headers["Content-Type"] = "application/json";
+      }
+
+      let response;
+      try {
+        response = await fetch(`${API_BASE}${path}`, {
+          method: options.method || "GET",
+          headers,
+          body: options.body,
+          cache: "no-store"
+        });
+      } catch {
+        throw new Error("Network error. Could not reach the forum API.");
+      }
+
+      const data = await parseApiResponse(response);
+      if (response.status === 401) {
+        redirectToAuth();
+        throw new Error("Your session expired. Please sign in again.");
+      }
+      if (!response.ok) {
+        throw new Error(data.error || data.message || "Request failed.");
+      }
+
+      return data;
+    }
+
     async function checkAuthAndInit() {
       const auth = localStorage.getItem("auth");
       if (!auth) {
-        window.location.href = "auth.html";
+        redirectToAuth();
         return;
       }
 
@@ -661,32 +759,35 @@
         const decoded = JSON.parse(atob(auth));
         currentUser = decoded;
         document.getElementById("userName").textContent = decoded.name;
-        loadPosts();
-        loadConversations();
+        await Promise.all([loadPosts(), loadConversations()]);
       } catch {
-        localStorage.removeItem("auth");
-        window.location.href = "auth.html";
+        redirectToAuth();
       }
     }
 
-    function getAuthHeader() {
-      return {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("auth")}`
-      };
+    function updateUserStats(conversations = []) {
+      const postCount = posts.filter((post) => post.authorId === currentUser?.id).length;
+      const unreadCount = conversations.reduce(
+        (sum, conversation) => sum + Number(conversation.unread || 0),
+        0
+      );
+
+      document.getElementById("userPostCount").textContent = String(postCount);
+      document.getElementById("userCommentCount").textContent = String(unreadCount);
     }
 
     async function loadPosts() {
       try {
         const url = currentCategory
-          ? `/api/forum/posts?category=${currentCategory}`
+          ? `/api/forum/posts?category=${encodeURIComponent(currentCategory)}`
           : "/api/forum/posts";
-        const response = await fetch(url, { headers: getAuthHeader() });
-        const data = await response.json();
+        const data = await forumFetch(url);
         posts = data.posts || [];
         renderPosts();
+        updateUserStats();
       } catch (error) {
         console.error("Error loading posts:", error);
+        alert(error.message);
       }
     }
 
@@ -728,8 +829,8 @@
             <span class="post-category">${escapeHtml(post.category)}</span>
           </div>
           <div class="post-stats">
-            <span>💬 ${post.comments?.length || 0} comments</span>
-            <span>👁️ ${post.viewCount || 0} views</span>
+            <span>${post.commentCount || 0} comments</span>
+            <span>${post.viewCount || 0} views</span>
           </div>
         `;
         postsList.appendChild(card);
@@ -747,19 +848,19 @@
       }
 
       try {
-        const response = await fetch("/api/forum/posts", {
+        const data = await forumFetch("/api/forum/posts", {
           method: "POST",
-          headers: getAuthHeader(),
           body: JSON.stringify({ title, content, category })
         });
-
-        if (!response.ok) throw new Error("Failed to create post");
 
         document.getElementById("postTitle").value = "";
         document.getElementById("postContent").value = "";
         document.getElementById("postCategory").value = "general";
 
-        loadPosts();
+        await loadPosts();
+        if (data.post?._id) {
+          await viewPost(data.post._id);
+        }
         alert("Post created successfully!");
       } catch (error) {
         alert("Error creating post: " + error.message);
@@ -768,17 +869,11 @@
 
     async function viewPost(postId) {
       try {
-        const response = await fetch(`/api/forum/posts/${postId}`, {
-          headers: getAuthHeader()
-        });
-        const data = await response.json();
-        const post = data.post;
-
-        // Load comments
-        const commentsResponse = await fetch(`/api/forum/posts/${postId}/comments`, {
-          headers: getAuthHeader()
-        });
-        const commentsData = await commentsResponse.json();
+        const [postData, commentsData] = await Promise.all([
+          forumFetch(`/api/forum/posts/${postId}`),
+          forumFetch(`/api/forum/posts/${postId}/comments`)
+        ]);
+        const post = postData.post;
         const comments = commentsData.comments || [];
 
         // Render detail view
@@ -814,9 +909,13 @@
             <span>by ${escapeHtml(post.authorName)}</span>
             <span>${date}</span>
             <span>👁️ ${post.viewCount} views</span>
-            ${isAuthor ? `<button class="btn btn-sm btn-danger" onclick="deletePost('${post._id}')">Delete Post</button>` : ""}
+            ${
+              isAuthor
+                ? `<button class="btn btn-sm btn-danger" onclick="deletePost('${post._id}')">Delete Post</button>`
+                : `<button class="btn btn-sm btn-secondary" onclick='startConversation(${JSON.stringify(post.authorId)}, ${JSON.stringify(post.authorName)})'>Message Author</button>`
+            }
           </div>
-          <div class="post-detail-content">${escapeHtml(post.content)}</div>
+          <div class="post-detail-content">${escapeHtml(post.content).replace(/\n/g, "<br>")}</div>
 
           <div class="comments-section">
             <h3>Comments (${comments.length})</h3>
@@ -843,16 +942,14 @@
       }
 
       try {
-        const response = await fetch(`/api/forum/posts/${postId}/comments`, {
+        await forumFetch(`/api/forum/posts/${postId}/comments`, {
           method: "POST",
-          headers: getAuthHeader(),
           body: JSON.stringify({ content })
         });
 
-        if (!response.ok) throw new Error("Failed to add comment");
-
         document.getElementById("commentInput").value = "";
-        viewPost(postId);
+        await loadPosts();
+        await viewPost(postId);
       } catch (error) {
         alert("Error adding comment: " + error.message);
       }
@@ -862,13 +959,12 @@
       if (!confirm("Delete this comment?")) return;
 
       try {
-        const response = await fetch(`/api/forum/comments/${commentId}`, {
-          method: "DELETE",
-          headers: getAuthHeader()
+        await forumFetch(`/api/forum/comments/${commentId}`, {
+          method: "DELETE"
         });
 
-        if (!response.ok) throw new Error("Failed to delete comment");
-        viewPost(postId);
+        await loadPosts();
+        await viewPost(postId);
       } catch (error) {
         alert("Error deleting comment: " + error.message);
       }
@@ -878,15 +974,12 @@
       if (!confirm("Delete this post? This cannot be undone.")) return;
 
       try {
-        const response = await fetch(`/api/forum/posts/${postId}`, {
-          method: "DELETE",
-          headers: getAuthHeader()
+        await forumFetch(`/api/forum/posts/${postId}`, {
+          method: "DELETE"
         });
 
-        if (!response.ok) throw new Error("Failed to delete post");
-
         backToList();
-        loadPosts();
+        await loadPosts();
       } catch (error) {
         alert("Error deleting post: " + error.message);
       }
@@ -898,19 +991,22 @@
       document.getElementById("postDetail").innerHTML = "";
     }
 
-    function filterByCategory(category) {
+    function filterByCategory(category, element) {
       currentCategory = category;
+      document.querySelectorAll(".category-item").forEach((item) => item.classList.remove("active"));
+      if (element) {
+        element.classList.add("active");
+      }
+      backToList();
       loadPosts();
     }
 
     async function loadConversations() {
       try {
-        const response = await fetch("/api/forum/conversations", {
-          headers: getAuthHeader()
-        });
-        const data = await response.json();
+        const data = await forumFetch("/api/forum/conversations");
         const conversations = data.conversations || [];
         renderConversations(conversations);
+        updateUserStats(conversations);
       } catch (error) {
         console.error("Error loading conversations:", error);
       }
@@ -930,26 +1026,31 @@
         item.className = `message-item ${conv.unread > 0 ? "unread" : ""}`;
         item.onclick = () => openConversation(conv.userId, conv.userName);
         item.innerHTML = `
-          <div class="message-item-name">${escapeHtml(conv.userName)}</div>
-          <div class="message-item-preview">${escapeHtml(conv.lastMessage)}</div>
+          <div class="message-item-name">${escapeHtml(conv.userName || "Member")}</div>
+          <div class="message-item-preview">${escapeHtml(conv.lastMessage || "")}</div>
         `;
         list.appendChild(item);
       });
     }
 
-    async function openConversation(userId, userName) {
+    async function openConversation(userId, userName, quiet = false) {
       currentConversation = { userId, userName };
 
       try {
-        const response = await fetch(`/api/forum/messages/${userId}`, {
-          headers: getAuthHeader()
-        });
-        const data = await response.json();
+        const data = await forumFetch(`/api/forum/messages/${userId}`);
         messages = data.messages || [];
         renderChatPanel();
+        if (!quiet) {
+          switchTab("messages", document.querySelectorAll(".tab-btn")[1]);
+        }
       } catch (error) {
         console.error("Error loading messages:", error);
       }
+    }
+
+    function startConversation(userId, userName) {
+      switchTab("messages", document.querySelectorAll(".tab-btn")[1]);
+      openConversation(userId, userName);
     }
 
     function renderChatPanel() {
@@ -992,33 +1093,32 @@
 
     async function sendMessage() {
       const content = document.getElementById("messageInput").value.trim();
-      if (!content) return;
+      if (!content || !currentConversation) return;
 
       try {
-        const response = await fetch("/api/forum/messages", {
+        await forumFetch("/api/forum/messages", {
           method: "POST",
-          headers: getAuthHeader(),
           body: JSON.stringify({
             recipientId: currentConversation.userId,
+            recipientName: currentConversation.userName,
             content
           })
         });
 
-        if (!response.ok) throw new Error("Failed to send message");
-
         document.getElementById("messageInput").value = "";
-        openConversation(currentConversation.userId, currentConversation.userName);
+        await loadConversations();
+        await openConversation(currentConversation.userId, currentConversation.userName, true);
       } catch (error) {
         alert("Error sending message: " + error.message);
       }
     }
 
-    function switchTab(tab) {
-      // Update buttons
+    function switchTab(tab, button) {
       document.querySelectorAll(".tab-btn").forEach((btn) => btn.classList.remove("active"));
-      event.target.classList.add("active");
+      if (button) {
+        button.classList.add("active");
+      }
 
-      // Update content
       document.querySelectorAll(".tab-content").forEach((content) => content.classList.remove("active"));
       document.getElementById(tab).classList.add("active");
 
@@ -1028,8 +1128,7 @@
     }
 
     function logout() {
-      localStorage.removeItem("auth");
-      window.location.href = "auth.html";
+      redirectToAuth();
     }
 
     function escapeHtml(text) {
@@ -1042,6 +1141,9 @@
     setInterval(() => {
       if (document.getElementById("messages").classList.contains("active")) {
         loadConversations();
+        if (currentConversation) {
+          openConversation(currentConversation.userId, currentConversation.userName, true);
+        }
       }
     }, 5000);
   </script>
