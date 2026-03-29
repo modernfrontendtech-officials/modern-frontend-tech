@@ -229,7 +229,17 @@
                 name: data.user?.name || payload.name || ""
               });
             }
-            window.location.href = "index.html";
+            // Save auth token for forum system
+            if (data.user) {
+              const authToken = btoa(JSON.stringify({
+                id: data.user.id,
+                name: data.user.name,
+                email: data.user.email
+              }));
+              localStorage.setItem("auth", authToken);
+            }
+            // Redirect to forum
+            window.location.href = "forum.html";
           }
         } catch {
           status.textContent = `Network error. Could not reach ${API_BASE || window.location.origin}.`;

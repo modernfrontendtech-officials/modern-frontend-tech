@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Community Forum - Frontend Development</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+        Ubuntu, Cantarell, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    header {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 30px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header h1 {
+      color: #333;
+      font-size: 28px;
+    }
+
+    header .user-info {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+
+    header .user-name {
+      color: #666;
+      font-weight: 500;
+    }
+
+    header .logout-btn {
+      background: #667eea;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    header .logout-btn:hover {
+      background: #5568d3;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 20px;
+    }
+
+    .main-content {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .tab-navigation {
+      display: flex;
+      gap: 10px;
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .tab-btn {
+      padding: 10px 20px;
+      border: 2px solid transparent;
+      background: #f5f5f5;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-weight: 500;
+    }
+
+    .tab-btn.active {
+      background: #667eea;
+      color: white;
+      border-color: #667eea;
+    }
+
+    .tab-btn:hover {
+      background: #667eea;
+      color: white;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    /* Create Post Section */
+    .create-post {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .create-post h2 {
+      margin-bottom: 15px;
+      color: #333;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      color: #555;
+      font-weight: 500;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+      font-family: inherit;
+    }
+
+    .form-group textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.3s;
+    }
+
+    .btn-primary {
+      background: #667eea;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #5568d3;
+    }
+
+    .btn-secondary {
+      background: #f5f5f5;
+      color: #333;
+    }
+
+    .btn-secondary:hover {
+      background: #e0e0e0;
+    }
+
+    .btn-danger {
+      background: #ff6b6b;
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background: #ee5a52;
+    }
+
+    .btn-sm {
+      padding: 6px 12px;
+      font-size: 13px;
+    }
+
+    /* Posts List */
+    .posts-list {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .post-card {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .post-card:hover {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      transform: translateY(-2px);
+    }
+
+    .post-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      margin-bottom: 10px;
+    }
+
+    .post-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 5px;
+    }
+
+    .post-meta {
+      font-size: 13px;
+      color: #999;
+      display: flex;
+      gap: 15px;
+      margin-bottom: 10px;
+    }
+
+    .post-content {
+      color: #666;
+      line-height: 1.5;
+      margin-bottom: 15px;
+      max-height: 100px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .post-category {
+      display: inline-block;
+      background: #e3f2fd;
+      color: #667eea;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 500;
+      margin-right: 10px;
+    }
+
+    .post-stats {
+      display: flex;
+      gap: 20px;
+      font-size: 13px;
+      color: #999;
+    }
+
+    .post-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    /* Post Detail View */
+    .post-detail {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      display: none;
+    }
+
+    .post-detail.active {
+      display: block;
+    }
+
+    .post-detail h1 {
+      color: #333;
+      margin-bottom: 15px;
+      font-size: 24px;
+    }
+
+    .post-detail-meta {
+      display: flex;
+      gap: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #eee;
+      margin-bottom: 20px;
+      color: #666;
+      font-size: 14px;
+    }
+
+    .post-detail-content {
+      color: #555;
+      line-height: 1.8;
+      margin-bottom: 30px;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .comments-section {
+      margin-top: 30px;
+    }
+
+    .comments-section h3 {
+      color: #333;
+      margin-bottom: 15px;
+    }
+
+    .comment-form {
+      background: #f9f9f9;
+      padding: 15px;
+      border-radius: 4px;
+      margin-bottom: 20px;
+    }
+
+    .comment {
+      background: #f9f9f9;
+      padding: 15px;
+      border-radius: 4px;
+      margin-bottom: 15px;
+      border-left: 3px solid #667eea;
+    }
+
+    .comment-author {
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 5px;
+    }
+
+    .comment-time {
+      font-size: 12px;
+      color: #999;
+      margin-bottom: 10px;
+    }
+
+    .comment-content {
+      color: #555;
+      line-height: 1.5;
+    }
+
+    .comment-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .sidebar-widget {
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .sidebar-widget h3 {
+      color: #333;
+      margin-bottom: 15px;
+      font-size: 15px;
+    }
+
+    .category-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .category-item {
+      padding: 8px 12px;
+      background: #f5f5f5;
+      border-radius: 4px;
+      color: #666;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-size: 13px;
+    }
+
+    .category-item:hover,
+    .category-item.active {
+      background: #667eea;
+      color: white;
+    }
+
+    .message-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .message-item {
+      padding: 10px;
+      background: #f5f5f5;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.3s;
+      border-left: 3px solid transparent;
+    }
+
+    .message-item:hover {
+      background: #e8e8ff;
+      border-left-color: #667eea;
+    }
+
+    .message-item.unread {
+      font-weight: 600;
+      background: #e3f2fd;
+    }
+
+    .message-item-name {
+      font-size: 13px;
+      color: #333;
+      margin-bottom: 3px;
+    }
+
+    .message-item-preview {
+      font-size: 12px;
+      color: #999;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    /* Messages Tab */
+    .messages-container {
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      gap: 20px;
+      height: 600px;
+    }
+
+    .conversations-list {
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      overflow-y: auto;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .chat-panel {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .chat-header {
+      padding: 15px;
+      border-bottom: 1px solid #eee;
+      font-weight: 600;
+      color: #333;
+    }
+
+    .chat-messages {
+      flex: 1;
+      padding: 15px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .message-bubble {
+      padding: 10px 15px;
+      border-radius: 4px;
+      max-width: 70%;
+      word-wrap: break-word;
+    }
+
+    .message-bubble.sent {
+      background: #667eea;
+      color: white;
+      align-self: flex-end;
+    }
+
+    .message-bubble.received {
+      background: #f0f0f0;
+      color: #333;
+      align-self: flex-start;
+    }
+
+    .chat-input-area {
+      padding: 15px;
+      border-top: 1px solid #eee;
+      display: flex;
+      gap: 10px;
+    }
+
+    .chat-input-area input {
+      flex: 1;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+
+    .chat-input-area button {
+      padding: 10px 20px;
+    }
+
+    .no-conversation {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #999;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 40px;
+      color: #999;
+    }
+
+    @media (max-width: 768px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .messages-container {
+        grid-template-columns: 1fr;
+      }
+
+      .tab-navigation {
+        flex-wrap: wrap;
+      }
+
+      header {
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .post-card {
+        padding: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🚀 Frontend Dev Community</h1>
+      <div class="user-info">
+        <span class="user-name" id="userName">Guest</span>
+        <button class="logout-btn" onclick="logout()">Logout</button>
+      </div>
+    </header>
+
+    <div class="layout">
+      <div class="main-content">
+        <div class="tab-navigation">
+          <button class="tab-btn active" onclick="switchTab('forum')">Forum</button>
+          <button class="tab-btn" onclick="switchTab('messages')">Messages</button>
+        </div>
+
+        <!-- Forum Tab -->
+        <div id="forum" class="tab-content active">
+          <div class="create-post">
+            <h2>Start a Discussion</h2>
+            <div class="form-group">
+              <label for="postTitle">Title</label>
+              <input type="text" id="postTitle" placeholder="What's on your mind?" />
+            </div>
+            <div class="form-group">
+              <label for="postCategory">Category</label>
+              <select id="postCategory">
+                <option value="general">General Discussion</option>
+                <option value="html">HTML</option>
+                <option value="css">CSS</option>
+                <option value="javascript">JavaScript</option>
+                <option value="react">React</option>
+                <option value="help">Need Help</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="postContent">Content</label>
+              <textarea id="postContent" placeholder="Share your thoughts or question..."></textarea>
+            </div>
+            <button class="btn btn-primary" onclick="createPost()">Post</button>
+          </div>
+
+          <div class="posts-list" id="postsList"></div>
+
+          <!-- Post Detail View -->
+          <div class="post-detail" id="postDetail"></div>
+        </div>
+
+        <!-- Messages Tab -->
+        <div id="messages" class="tab-content">
+          <div class="messages-container">
+            <div class="conversations-list" id="conversationsList"></div>
+            <div class="chat-panel" id="chatPanel">
+              <div class="no-conversation">Select a conversation to start messaging</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sidebar -->
+      <div class="sidebar">
+        <div class="sidebar-widget">
+          <h3>Categories</h3>
+          <div class="category-list">
+            <div class="category-item" onclick="filterByCategory(null)">All Posts</div>
+            <div class="category-item" onclick="filterByCategory('html')">HTML</div>
+            <div class="category-item" onclick="filterByCategory('css')">CSS</div>
+            <div class="category-item" onclick="filterByCategory('javascript')">JavaScript</div>
+            <div class="category-item" onclick="filterByCategory('react')">React</div>
+            <div class="category-item" onclick="filterByCategory('help')">Help</div>
+          </div>
+        </div>
+
+        <div class="sidebar-widget">
+          <h3>Your Stats</h3>
+          <div style="font-size: 13px; color: #666; line-height: 1.8;">
+            <div>Posts: <strong id="userPostCount">0</strong></div>
+            <div>Comments: <strong id="userCommentCount">0</strong></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // State management
+    let currentUser = null;
+    let posts = [];
+    let currentCategory = null;
+    let currentConversation = null;
+    let messages = [];
+
+    // Initialize
+    document.addEventListener("DOMContentLoaded", () => {
+      checkAuthAndInit();
+    });
+
+    async function checkAuthAndInit() {
+      const auth = localStorage.getItem("auth");
+      if (!auth) {
+        window.location.href = "auth.html";
+        return;
+      }
+
+      try {
+        const decoded = JSON.parse(atob(auth));
+        currentUser = decoded;
+        document.getElementById("userName").textContent = decoded.name;
+        loadPosts();
+        loadConversations();
+      } catch {
+        localStorage.removeItem("auth");
+        window.location.href = "auth.html";
+      }
+    }
+
+    function getAuthHeader() {
+      return {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("auth")}`
+      };
+    }
+
+    async function loadPosts() {
+      try {
+        const url = currentCategory
+          ? `/api/forum/posts?category=${currentCategory}`
+          : "/api/forum/posts";
+        const response = await fetch(url, { headers: getAuthHeader() });
+        const data = await response.json();
+        posts = data.posts || [];
+        renderPosts();
+      } catch (error) {
+        console.error("Error loading posts:", error);
+      }
+    }
+
+    function renderPosts() {
+      const postsList = document.getElementById("postsList");
+      postsList.innerHTML = "";
+
+      if (posts.length === 0) {
+        postsList.innerHTML = '<div class="loading">No posts yet. Be the first to share!</div>';
+        return;
+      }
+
+      posts.forEach((post) => {
+        const date = new Date(post.createdAt).toLocaleDateString();
+        const card = document.createElement("div");
+        card.className = "post-card";
+        card.onclick = () => viewPost(post._id);
+
+        const isAuthor = post.authorId === currentUser.id;
+        card.innerHTML = `
+          <div class="post-header">
+            <div>
+              <div class="post-title">${escapeHtml(post.title)}</div>
+              <div class="post-meta">
+                <span>by ${escapeHtml(post.authorName)}</span>
+                <span>${date}</span>
+              </div>
+            </div>
+            ${
+              isAuthor
+                ? `
+              <button class="btn btn-sm btn-danger" onclick="event.stopPropagation(); deletePost('${post._id}')">Delete</button>
+            `
+                : ""
+            }
+          </div>
+          <div class="post-content">${escapeHtml(post.content.substring(0, 150))}${post.content.length > 150 ? "..." : ""}</div>
+          <div>
+            <span class="post-category">${escapeHtml(post.category)}</span>
+          </div>
+          <div class="post-stats">
+            <span>💬 ${post.comments?.length || 0} comments</span>
+            <span>👁️ ${post.viewCount || 0} views</span>
+          </div>
+        `;
+        postsList.appendChild(card);
+      });
+    }
+
+    async function createPost() {
+      const title = document.getElementById("postTitle").value.trim();
+      const content = document.getElementById("postContent").value.trim();
+      const category = document.getElementById("postCategory").value;
+
+      if (!title || !content) {
+        alert("Please fill in all fields");
+        return;
+      }
+
+      try {
+        const response = await fetch("/api/forum/posts", {
+          method: "POST",
+          headers: getAuthHeader(),
+          body: JSON.stringify({ title, content, category })
+        });
+
+        if (!response.ok) throw new Error("Failed to create post");
+
+        document.getElementById("postTitle").value = "";
+        document.getElementById("postContent").value = "";
+        document.getElementById("postCategory").value = "general";
+
+        loadPosts();
+        alert("Post created successfully!");
+      } catch (error) {
+        alert("Error creating post: " + error.message);
+      }
+    }
+
+    async function viewPost(postId) {
+      try {
+        const response = await fetch(`/api/forum/posts/${postId}`, {
+          headers: getAuthHeader()
+        });
+        const data = await response.json();
+        const post = data.post;
+
+        // Load comments
+        const commentsResponse = await fetch(`/api/forum/posts/${postId}/comments`, {
+          headers: getAuthHeader()
+        });
+        const commentsData = await commentsResponse.json();
+        const comments = commentsData.comments || [];
+
+        // Render detail view
+        const detailView = document.getElementById("postDetail");
+        const date = new Date(post.createdAt).toLocaleDateString();
+        const isAuthor = post.authorId === currentUser.id;
+
+        let commentsHtml = comments
+          .map((comment) => {
+            const commentDate = new Date(comment.createdAt).toLocaleDateString();
+            const isCommentAuthor = comment.authorId === currentUser.id;
+            return `
+              <div class="comment">
+                <div class="comment-author">${escapeHtml(comment.authorName)}</div>
+                <div class="comment-time">${commentDate}</div>
+                <div class="comment-content">${escapeHtml(comment.content)}</div>
+                <div class="comment-actions">
+                  ${
+                    isCommentAuthor
+                      ? `<button class="btn btn-sm btn-danger" onclick="deleteComment('${comment._id}', '${postId}')">Delete</button>`
+                      : ""
+                  }
+                </div>
+              </div>
+            `;
+          })
+          .join("");
+
+        detailView.innerHTML = `
+          <button class="btn btn-secondary" onclick="backToList()">← Back to Posts</button>
+          <h1>${escapeHtml(post.title)}</h1>
+          <div class="post-detail-meta">
+            <span>by ${escapeHtml(post.authorName)}</span>
+            <span>${date}</span>
+            <span>👁️ ${post.viewCount} views</span>
+            ${isAuthor ? `<button class="btn btn-sm btn-danger" onclick="deletePost('${post._id}')">Delete Post</button>` : ""}
+          </div>
+          <div class="post-detail-content">${escapeHtml(post.content)}</div>
+
+          <div class="comments-section">
+            <h3>Comments (${comments.length})</h3>
+            <div class="comment-form">
+              <textarea id="commentInput" placeholder="Share your thoughts..."></textarea>
+              <button class="btn btn-primary" style="margin-top: 10px;" onclick="addComment('${postId}')">Post Comment</button>
+            </div>
+            ${commentsHtml || '<p style="color: #999;">No comments yet.</p>'}
+          </div>
+        `;
+
+        document.getElementById("postsList").style.display = "none";
+        detailView.classList.add("active");
+      } catch (error) {
+        alert("Error loading post: " + error.message);
+      }
+    }
+
+    async function addComment(postId) {
+      const content = document.getElementById("commentInput").value.trim();
+      if (!content) {
+        alert("Please enter a comment");
+        return;
+      }
+
+      try {
+        const response = await fetch(`/api/forum/posts/${postId}/comments`, {
+          method: "POST",
+          headers: getAuthHeader(),
+          body: JSON.stringify({ content })
+        });
+
+        if (!response.ok) throw new Error("Failed to add comment");
+
+        document.getElementById("commentInput").value = "";
+        viewPost(postId);
+      } catch (error) {
+        alert("Error adding comment: " + error.message);
+      }
+    }
+
+    async function deleteComment(commentId, postId) {
+      if (!confirm("Delete this comment?")) return;
+
+      try {
+        const response = await fetch(`/api/forum/comments/${commentId}`, {
+          method: "DELETE",
+          headers: getAuthHeader()
+        });
+
+        if (!response.ok) throw new Error("Failed to delete comment");
+        viewPost(postId);
+      } catch (error) {
+        alert("Error deleting comment: " + error.message);
+      }
+    }
+
+    async function deletePost(postId) {
+      if (!confirm("Delete this post? This cannot be undone.")) return;
+
+      try {
+        const response = await fetch(`/api/forum/posts/${postId}`, {
+          method: "DELETE",
+          headers: getAuthHeader()
+        });
+
+        if (!response.ok) throw new Error("Failed to delete post");
+
+        backToList();
+        loadPosts();
+      } catch (error) {
+        alert("Error deleting post: " + error.message);
+      }
+    }
+
+    function backToList() {
+      document.getElementById("postsList").style.display = "flex";
+      document.getElementById("postDetail").classList.remove("active");
+      document.getElementById("postDetail").innerHTML = "";
+    }
+
+    function filterByCategory(category) {
+      currentCategory = category;
+      loadPosts();
+    }
+
+    async function loadConversations() {
+      try {
+        const response = await fetch("/api/forum/conversations", {
+          headers: getAuthHeader()
+        });
+        const data = await response.json();
+        const conversations = data.conversations || [];
+        renderConversations(conversations);
+      } catch (error) {
+        console.error("Error loading conversations:", error);
+      }
+    }
+
+    function renderConversations(conversations) {
+      const list = document.getElementById("conversationsList");
+      list.innerHTML = "<h3>Conversations</h3>";
+
+      if (conversations.length === 0) {
+        list.innerHTML += '<p style="color: #999; font-size: 12px;">No conversations yet</p>';
+        return;
+      }
+
+      conversations.forEach((conv) => {
+        const item = document.createElement("div");
+        item.className = `message-item ${conv.unread > 0 ? "unread" : ""}`;
+        item.onclick = () => openConversation(conv.userId, conv.userName);
+        item.innerHTML = `
+          <div class="message-item-name">${escapeHtml(conv.userName)}</div>
+          <div class="message-item-preview">${escapeHtml(conv.lastMessage)}</div>
+        `;
+        list.appendChild(item);
+      });
+    }
+
+    async function openConversation(userId, userName) {
+      currentConversation = { userId, userName };
+
+      try {
+        const response = await fetch(`/api/forum/messages/${userId}`, {
+          headers: getAuthHeader()
+        });
+        const data = await response.json();
+        messages = data.messages || [];
+        renderChatPanel();
+      } catch (error) {
+        console.error("Error loading messages:", error);
+      }
+    }
+
+    function renderChatPanel() {
+      const panel = document.getElementById("chatPanel");
+
+      if (!currentConversation) {
+        panel.innerHTML =
+          '<div class="no-conversation">Select a conversation to start messaging</div>';
+        return;
+      }
+
+      const messagesHtml = messages
+        .map((msg) => {
+          const isSent = msg.senderId === currentUser.id;
+          const time = new Date(msg.createdAt).toLocaleTimeString();
+          return `
+            <div class="message-bubble ${isSent ? "sent" : "received"}">
+              <div>${escapeHtml(msg.content)}</div>
+              <small style="opacity: 0.7; font-size: 11px;">${time}</small>
+            </div>
+          `;
+        })
+        .join("");
+
+      panel.innerHTML = `
+        <div class="chat-header">💬 ${escapeHtml(currentConversation.userName)}</div>
+        <div class="chat-messages" id="chatMessages">${messagesHtml || '<div class="loading">No messages yet</div>'}</div>
+        <div class="chat-input-area">
+          <input type="text" id="messageInput" placeholder="Type a message..." />
+          <button class="btn btn-primary" onclick="sendMessage()">Send</button>
+        </div>
+      `;
+
+      // Auto-scroll to bottom
+      const chatMessages = document.getElementById("chatMessages");
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+
+      document.getElementById("messageInput").focus();
+    }
+
+    async function sendMessage() {
+      const content = document.getElementById("messageInput").value.trim();
+      if (!content) return;
+
+      try {
+        const response = await fetch("/api/forum/messages", {
+          method: "POST",
+          headers: getAuthHeader(),
+          body: JSON.stringify({
+            recipientId: currentConversation.userId,
+            content
+          })
+        });
+
+        if (!response.ok) throw new Error("Failed to send message");
+
+        document.getElementById("messageInput").value = "";
+        openConversation(currentConversation.userId, currentConversation.userName);
+      } catch (error) {
+        alert("Error sending message: " + error.message);
+      }
+    }
+
+    function switchTab(tab) {
+      // Update buttons
+      document.querySelectorAll(".tab-btn").forEach((btn) => btn.classList.remove("active"));
+      event.target.classList.add("active");
+
+      // Update content
+      document.querySelectorAll(".tab-content").forEach((content) => content.classList.remove("active"));
+      document.getElementById(tab).classList.add("active");
+
+      if (tab === "messages") {
+        loadConversations();
+      }
+    }
+
+    function logout() {
+      localStorage.removeItem("auth");
+      window.location.href = "auth.html";
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement("div");
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // Refresh conversations every 5 seconds
+    setInterval(() => {
+      if (document.getElementById("messages").classList.contains("active")) {
+        loadConversations();
+      }
+    }, 5000);
+  </script>
+</body>
+</html>
