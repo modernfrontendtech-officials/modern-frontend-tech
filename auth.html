@@ -238,7 +238,8 @@
               }));
               localStorage.setItem("auth", authToken);
             }
-            window.location.href = "index.html";
+            const redirectTarget = window.siteAuth?.getAuthRedirectTarget?.() || "index.html";
+            window.location.href = redirectTarget;
           }
         } catch {
           status.textContent = `Network error. Could not reach ${API_BASE || window.location.origin}.`;
@@ -254,6 +255,9 @@
     submitForm("signin-form", "/api/signin", "signin-status");
     checkServer();
   </script>
+    <footer class="site-footer">
+        <p class="footer-note">This is not San Web Jose UI/UX Builder or FrontendTech.co.in. It is an HTML learning platform. To visit the UI/UX builder, go to <a href="https://frontendtech.com">frontendtech.com</a>.</p>
+    </footer>
     <script src="ai-widget.js"></script>
 </body>
 </html>

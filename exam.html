@@ -22,7 +22,7 @@
         <img src="favicon.ico" alt="logo" height="75px" style="float: left;">
         <p id="name">modern front end tech</p>
         <h1>html certification exam</h1>
-        <p id="p">Students get 180 minutes to fix 60 broken HTML problems across 20 lesson groups. Scores below 50% fail, 50% to 79.99% earn an Intermediate certificate, and 80% or more earn a Professional certificate.</p>
+        <p id="p">This is the hardest HTML repair exam on the site: 60 multi-step fixes across 20 lesson groups. Scores below 50% fail, 50% to 79.99% earn an Intermediate certificate, and 80% or more earn a Professional certificate.</p>
     </header>
 
     <main class="exam-page">
@@ -30,7 +30,7 @@
             <div>
                 <span class="label">Certification</span>
                 <h2>Repair broken HTML under exam conditions</h2>
-                <p>This is a full exam, not a quick quiz. Each problem starts with broken code, and many questions now require several repairs before the HTML becomes valid.</p>
+                <p>This is a full stress-test, not a quick quiz. Each problem starts with broken code, and most questions now combine several structural, nesting, and attribute mistakes before the HTML becomes valid.</p>
             </div>
             <div class="exam-rule-grid">
                 <article class="exam-rule-card">
@@ -98,8 +98,8 @@
                 <div class="exam-problem-summary">
                     <h2>Exam instructions</h2>
                     <ul>
-                        <li>Read each repair goal carefully before editing the broken snippet. Some tasks contain multiple mistakes.</li>
-                        <li>Keep the answer focused on the problem shown. You may need to repair more than one tag or attribute.</li>
+                        <li>Read each repair goal carefully before editing the broken snippet. Most tasks contain several mistakes at once.</li>
+                        <li>Keep the answer focused on the exact structure requested. Many problems expect more than one tag, attribute, or closing-order repair.</li>
                         <li>The exam submits automatically when the countdown reaches zero.</li>
                     </ul>
                 </div>
@@ -190,6 +190,15 @@
 
     <script src="nav.js"></script>
     <script>
+        const canUseExam = window.siteAuth?.requireAuth?.({
+            title: "Sign in to take the HTML exam",
+            message: "Students must sign in or create an account before starting the certification exam.",
+            next: "exam.html"
+        }) ?? true;
+
+        if (!canUseExam) {
+            // Prevent exam setup and timers from starting for signed-out visitors.
+        } else {
         const EXAM_STORAGE_KEY = "mft_html_exam_state_v1";
         const EXAM_DURATION_MINUTES = 180;
         const EXAM_DURATION_MS = EXAM_DURATION_MINUTES * 60 * 1000;
@@ -199,169 +208,161 @@
             {
                 lesson: "Lesson 1: HTML basics",
                 problems: [
-                    { prompt: "This starter snippet has more than one broken tag. Fix all heading and paragraph tags so the structure is valid.", broken: `<h1>Welcome to HTML<h2>Start here</h3><p>Build your first page</div>`, solution: `<h1>Welcome to HTML</h1><h2>Start here</h2><p>Build your first page</p>` },
-                    { prompt: "Repair this text-formatting snippet so the bold text stays inside the paragraph and all tags close correctly.", broken: `<p>HTML gives <b>structure to web pages.</p></strong>`, solution: `<p>HTML gives <b>structure to web pages.</b></p>` },
-                    { prompt: "Fix the wrapper and child tags so this intro card contains a heading and paragraph correctly.", broken: `<div><h2>Topics<h2><p>Tags and text</div>`, solution: `<div><h2>Topics</h2><p>Tags and text</p></div>` }
+                    { prompt: "Repair this intro card so it contains one div with an h1, an h2, and one paragraph in that order.", broken: `<div><h1>HTML bootcamp<h2>Week 1</h3><pr>Build real pages fast.</pr></div>`, solution: `<div><h1>HTML bootcamp</h1><h2>Week 1</h2><p>Build real pages fast.</p></div>` },
+                    { prompt: "Fix this lesson summary so it uses one section with one h1 and exactly two paragraphs.", broken: `<section><h1>Lesson summary</h1><p>Read the example<p><para>Practice after class.</para></section>`, solution: `<section><h1>Lesson summary</h1><p>Read the example.</p><p>Practice after class.</p></section>` },
+                    { prompt: "Repair this page intro so it uses one div with one h1, one h2, and one paragraph, all closed correctly.", broken: `<div><h1>Main topic</h1><h2>Sub topic<h2><p>Start coding today</strong></div>`, solution: `<div><h1>Main topic</h1><h2>Sub topic</h2><p>Start coding today</p></div>` }
                 ]
             },
             {
                 lesson: "Lesson 2: First code",
                 problems: [
-                    { prompt: "Repair the document so the title, body, and html elements all close properly.", broken: `<html><head><title>My Page<title></head><body><h1>My Page</h1>`, solution: `<html><head><title>My Page</title></head><body><h1>My Page</h1>
-</body></html>` },
-                    { prompt: "Fix the card snippet so the paragraph and button both close correctly inside the section.", broken: `<section><h2>First project</h2><p>Create your first page<button>Start now</section>`, solution: `<section><h2>First project</h2><p>Create your first page</p><button>Start now</button></section>` },
-                    { prompt: "Repair this article so the heading, paragraph, and article structure are all complete.", broken: `<article><h1>Practice page</h1><p>Write code every day</article>`, solution: `<article><h1>Practice page</h1><p>Write code every day</p></article>` }
+                    { prompt: "Repair this starter document so html, head, title, and body are all correct.", broken: `<html><hed><title>Practice page</title></hed><body><h1>Practice page</h1><p>Write code daily.</p></boddy></html>`, solution: `<html><head><title>Practice page</title></head><body><h1>Practice page</h1><p>Write code daily.</p></body></html>` },
+                    { prompt: "Fix this first file so the title closes, the body stays inside html, and the paragraph closes before the button.", broken: `<html><head><title>Starter file<title></head><body><h1>My first page</h1><p>Hello there<button>Run</button></body></html>`, solution: `<html><head><title>Starter file</title></head><body><h1>My first page</h1><p>Hello there</p><button>Run</button></body></html>` },
+                    { prompt: "Repair this practice file so the article and both paragraphs stay inside the body.", broken: `<html><head><title>Daily practice</title></head><body><article><h1>Daily practice</h1><p>Write one page.</p><p>Review your tags.</body></html>`, solution: `<html><head><title>Daily practice</title></head><body><article><h1>Daily practice</h1><p>Write one page.</p><p>Review your tags.</p></article></body></html>` }
                 ]
             },
             {
                 lesson: "Lesson 3: Comments and text formatting",
                 problems: [
-                    { prompt: "Fix both the HTML comment syntax and the strong tag in this snippet.", broken: `<!- important note --><p><strong>Read the task carefully</b></p>`, solution: `<!-- important note --><p><strong>Read the task carefully</strong></p>` },
-                    { prompt: "Repair the mark and emphasis nesting so the highlighted text is valid HTML.", broken: `<p><mark>Important <em>revision point</mark></em></p>`, solution: `<p><mark>Important <em>revision point</em></mark></p>` },
-                    { prompt: "Fix the superscript and small-text tags so this formula line is valid.", broken: `<p>Area in cm<sup>2</sub> <small>approx<small></p>`, solution: `<p>Area in cm<sup>2</sup> <small>approx</small></p>` }
+                    { prompt: "Fix this study reminder so the HTML comment, strong tag, and em tag are all valid.", broken: `<!- study plan --><p><strong>Read</b> the <em>markup guide</p>`, solution: `<!-- study plan --><p><strong>Read</strong> the <em>markup guide</em></p>` },
+                    { prompt: "Repair this science line so the subscript, superscript, and small text all close correctly.", broken: `<p>Water is H<sub>2<sub>O and area is cm<sup>2</sub> <small>approx<small></p>`, solution: `<p>Water is H<sub>2</sub>O and area is cm<sup>2</sup> <small>approx</small></p>` },
+                    { prompt: "Fix the nested formatting so mark, strong, and em all close in the correct order.", broken: `<p><mark>Important <strong>practice</mark></strong> every <em>day</i></p>`, solution: `<p><mark>Important <strong>practice</strong></mark> every <em>day</em></p>` }
                 ]
             },
             {
                 lesson: "Lesson 4: HTML structure",
                 problems: [
-                    { prompt: "Repair this page shell so head, body, and main are all placed and closed correctly.", broken: `<html lang="en"><head><meta charset="UTF-8"><title>Doc</title><body><main><p>Hello</p>
-</body></html>`, solution: `<html lang="en"><head><meta charset="UTF-8"><title>Doc</title></head><body><main><p>Hello</p></main>
-</body></html>` },
-                    { prompt: "Fix the layout structure so header, main, and section all close correctly.", broken: `<body><header><h1>Guide</h1><main><section><p>Start learning</p></section>
-</body>`, solution: `<body><header><h1>Guide</h1></header><main><section><p>Start learning</p></section></main>
-</body>` },
-                    { prompt: "Repair the page so the aside and footer are inside the body correctly.", broken: `<html lang="en"><head><title>Course</title></head><body><aside><p>Tips</p><footer>End</footer></html>`, solution: `<html lang="en"><head><title>Course</title></head><body><aside><p>Tips</p></aside><footer>End</footer>
-</body></html>` }
+                    { prompt: "Repair this page shell so the head closes before body and the structure remains html > head + body.", broken: `<html lang="en"><head><meta charset="UTF-8"><title>Guide</title><body><header><h1>Guide</h1></header><main><section><p>Start here</p></section></main></body></html>`, solution: `<html lang="en"><head><meta charset="UTF-8"><title>Guide</title></head><body><header><h1>Guide</h1></header><main><section><p>Start here</p></section></main></body></html>` },
+                    { prompt: "Fix this layout so article stays inside main and footer stays outside main.", broken: `<body><header><h1>Course</h1></header><main><article><h2>Intro</h2><p>Read first.</p></main><footer>End of page</footer></body>`, solution: `<body><header><h1>Course</h1></header><main><article><h2>Intro</h2><p>Read first.</p></article></main><footer>End of page</footer></body>` },
+                    { prompt: "Repair this document so aside, section, and footer all stay inside body with every closing tag present.", broken: `<html><head><title>Layout</title></head><body><aside><p>Tips</p></aside><section><p>Lesson text</p></section><footer><p>Done</p></body></html>`, solution: `<html><head><title>Layout</title></head><body><aside><p>Tips</p></aside><section><p>Lesson text</p></section><footer><p>Done</p></footer></body></html>` }
                 ]
             },
             {
                 lesson: "Lesson 5: Quotation and citation",
                 problems: [
-                    { prompt: "Fix every broken tag in this blockquote so the paragraph and citation render correctly.", broken: `<blockquote cite="https://example.com"><p>Practice daily<p><cite>Coach</blockquote>`, solution: `<blockquote cite="https://example.com"><p>Practice daily</p><cite>Coach</cite></blockquote>` },
-                    { prompt: "Repair the inline quote and paragraph so the sentence structure is valid.", broken: `<p>Teacher said <q>Keep building</blockquote></p>`, solution: `<p>Teacher said <q>Keep building</q></p>` },
-                    { prompt: "Fix the figure so the figcaption and cite wrap the author correctly.", broken: `<figure><blockquote>Never stop learning</blockquote><figcaption><cite>Modern Front End Tech</figure>`, solution: `<figure><blockquote>Never stop learning</blockquote><figcaption><cite>Modern Front End Tech</cite></figcaption></figure>` }
+                    { prompt: "Fix this blockquote so the paragraph and cite both stay inside the blockquote correctly.", broken: `<blockquote cite="https://example.com"><p>Practice every day<p><cite>Coach note</blockquote>`, solution: `<blockquote cite="https://example.com"><p>Practice every day</p><cite>Coach note</cite></blockquote>` },
+                    { prompt: "Repair this figure so blockquote, figcaption, and cite are all closed in the right order.", broken: `<figure><blockquote><p>Keep learning</p></blockquote><figcaption><cite>Modern Front End Tech</figcaption></figure>`, solution: `<figure><blockquote><p>Keep learning</p></blockquote><figcaption><cite>Modern Front End Tech</cite></figcaption></figure>` },
+                    { prompt: "Fix this sentence so the inline quote and citation both render as valid HTML.", broken: `<p>Teacher said <q>Build small projects</q and <cite>review code</cite></p>`, solution: `<p>Teacher said <q>Build small projects</q> and <cite>review code</cite></p>` }
                 ]
             },
             {
                 lesson: "Lesson 6: Links",
                 problems: [
-                    { prompt: "This navigation block has multiple broken links. Fix all href and closing-tag mistakes.", broken: `<nav><a herf="index.html">Home</a><a href="exam.html">Exam<a></nav>`, solution: `<nav><a href="index.html">Home</a><a href="exam.html">Exam</a></nav>` },
-                    { prompt: "Repair this call-to-action link so target, nesting, and closing tags are correct.", broken: `<a href="contact.html" target="blank"><strong>Contact team</a></strong>`, solution: `<a href="contact.html" target="_blank"><strong>Contact team</strong></a>` },
-                    { prompt: "Fix the paragraph and anchor tags so the guide link is valid.", broken: `<p><a href="guide.html#lists">Read the lists guide<p>`, solution: `<p><a href="guide.html#lists">Read the lists guide</a></p>` }
+                    { prompt: "Repair this navigation so all three links use href and close before nav ends.", broken: `<nav><a herf="index.html">Home</a><a href="whatishtml.html">Course</a><a href="exam.html">Exam</nav>`, solution: `<nav><a href="index.html">Home</a><a href="whatishtml.html">Course</a><a href="exam.html">Exam</a></nav>` },
+                    { prompt: "Fix this external call-to-action link so target, rel, and strong nesting are all correct.", broken: `<a href="https://frontendtech.com" target="blank"><strong>Visit builder</a></strong>`, solution: `<a href="https://frontendtech.com" target="_blank" rel="noopener noreferrer"><strong>Visit builder</strong></a>` },
+                    { prompt: "Repair this paragraph so the fragment link and mailto link are both valid and closed correctly.", broken: `<p><a href="forms2.html#level">Jump to forms level<a> or <a hre="mailto:modernfrontendtech@gmail.com">email us</a></p>`, solution: `<p><a href="forms2.html#level">Jump to forms level</a> or <a href="mailto:modernfrontendtech@gmail.com">email us</a></p>` }
                 ]
             },
             {
                 lesson: "Lesson 7: Images",
                 problems: [
-                    { prompt: "Repair this figure so the image attributes and figcaption tags are all correct.", broken: `<figure><img scr="card.png" atl="Student card"><figcaption>Student card</figure>`, solution: `<figure><img src="card.png" alt="Student card"><figcaption>Student card</figcaption></figure>` },
-                    { prompt: "Fix the responsive picture snippet by correcting the source-set attribute and the fallback image alt text.", broken: `<picture><source media="(min-width: 700px)" scrset="large.jpg"><img src="small.jpg" atl="Desk setup"></picture>`, solution: `<picture><source media="(min-width: 700px)" srcset="large.jpg"><img src="small.jpg" alt="Desk setup"></picture>` },
-                    { prompt: "Repair the gallery snippet so the second image has alt text and the paragraph closes correctly.", broken: `<div class="gallery"><img src="one.jpg" alt="One"><img src="two.jpg"><p>Gallery preview</div>`, solution: `<div class="gallery"><img src="one.jpg" alt="One"><img src="two.jpg" alt="Two"><p>Gallery preview</p></div>` }
+                    { prompt: "Fix this figure so img uses src, alt, width, and height correctly and figcaption stays valid.", broken: `<figure><img scr="card.png" alt="Student card" width="320" heigth="180"><figcaption>Student card preview</figcaption></figure>`, solution: `<figure><img src="card.png" alt="Student card" width="320" height="180"><figcaption>Student card preview</figcaption></figure>` },
+                    { prompt: "Repair this picture element by correcting srcset and the fallback img alt text.", broken: `<picture><source media="(min-width: 900px)" scrset="hero-large.jpg"><source media="(min-width: 500px)" srcset="hero-medium.jpg"><img src="hero-small.jpg" atl="Student workspace"></picture>`, solution: `<picture><source media="(min-width: 900px)" srcset="hero-large.jpg"><source media="(min-width: 500px)" srcset="hero-medium.jpg"><img src="hero-small.jpg" alt="Student workspace"></picture>` },
+                    { prompt: "Fix this linked image card so the paragraph closes before the anchor closes.", broken: `<a href="gallery.html"><img src="thumb.jpg" alt="Gallery preview"><p>Open gallery</a>`, solution: `<a href="gallery.html"><img src="thumb.jpg" alt="Gallery preview"><p>Open gallery</p></a>` }
                 ]
             },
             {
                 lesson: "Lesson 8: Favicon",
                 problems: [
-                    { prompt: "Fix this favicon link by correcting both the relation and file-path attribute.", broken: `<head><link rel="favion" type="image/x-icon" src="favicon.ico"><title>Site</title></head>`, solution: `<head><link rel="icon" type="image/x-icon" href="favicon.ico"><title>Site</title></head>` },
-                    { prompt: "Repair the PNG favicon link so the file path and sizes attribute are both correct.", broken: `<head><link rel="icon" type="image/png" hre="favicon-32.png" size="32x32"></head>`, solution: `<head><link rel="icon" type="image/png" href="favicon-32.png" sizes="32x32"></head>` },
-                    { prompt: "Fix this head snippet so the icon link closes properly and keeps the correct file path.", broken: `<head><link rel="apple-touch-icon" href="apple-touch.png"><link rel="icon" href="favicon.ico"</head>`, solution: `<head><link rel="apple-touch-icon" href="apple-touch.png"><link rel="icon" href="favicon.ico"></head>` }
+                    { prompt: "Repair this favicon setup by correcting the relation and switching src to href.", broken: `<head><link rel="favion" type="image/x-icon" src="favicon.ico"><title>Site</title></head>`, solution: `<head><link rel="icon" type="image/x-icon" href="favicon.ico"><title>Site</title></head>` },
+                    { prompt: "Fix this head block so both icon links are valid and the title remains inside head.", broken: `<head><link rel="icon" type="image/png" hre="favicon-32.png" sizes="32x32"><link rel="apple-touch-icon" href="apple-touch.png"<title>Site</title></head>`, solution: `<head><link rel="icon" type="image/png" href="favicon-32.png" sizes="32x32"><link rel="apple-touch-icon" href="apple-touch.png"><title>Site</title></head>` },
+                    { prompt: "Repair this shortcut favicon line so the rel value is written correctly.", broken: `<head><link rel="shortcuticon" type="image/x-icon" href="favicon.ico"><meta charset="UTF-8"></head>`, solution: `<head><link rel="shortcut icon" type="image/x-icon" href="favicon.ico"><meta charset="UTF-8"></head>` }
                 ]
             },
             {
                 lesson: "Lesson 9: Title",
                 problems: [
-                    { prompt: "Repair the page title so the title tag closes correctly before the metadata continues.", broken: `<head><title>HTML Exam<title><meta charset="UTF-8"></head>`, solution: `<head><title>HTML Exam</title><meta charset="UTF-8"></head>` },
-                    { prompt: "Fix this page shell so the title closes correctly before the body starts.", broken: `<head><title>Student Portal</head><body><h1>Portal</h1>
-</body>`, solution: `<head><title>Student Portal</title></head><body><h1>Portal</h1>
-</body>` },
-                    { prompt: "Repair the misspelled title tags in this head snippet.", broken: `<head><titel>Practice and Revision</titel><meta name="description" content="Study page"></head>`, solution: `<head><title>Practice and Revision</title><meta name="description" content="Study page"></head>` }
+                    { prompt: "Fix this head block so the title closes before both meta tags continue.", broken: `<head><title>HTML Exam<title><meta charset="UTF-8"><meta name="description" content="Hard revision set"></head>`, solution: `<head><title>HTML Exam</title><meta charset="UTF-8"><meta name="description" content="Hard revision set"></head>` },
+                    { prompt: "Repair this snippet so it uses one correct title tag and one description meta tag.", broken: `<head><titel>Student portal</titel><title>Student portal<title><meta name="description" content="Exam dashboard"></head>`, solution: `<head><title>Student portal</title><meta name="description" content="Exam dashboard"></head>` },
+                    { prompt: "Fix this page shell so the title closes before body and the body closes before html.", broken: `<html><head><title>Revision board</head><body><h1>Revision board</h1><p>Stay focused.</p></html>`, solution: `<html><head><title>Revision board</title></head><body><h1>Revision board</h1><p>Stay focused.</p></body></html>` }
                 ]
             },
             {
                 lesson: "Lesson 10: Table",
                 problems: [
-                    { prompt: "Fix all broken table cells and row tags in this score table.", broken: `<table><thead><tr><th>Name</th><th>Score</th></tr></thead><tbody><tr><td>Ana<td>91</td></tr><tr><td>Ben</td><td>84</td></tbody></table>`, solution: `<table><thead><tr><th>Name</th><th>Score</th></tr></thead><tbody><tr><td>Ana</td><td>91</td></tr><tr><td>Ben</td><td>84</td></tr></tbody></table>` },
-                    { prompt: "Repair this table so the caption closes properly and the header row stays valid.", broken: `<table><caption>Scores<caption><tr><th>Name</th><th>Marks</th></tr><tr><td>Ana</td><td>91</td></tr></table>`, solution: `<table><caption>Scores</caption><tr><th>Name</th><th>Marks</th></tr><tr><td>Ana</td><td>91</td></tr></table>` },
-                    { prompt: "Fix the last row of this table so every cell and row closes correctly.", broken: `<table><tr><th>Topic</th><th>Level</th></tr><tr><td>Lists</td><td>Beginner</td></tr><tr><td>Forms<td>Intermediate</table>`, solution: `<table><tr><th>Topic</th><th>Level</th></tr><tr><td>Lists</td><td>Beginner</td></tr><tr><td>Forms</td><td>Intermediate</td></tr></table>` }
+                    { prompt: "Repair this weekly scores table so caption, thead, tbody, and both body rows are valid.", broken: `<table><caption>Weekly scores</caption><thead><tr><th>Name</th><th>Score</th></tr></thead><tbody><tr><td>Ana<td>91</td></tr><tr><td>Ben</td><td>84</td></tbody></table>`, solution: `<table><caption>Weekly scores</caption><thead><tr><th>Name</th><th>Score</th></tr></thead><tbody><tr><td>Ana</td><td>91</td></tr><tr><td>Ben</td><td>84</td></tr></tbody></table>` },
+                    { prompt: "Fix this summary table so the colspan header stays valid and the last row closes correctly.", broken: `<table><tr><th colspan="2">Weekly scores</th></tr><tr><td>Ana</td><td>91</td></tr><tr><td>Ben<td>84</td></tr></table>`, solution: `<table><tr><th colspan="2">Weekly scores</th></tr><tr><td>Ana</td><td>91</td></tr><tr><td>Ben</td><td>84</td></tr></table>` },
+                    { prompt: "Repair this table so the tfoot summary row closes every cell and row correctly.", broken: `<table><thead><tr><th>Topic</th><th>Level</th></tr></thead><tbody><tr><td>Forms</td><td>Advanced</td></tr></tbody><tfoot><tr><td colspan="2">1 topic</tfoot></table>`, solution: `<table><thead><tr><th>Topic</th><th>Level</th></tr></thead><tbody><tr><td>Forms</td><td>Advanced</td></tr></tbody><tfoot><tr><td colspan="2">1 topic</td></tr></tfoot></table>` }
                 ]
             },
             {
                 lesson: "Lesson 11: Lists",
                 problems: [
-                    { prompt: "Repair this nested list so all list items and nested lists close correctly.", broken: `<ul><li>HTML<ul><li>Tags<li>Elements</ul></li><li>CSS</li></ul>`, solution: `<ul><li>HTML<ul><li>Tags</li><li>Elements</li></ul></li><li>CSS</li></ul>` },
-                    { prompt: "Fix this ordered list so every step and nested list item closes correctly.", broken: `<ol><li>Plan<li>Build<ul><li>Write HTML<li>Test page</ul></li><li>Review</li></ol>`, solution: `<ol><li>Plan</li><li>Build<ul><li>Write HTML</li><li>Test page</li></ul></li><li>Review</li></ol>` },
-                    { prompt: "Repair the definition list so every term and description is paired correctly.", broken: `<dl><dt>HTML<dd>Markup language<dt>CSS</dt><dd>Styling language</dl>`, solution: `<dl><dt>HTML</dt><dd>Markup language</dd><dt>CSS</dt><dd>Styling language</dd></dl>` }
+                    { prompt: "Repair this nested unordered list so every list item and nested list closes correctly.", broken: `<ul><li>HTML<ul><li>Tags<li>Elements</ul></li><li>CSS</li></ul>`, solution: `<ul><li>HTML<ul><li>Tags</li><li>Elements</li></ul></li><li>CSS</li></ul>` },
+                    { prompt: "Fix this ordered workflow so the nested unordered list and final review step remain valid.", broken: `<ol><li>Plan</li><li>Build<ul><li>Write HTML<li>Test page</ul></li><li>Review</ol>`, solution: `<ol><li>Plan</li><li>Build<ul><li>Write HTML</li><li>Test page</li></ul></li><li>Review</li></ol>` },
+                    { prompt: "Repair this definition list so all three terms keep their matching descriptions.", broken: `<dl><dt>HTML<dd>Markup language<dt>Forms</dt><dd>User input</dd><dt>Canvas<dd>Drawing area</dl>`, solution: `<dl><dt>HTML</dt><dd>Markup language</dd><dt>Forms</dt><dd>User input</dd><dt>Canvas</dt><dd>Drawing area</dd></dl>` }
                 ]
             },
             {
                 lesson: "Lesson 12: Block and inline elements",
                 problems: [
-                    { prompt: "Fix the nesting so the inline tags stay inside the div in the correct order.", broken: `<div>Card title: <span><strong>HTML basics</span></strong></div>`, solution: `<div>Card title: <span><strong>HTML basics</strong></span></div>` },
-                    { prompt: "Repair the inline code example so the emphasis and code tags close in the right order.", broken: `<p>Read <em>carefully <code>&lt;section&gt;</em></code></p>`, solution: `<p>Read <em>carefully <code>&lt;section&gt;</code></em></p>` },
-                    { prompt: "Fix this badge snippet so the span closes before the wrapper div closes.", broken: `<div><span>Inline badge</div></span><p>Below text</p>`, solution: `<div><span>Inline badge</span></div><p>Below text</p>` }
+                    { prompt: "Fix this card line so span, strong, and code all stay inline and close correctly inside the div.", broken: `<div>Card title: <span><strong>HTML basics</span></strong> <code>&lt;h1&gt;</div>`, solution: `<div>Card title: <span><strong>HTML basics</strong></span> <code>&lt;h1&gt;</code></div>` },
+                    { prompt: "Repair this instruction line so em, code, and span close in the right order.", broken: `<p>Read <em>carefully <code>&lt;section&gt;</em></code> before using a <span>layout helper</p>`, solution: `<p>Read <em>carefully <code>&lt;section&gt;</code></em> before using a <span>layout helper</span></p>` },
+                    { prompt: "Fix this badge layout so the block wrapper and the bold paragraph both close correctly.", broken: `<div><span>Inline badge</div></span><p><strong>Below text</p></strong>`, solution: `<div><span>Inline badge</span></div><p><strong>Below text</strong></p>` }
                 ]
             },
             {
                 lesson: "Lesson 13: Divs, classes, and ids",
                 problems: [
-                    { prompt: "Repair the wrapper so the class name is correct and the paragraph closes inside the card.", broken: `<div classs="card" id="profile-card"><h3>Profile</h3><p>Student bio</div>`, solution: `<div class="card" id="profile-card"><h3>Profile</h3><p>Student bio</p></div>` },
-                    { prompt: "Fix the grid snippet so both class and id attributes are written correctly.", broken: `<section class="card-grid"><div clas="card" idd="summary"><h2>Summary</h2></div></section>`, solution: `<section class="card-grid"><div class="card" id="summary"><h2>Summary</h2></div></section>` },
-                    { prompt: "Repair the nested card layout so both div elements close correctly and the class name is valid.", broken: `<div class="cards"><div classs="card"><p class="lead">Intro text</p></div><div class="card"><p>Next step</div>`, solution: `<div class="cards"><div class="card"><p class="lead">Intro text</p></div><div class="card"><p>Next step</p></div></div>` }
+                    { prompt: "Repair this grid so the outer class name is correct and both card paragraphs stay closed.", broken: `<div classs="card-grid" id="lesson-grid"><div class="card"><h3>One</h3><p>Start here.</p></div><div class="card"><h3>Two</h3><p>Keep going.</div></div>`, solution: `<div class="card-grid" id="lesson-grid"><div class="card"><h3>One</h3><p>Start here.</p></div><div class="card"><h3>Two</h3><p>Keep going.</p></div></div>` },
+                    { prompt: "Fix this dashboard panel so both class and id attributes are written correctly.", broken: `<section class="dashboard"><div clas="panel" idd="summary"><h2>Summary</h2><p>Track progress</p></div></section>`, solution: `<section class="dashboard"><div class="panel" id="summary"><h2>Summary</h2><p>Track progress</p></div></section>` },
+                    { prompt: "Repair this layout so the second panel uses the correct class name and the outer wrapper closes.", broken: `<div class="layout"><div class="panel" id="overview"><p class="lead">Course map</p></div><div classs="panel" id="tasks"><p>Next step</p></div>`, solution: `<div class="layout"><div class="panel" id="overview"><p class="lead">Course map</p></div><div class="panel" id="tasks"><p>Next step</p></div></div>` }
                 ]
             },
             {
                 lesson: "Lesson 14: Buttons and iframes",
                 problems: [
-                    { prompt: "Fix the button snippet so the type value is correct and the span closes properly.", broken: `<section><button type="buton"><span>Save draft</button></section>`, solution: `<section><button type="button"><span>Save draft</span></button></section>` },
-                    { prompt: "Repair this iframe by correcting the source attribute and the closing tag.", broken: `<iframe scr="https://example.com" title="Example site"><iframe>`, solution: `<iframe src="https://example.com" title="Example site"></iframe>` },
-                    { prompt: "Fix both button types in this action bar so the markup is valid.", broken: `<div class="actions"><button type="submit">Finish</button><button type="reseet">Clear</button></div>`, solution: `<div class="actions"><button type="submit">Finish</button><button type="reset">Clear</button></div>` }
+                    { prompt: "Fix this action area so the first button uses type=\"button\" and the inner span closes before the button closes.", broken: `<section><button type="buton"><span>Save draft</button><button type="submit">Publish</button></section>`, solution: `<section><button type="button"><span>Save draft</span></button><button type="submit">Publish</button></section>` },
+                    { prompt: "Repair this iframe so src, title, loading, and the closing tag are all correct.", broken: `<iframe scr="https://example.com" titel="Example site" loading="lasy"><iframe>`, solution: `<iframe src="https://example.com" title="Example site" loading="lazy"></iframe>` },
+                    { prompt: "Fix this preview bar so the reset button type is valid and the iframe closes correctly.", broken: `<div class="actions"><button type="submit"><span>Finish</span></button><button type="reseet">Clear</button><iframe src="preview.html" title="Preview panel"></frame></div>`, solution: `<div class="actions"><button type="submit"><span>Finish</span></button><button type="reset">Clear</button><iframe src="preview.html" title="Preview panel"></iframe></div>` }
                 ]
             },
             {
                 lesson: "Lesson 15: Everything in head",
                 problems: [
                     { prompt: "Repair this head block by fixing the charset value and the viewport content syntax.", broken: `<head><meta charset="UTF=8"><meta name="viewport" content="width=device-width initial-scale=1.0"><title>Exam</title></head>`, solution: `<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Exam</title></head>` },
-                    { prompt: "Fix the stylesheet link so the relation and file path attributes are both correct.", broken: `<head><link ref="stylesheet" herf="styles.css"><title>Page</title></head>`, solution: `<head><link rel="stylesheet" href="styles.css"><title>Page</title></head>` },
-                    { prompt: "Repair the external script tag so the source attribute, defer attribute, and closing tag are correct.", broken: `<script scr="nav.js" deffer></style>`, solution: `<script src="nav.js" defer><\/script>` }
+                    { prompt: "Fix this head block so the description meta stays valid and the stylesheet link uses rel and href correctly.", broken: `<head><meta name="description" content="Hard practice exam"><link ref="stylesheet" herf="styles.css"><title>Page</title></head>`, solution: `<head><meta name="description" content="Hard practice exam"><link rel="stylesheet" href="styles.css"><title>Page</title></head>` },
+                    { prompt: "Repair this head so the external script tag and favicon link are both valid.", broken: `<head><script scr="nav.js" deffer></style><link rel="icon" type="image/x-icon" href="favicon.ico"></head>`, solution: `<head><script src="nav.js" defer><\/script><link rel="icon" type="image/x-icon" href="favicon.ico"></head>` }
                 ]
             },
             {
                 lesson: "Lesson 16: Computer code",
                 problems: [
-                    { prompt: "Fix the preformatted code block so the code tag stays inside the pre tag.", broken: `<pre><code>&lt;h1&gt;Hello&lt;/h1&gt;</pre></code>`, solution: `<pre><code>&lt;h1&gt;Hello&lt;/h1&gt;</code></pre>` },
-                    { prompt: "Repair this shortcut line so the paragraph and second keyboard tag are complete.", broken: `<p>Press <kbd>Ctrl</kbd> + <kbd>S<p>`, solution: `<p>Press <kbd>Ctrl</kbd> + <kbd>S</kbd></p>` },
-                    { prompt: "Fix the sample-output snippet so the sample tag and paragraph both close correctly.", broken: `<p><samp>Saved successfully</code></p>`, solution: `<p><samp>Saved successfully</samp></p>` }
+                    { prompt: "Fix this code sample so code stays inside pre and both tags close in the right order.", broken: `<pre><code>&lt;h1&gt;Hello&lt;/h1&gt;</pre></code>`, solution: `<pre><code>&lt;h1&gt;Hello&lt;/h1&gt;</code></pre>` },
+                    { prompt: "Repair this shortcut hint so the paragraph and all three keyboard tags are valid.", broken: `<p>Press <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>S<p>`, solution: `<p>Press <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd></p>` },
+                    { prompt: "Fix this feedback line so samp and code both close correctly inside the paragraph.", broken: `<p><samp>Saved successfully</code> after running <code>npm start</samp></p>`, solution: `<p><samp>Saved successfully</samp> after running <code>npm start</code></p>` }
                 ]
             },
             {
                 lesson: "Lesson 17: Semantics",
                 problems: [
-                    { prompt: "Repair this semantic layout so header, main, and footer all use correct tags.", broken: `<heder><h1>Course</h1></heder><main><p>Practice tasks</p><footer>End of page</footer>`, solution: `<header><h1>Course</h1></header><main><p>Practice tasks</p></main><footer>End of page</footer>` },
-                    { prompt: "Fix the article snippet so the section and paragraph close in the correct order.", broken: `<article><header><h2>Lesson</h2></header><section><p>Practice now</section></article>`, solution: `<article><header><h2>Lesson</h2></header><section><p>Practice now</p></section></article>` },
-                    { prompt: "Repair the navigation so both links close before the nav ends.", broken: `<nav><a href="index.html">Home</a><a href="exam.html">Exam</nav>`, solution: `<nav><a href="index.html">Home</a><a href="exam.html">Exam</a></nav>` }
+                    { prompt: "Repair this semantic page so it uses header, nav, main, article, and footer correctly.", broken: `<heder><h1>Course</h1></heder><nav><a href="index.html">Home</a><a href="exam.html">Exam</nav><main><article><h2>Practice</h2><p>Fix tags</p></article><footer>End</footer>`, solution: `<header><h1>Course</h1></header><nav><a href="index.html">Home</a><a href="exam.html">Exam</a></nav><main><article><h2>Practice</h2><p>Fix tags</p></article></main><footer>End</footer>` },
+                    { prompt: "Fix this semantic article so section, aside, and footer all close correctly inside article.", broken: `<article><header><h2>Lesson</h2></header><section><p>Practice now</section><aside>Extra tip</asid><footer>Keep going</footer></article>`, solution: `<article><header><h2>Lesson</h2></header><section><p>Practice now</p></section><aside>Extra tip</aside><footer>Keep going</footer></article>` },
+                    { prompt: "Repair this roadmap so nav closes before section closes and everything stays inside main.", broken: `<main><section><h2>Roadmap</h2><nav><a href="whatishtml.html">Start</a><a href="forms3.html">Finish</a></section></main>`, solution: `<main><section><h2>Roadmap</h2><nav><a href="whatishtml.html">Start</a><a href="forms3.html">Finish</a></nav></section></main>` }
                 ]
             },
             {
                 lesson: "Lesson 18: HTML symbols",
                 problems: [
-                    { prompt: "Replace every unsafe symbol in this sentence with the correct HTML entity.", broken: `<p>5 < 9 & 3 > 1</p>`, solution: `<p>5 &lt; 9 &amp; 3 &gt; 1</p>` },
-                    { prompt: "Repair both entities in this copyright and currency line.", broken: `<p>&copy 2026 Course fee: &euro 25</p>`, solution: `<p>&copy; 2026 Course fee: &euro; 25</p>` },
-                    { prompt: "Fix the quote entities in this sentence so both entity references are complete.", broken: `<p>&quotHTML&quot is often called the language of structure &amp learning</p>`, solution: `<p>&quot;HTML&quot; is often called the language of structure &amp; learning</p>` }
+                    { prompt: "Replace every unsafe symbol in this line with the correct entity reference.", broken: `<p>&copy 2026 Modern Front End Tech & 5 < 9</p>`, solution: `<p>&copy; 2026 Modern Front End Tech &amp; 5 &lt; 9</p>` },
+                    { prompt: "Fix this sentence so the quote, section-tag text, and euro entity are all complete.", broken: `<p>&quotHard exam&quot uses &ltsection&gt and costs &euro 25</p>`, solution: `<p>&quot;Hard exam&quot; uses &lt;section&gt; and costs &euro; 25</p>` },
+                    { prompt: "Repair this spacing line so both non-breaking spaces and the ampersand entity are valid.", broken: `<p>Use&nbsp spaces for names like Modern&nbspFront End Tech &amp learning</p>`, solution: `<p>Use&nbsp; spaces for names like Modern&nbsp;Front End Tech &amp; learning</p>` }
                 ]
             },
             {
                 lesson: "Lesson 19: Canvas",
                 problems: [
-                    { prompt: "Repair this canvas so the width value, height attribute, and closing tag are all correct.", broken: `<canvas id="pad" width="30O" heigth="150"></canva>`, solution: `<canvas id="pad" width="300" height="150"></canvas>` },
-                    { prompt: "Fix this section so the canvas closes correctly and the fallback text stays inside it.", broken: `<section><canvas id="chart" width="400" height="200">Charts not supported<section>`, solution: `<section><canvas id="chart" width="400" height="200">Charts not supported</canvas></section>` },
-                    { prompt: "Repair the game area so the canvas tag and paragraph both close correctly.", broken: `<div><canvas id="game" width="500" height="250"></canavs><p>Game area</div>`, solution: `<div><canvas id="game" width="500" height="250"></canvas><p>Game area</p></div>` }
+                    { prompt: "Repair this canvas so the width, height, and closing tag are all correct while keeping the fallback text inside.", broken: `<canvas id="pad" width="30O" heigth="150">Practice board</canva>`, solution: `<canvas id="pad" width="300" height="150">Practice board</canvas>` },
+                    { prompt: "Fix this section so the canvas closes correctly and the fallback text stays inside the canvas.", broken: `<section><canvas id="chart" width="400" height="200">Charts not supported<section>`, solution: `<section><canvas id="chart" width="400" height="200">Charts not supported</canvas></section>` },
+                    { prompt: "Repair this figure so the canvas tag and figcaption both close correctly.", broken: `<figure><canvas id="game" width="500" height="250"></canavs><figcaption>Game area</figure>`, solution: `<figure><canvas id="game" width="500" height="250"></canvas><figcaption>Game area</figcaption></figure>` }
                 ]
             },
             {
                 lesson: "Lesson 20: Forms",
                 problems: [
-                    { prompt: "Fix this sign-up form so the label, required attribute, and form closing tag are all correct.", broken: `<form><label for="email">Email<label><input type="email" id="email" name="email" requierd><form>`, solution: `<form><label for="email">Email</label><input type="email" id="email" name="email" required></form>` },
-                    { prompt: "Repair the select field so the label and both option tags close correctly.", broken: `<form><label for="level">Level</label><select id="level" name="level"><option>Beginner<option>Intermediate</option></select></form>`, solution: `<form><label for="level">Level</label><select id="level" name="level"><option>Beginner</option><option>Intermediate</option></select></form>` },
-                    { prompt: "Fix this fieldset so the legend, first input, and fieldset all close correctly.", broken: `<form><fieldset><legend>Contact details<legend><input type="text" name="name"><input type="tel" name="phone"></fieldset></form>`, solution: `<form><fieldset><legend>Contact details</legend><input type="text" name="name"><input type="tel" name="phone"></fieldset></form>` }
+                    { prompt: "Fix this account form so legend, label, required, and fieldset structure are all correct.", broken: `<form><fieldset><legend>Account details<legend><label for="email">Email<label><input type="email" id="email" name="email" requierd></fieldset><button type="submit">Create account</button></form>`, solution: `<form><fieldset><legend>Account details</legend><label for="email">Email</label><input type="email" id="email" name="email" required></fieldset><button type="submit">Create account</button></form>` },
+                    { prompt: "Repair this select form so the label and all three option tags close correctly.", broken: `<form><label for="level">Level</label><select id="level" name="level"><option>Beginner<option>Intermediate</option><option>Advanced</select></form>`, solution: `<form><label for="level">Level</label><select id="level" name="level"><option>Beginner</option><option>Intermediate</option><option>Advanced</option></select></form>` },
+                    { prompt: "Fix this form so the textarea closes correctly before the checkbox and submit button.", broken: `<form><label for="bio">Bio</label><textarea id="bio" name="bio">I love HTML<textarea><label><input type="checkbox" name="terms" checked>Accept terms</label><button type="submit">Send</button></form>`, solution: `<form><label for="bio">Bio</label><textarea id="bio" name="bio">I love HTML</textarea><label><input type="checkbox" name="terms" checked>Accept terms</label><button type="submit">Send</button></form>` }
                 ]
             }
         ];
@@ -935,7 +936,10 @@
         downloadCertificateButton.addEventListener("click", downloadCertificate);
 
         renderView();
+        }
     </script>
-    <script src="ai-widget.js"></script>
+    <footer class="site-footer">
+        <p class="footer-note">This is not San Web Jose UI/UX Builder or FrontendTech.co.in. It is an HTML learning platform. To visit the UI/UX builder, go to <a href="https://frontendtech.com">frontendtech.com</a>.</p>
+    </footer>
 </body>
 </html>

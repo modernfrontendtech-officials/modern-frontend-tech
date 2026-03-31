@@ -1434,6 +1434,55 @@ footer nav:not(#site-nav) a {
   margin-bottom: 0;
 }
 
+.auth-gate-card {
+  display: grid;
+  gap: 16px;
+  margin-top: 24px;
+  padding: 26px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-xl);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(248, 242, 232, 0.98));
+  box-shadow: var(--shadow);
+}
+
+.auth-gate-card h2 {
+  margin-bottom: 0;
+}
+
+.auth-gate-card p {
+  margin-bottom: 0;
+  color: var(--ink-soft);
+}
+
+.auth-gate-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.auth-gate-actions a.secondary {
+  background: rgba(20, 33, 61, 0.06);
+  border-color: rgba(20, 33, 61, 0.14);
+  color: var(--ink) !important;
+  box-shadow: none;
+}
+
+.auth-gate-actions a.secondary:hover {
+  background: rgba(20, 33, 61, 0.1);
+}
+
+.footer-note {
+  margin: 0;
+  color: var(--ink);
+  font-family: "Trebuchet MS", "Gill Sans", sans-serif;
+  font-size: 0.98rem;
+  line-height: 1.6;
+}
+
+.footer-note a {
+  display: inline-flex;
+  margin-top: 8px;
+}
 .auth-page {
   display: block;
   padding-bottom: 56px;
@@ -2074,6 +2123,7 @@ footer nav:not(#site-nav) a {
   .page-links,
   .hero-actions,
   .social-links,
+  .auth-gate-actions,
   .assistant-form-actions,
   .assistant-prompt-list,
   .assistant-topbar-actions,
@@ -2108,6 +2158,7 @@ footer nav:not(#site-nav) a {
   .page-links > *,
   .hero-actions > *,
   .social-links > *,
+  .auth-gate-actions > *,
   .assistant-form-actions > *,
   .assistant-prompt-list > *,
   .assistant-topbar-actions > *,

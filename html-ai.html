@@ -139,9 +139,20 @@
             </form>
         </section>
     </main>
-
-    <script src="nav.js"></script>
+    <footer class="site-footer">
+        <p class="footer-note">This is not San Web Jose UI/UX Builder or FrontendTech.co.in. It is an HTML learning platform. To visit the UI/UX builder, go to <a href="https://frontendtech.com">frontendtech.com</a>.</p>
+    </footer>
+<script src="nav.js"></script>
     <script>
+        const canUseHtmlAi = window.siteAuth?.requireAuth?.({
+            title: "Sign in to use HTML AI",
+            message: "Please sign in or create an account before chatting with the HTML AI assistant.",
+            next: "html-ai.html"
+        }) ?? true;
+
+        if (!canUseHtmlAi) {
+            // Keep the chat locked for signed-out visitors.
+        } else {
         const CHAT_STORAGE_KEY = "mft_html_ai_chat_v2";
         const form = document.getElementById("assistant-form");
         const questionInput = document.getElementById("assistant-question");
@@ -352,6 +363,7 @@
 
         renderChatHistory();
         checkApiConnection();
+        }
     </script>
     <script src="ai-widget.js"></script>
 </body>

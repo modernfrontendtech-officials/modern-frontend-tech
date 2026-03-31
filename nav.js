@@ -38,9 +38,88 @@ function setAuthenticated(user = {}) {
 function clearAuthenticated() {
     try {
         window.localStorage.removeItem(AUTH_STATE_KEY);
+        window.localStorage.removeItem('auth');
     } catch {
         // Ignore storage failures and continue.
     }
+}
+
+function getAuthRedirectTarget() {
+    const params = new URLSearchParams(window.location.search);
+    const next = params.get('next');
+    if (!next) return 'index.html';
+
+    const trimmed = next.trim();
+    if (!trimmed) return 'index.html';
+    if (/^[a-z]+:/i.test(trimmed) || trimmed.startsWith('//')) return 'index.html';
+    if (!/\.html($|[?#])/i.test(trimmed)) return 'index.html';
+
+    return trimmed.replace(/^\.\//, '');
+}
+
+function buildAuthUrl(nextPath) {
+    const fallback = 'index.html';
+    const path = (nextPath || fallback).replace(/^\.\//, '');
+    return `auth.html?next=${encodeURIComponent(path || fallback)}`;
+}
+
+function getCurrentPageTarget() {
+    const path = window.location.pathname.split('/').pop() || 'index.html';
+    const search = window.location.search || '';
+    const hash = window.location.hash || '';
+    return `${path}${search}${hash}`;
+}
+
+function requireAuth(options = {}) {
+    if (isAuthenticated()) {
+        return true;
+    }
+
+    if (document.body) {
+        document.body.classList.add('auth-required-page', 'is-auth-locked');
+    }
+
+    const existingGate = document.querySelector('.auth-gate-card');
+    if (existingGate) {
+        return false;
+    }
+
+    const main = document.querySelector('main');
+    const gate = document.createElement('section');
+    gate.className = 'auth-gate-card';
+
+    const heading = document.createElement('h2');
+    heading.textContent = options.title || 'Sign in to continue';
+
+    const message = document.createElement('p');
+    message.textContent = options.message || 'You need an account before you can use this page.';
+
+    const actionRow = document.createElement('div');
+    actionRow.className = 'auth-gate-actions';
+
+    const signInLink = document.createElement('a');
+    signInLink.href = buildAuthUrl(options.next || getCurrentPageTarget());
+    signInLink.textContent = options.actionLabel || 'Sign In / Sign Up';
+
+    const homeLink = document.createElement('a');
+    homeLink.href = 'index.html';
+    homeLink.className = 'secondary';
+    homeLink.textContent = 'Back To Home';
+
+    actionRow.appendChild(signInLink);
+    actionRow.appendChild(homeLink);
+    gate.appendChild(heading);
+    gate.appendChild(message);
+    gate.appendChild(actionRow);
+
+    if (main && main.parentNode) {
+        main.classList.add('hidden');
+        main.parentNode.insertBefore(gate, main);
+    } else if (document.body) {
+        document.body.appendChild(gate);
+    }
+
+    return false;
 }
 
 function isBannerDismissed() {
@@ -231,6 +310,21 @@ function ensureFloatingAuthButton() {
     button.href = isAuthPage ? 'index.html' : 'auth.html';
     button.textContent = isAuthPage ? 'Home' : 'Sign In / Sign Up';
     document.body.appendChild(button);
+}
+
+function protectNavigationLinks() {
+    if (isAuthenticated()) return;
+
+    const protectedPages = new Set(['editor.html', 'html-ai.html', 'exam.html']);
+    document.querySelectorAll('a[href]').forEach((link) => {
+        const href = (link.getAttribute('href') || '').trim();
+        if (!protectedPages.has(href)) return;
+
+        link.addEventListener('click', (event) => {
+            event.preventDefault();
+            window.location.href = buildAuthUrl(href);
+        });
+    });
 }
 
 function initNav() {
@@ -436,15 +530,20 @@ function enhanceCodeExamples() {
     });
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    window.siteAuth = {
-        clearAuthenticated,
-        isAuthenticated,
-        setAuthenticated
-    };
+window.siteAuth = {
+    buildAuthUrl,
+    clearAuthenticated,
+    getAuthRedirectTarget,
+    getCurrentPageTarget,
+    isAuthenticated,
+    requireAuth,
+    setAuthenticated
+};
 
+document.addEventListener('DOMContentLoaded', () => {
     ensureTopBanner();
     ensureFloatingAuthButton();
+    protectNavigationLinks();
     initNav();
     enhanceCodeExamples();
     window.addEventListener('resize', syncBannerOffset);

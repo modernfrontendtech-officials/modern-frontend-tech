@@ -100,9 +100,20 @@
             </div>
         </section>
     </main>
-
-    <script src="nav.js"></script>
+    <footer class="site-footer">
+        <p class="footer-note">This is not San Web Jose UI/UX Builder or FrontendTech.co.in. It is an HTML learning platform. To visit the UI/UX builder, go to <a href="https://frontendtech.com">frontendtech.com</a>.</p>
+    </footer>
+<script src="nav.js"></script>
     <script>
+        const canUseEditor = window.siteAuth?.requireAuth?.({
+            title: "Sign in to use the HTML text editor",
+            message: "Create an account or sign in before writing code in the editor.",
+            next: "editor.html"
+        }) ?? true;
+
+        if (!canUseEditor) {
+            // Stop the editor from loading when the visitor is signed out.
+        } else {
         const STORAGE_KEY = "mft_editor_state_v1";
         const defaultState = {
             html: `<section class="card">\n  <p class="eyebrow">My first live project</p>\n  <h1>Hello from Modern Front End Tech</h1>\n  <p>I am learning HTML by writing real code inside my own editor.</p>\n  <button id="hello-btn">Click me</button>\n  <p id="message"></p>\n</section>`,
@@ -207,6 +218,7 @@ ${jsInput.value}
                 }
             });
         });
+        }
     </script>
     <script src="ai-widget.js"></script>
 </body>
