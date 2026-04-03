@@ -1,229 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HTML final exam</title>
-    <link rel="icon" type="image/x-icon" href="favicon.ico"> 
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-    <header>
-        <button id="open">open <br>
-            navigation bar</button>
-        <nav id="site-nav">
-            <button id="close">close <br>
-                navigation bar</button><br><br>
-            <a href="index.html" class="nav-link">home</a>
-            <a href="editor.html" class="nav-link">text editor</a>
-            <a href="whatishtml.html" class="nav-link">our html course</a>
-            <a href="exam.html" class="nav-link">html exam</a>
-            <a href="https://forum.frontendtech.co.in/" class="nav-link" target="_blank" rel="noopener noreferrer">community</a>
-        </nav>
-        <img src="favicon.ico" alt="logo" height="75px" style="float: left;">
-        <p id="name">modern front end tech</p>
-        <h1>html certification exam</h1>
-        <p id="p">This is the hardest HTML repair exam on the site: 60 multi-step fixes across 20 lesson groups. Scores below 50% fail, 50% to 79.99% earn an Intermediate certificate, and 80% or more earn a Professional certificate.</p>
-    </header>
 
-    <main class="exam-page">
-        <section class="exam-hero">
-            <div>
-                <span class="label">Certification</span>
-                <h2>Repair broken HTML under exam conditions</h2>
-                <p>This is a full stress-test, not a quick quiz. Each problem starts with broken code, and most questions now combine several structural, nesting, and attribute mistakes before the HTML becomes valid.</p>
-            </div>
-            <div class="exam-rule-grid">
-                <article class="exam-rule-card">
-                    <strong>180 minutes</strong>
-                    <p>A countdown starts as soon as the student begins the attempt.</p>
-                </article>
-                <article class="exam-rule-card">
-                    <strong>60 problems</strong>
-                    <p>There are 3 repair tasks from each of the 20 lesson groups.</p>
-                </article>
-                <article class="exam-rule-card">
-                    <strong>Auto grading</strong>
-                    <p>Every answer is checked against a corrected HTML solution when the exam is submitted.</p>
-                </article>
-                <article class="exam-rule-card">
-                    <strong>Certificates</strong>
-                    <p>Passing students receive a certificate level based on the percentage they earn.</p>
-                </article>
-            </div>
-        </section>
-
-        <section class="exam-start-card" id="exam-start-card">
-            <h2>Start exam</h2>
-            <p>Enter the student name before starting. When the exam begins, the student is moved into the focused exam editor page, and progress is saved in this browser so accidental refreshes do not erase the attempt.</p>
-            <form id="exam-start-form" class="exam-start-form">
-                <label for="student-name">Student name</label>
-                <input id="student-name" name="student-name" type="text" maxlength="80" placeholder="Enter full name" required>
-                <div class="exam-start-actions">
-                    <button type="submit" id="start-exam-button">start exam</button>
-                    <button type="button" class="secondary-action" id="reset-attempt-button">clear saved attempt</button>
-                </div>
-                <p id="exam-start-status" class="exam-start-status"></p>
-            </form>
-        </section>
-
-        <section class="exam-shell hidden" id="exam-shell">
-            <aside class="exam-sidebar">
-                <div class="exam-sidebar-card exam-sticky">
-                    <span class="label">Exam status</span>
-                    <h2 id="candidate-heading">Candidate</h2>
-                    <p class="exam-candidate" id="candidate-name-display"></p>
-                    <div class="exam-stat-list">
-                        <div>
-                            <span>Time left</span>
-                            <strong id="timer-display">03:00:00</strong>
-                        </div>
-                        <div>
-                            <span>Answered problems</span>
-                            <strong id="answered-display">0 / 60</strong>
-                        </div>
-                        <div>
-                            <span>Current problem</span>
-                            <strong id="current-problem-display">1 / 60</strong>
-                        </div>
-                    </div>
-                    <div class="exam-sidebar-actions">
-                        <button type="button" id="submit-exam-button">submit exam</button>
-                        <button type="button" class="secondary-action" id="restart-exam-button">start fresh</button>
-                    </div>
-                    <p class="quiet-note" id="save-status">Your work is saved automatically in this browser.</p>
-                </div>
-
-                <div class="exam-sidebar-card exam-question-list-card">
-                    <span class="label">All instructions</span>
-                    <h2>Question navigator</h2>
-                    <p>Select any of the 60 instructions from this list. The editor for each question starts blank until the student types an answer.</p>
-                    <div id="exam-question-list" class="exam-question-list"></div>
-                </div>
-            </aside>
-
-            <section class="exam-content exam-workspace">
-                <div class="exam-problem-summary">
-                    <h2>Exam instructions</h2>
-                    <ul>
-                        <li>Pick one instruction from the left and write the full HTML answer from scratch in the editor.</li>
-                        <li>The editor is intentionally blank. Nothing is pre-written for the student.</li>
-                        <li>Use the live preview to check the current answer before moving to the next question.</li>
-                        <li>The exam submits automatically when the countdown reaches zero.</li>
-                    </ul>
-                </div>
-                <article class="exam-problem-card exam-editor-card">
-                    <div class="exam-problem-head">
-                        <span class="exam-problem-number" id="current-problem-number">Problem 1</span>
-                        <span class="exam-problem-lesson" id="current-problem-lesson">Lesson 1</span>
-                    </div>
-                    <h2 id="current-problem-heading">Current instruction</h2>
-                    <p id="current-problem-prompt" class="exam-current-prompt"></p>
-                    <div class="exam-editor-actions">
-                        <button type="button" class="secondary-action" id="previous-problem-button">previous</button>
-                        <button type="button" id="next-problem-button">next</button>
-                    </div>
-                    <label class="exam-answer-panel" for="current-answer">
-                        <span>Student answer</span>
-                        <textarea id="current-answer" spellcheck="false" placeholder="Write your HTML answer here."></textarea>
-                    </label>
-                    <div class="exam-feedback hidden" id="current-problem-feedback"></div>
-                </article>
-
-                <article class="exam-sidebar-card exam-preview-card">
-                    <div class="exam-preview-head">
-                        <span class="label">Live preview</span>
-                        <h2>Current answer preview</h2>
-                        <p>The preview updates from the code written for the selected question.</p>
-                    </div>
-                    <iframe id="exam-preview-frame" class="exam-preview-frame" title="HTML answer preview" sandbox="allow-same-origin"></iframe>
-                </article>
-            </section>
-        </section>
-
-        <section class="exam-results hidden" id="exam-results">
-            <span class="label">Final result</span>
-            <h2 id="result-heading">Exam result</h2>
-            <p id="result-summary"></p>
-            <div class="exam-result-grid">
-                <article class="exam-result-card">
-                    <span>Score</span>
-                    <strong id="result-score">0 / 60</strong>
-                </article>
-                <article class="exam-result-card">
-                    <span>Percentage</span>
-                    <strong id="result-percent">0%</strong>
-                </article>
-                <article class="exam-result-card">
-                    <span>Status</span>
-                    <strong id="result-status">Fail</strong>
-                </article>
-                <article class="exam-result-card">
-                    <span>Certificate</span>
-                    <strong id="result-certificate">None</strong>
-                </article>
-            </div>
-
-            <div class="certificate-card hidden" id="certificate-card">
-                <div class="certificate-ornaments" aria-hidden="true">
-                    <svg class="certificate-medal" viewBox="0 0 120 120" role="presentation">
-                        <circle cx="60" cy="50" r="28" fill="#f6c65b"></circle>
-                        <circle cx="60" cy="50" r="18" fill="#fff2bf"></circle>
-                        <path d="M48 78 L38 112 L60 98 L82 112 L72 78 Z" fill="#d96b34"></path>
-                        <path d="M52 40 L57 50 L69 51 L60 59 L62 71 L52 65 L42 71 L44 59 L35 51 L47 50 Z" fill="#d48216"></path>
-                    </svg>
-                    <svg class="certificate-ribbon" viewBox="0 0 220 120" role="presentation">
-                        <rect x="0" y="22" width="220" height="50" rx="25" fill="rgba(255,255,255,0.12)"></rect>
-                        <circle cx="110" cy="47" r="28" fill="#ffe6a8"></circle>
-                        <circle cx="110" cy="47" r="18" fill="#fff7dd"></circle>
-                        <path d="M102 42 L108 48 L120 36" fill="none" stroke="#c2542d" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"></path>
-                    </svg>
-                    <svg class="certificate-medal" viewBox="0 0 120 120" role="presentation">
-                        <circle cx="60" cy="50" r="28" fill="#f6c65b"></circle>
-                        <circle cx="60" cy="50" r="18" fill="#fff2bf"></circle>
-                        <path d="M48 78 L38 112 L60 98 L82 112 L72 78 Z" fill="#2d7fb4"></path>
-                        <path d="M52 40 L57 50 L69 51 L60 59 L62 71 L52 65 L42 71 L44 59 L35 51 L47 50 Z" fill="#d48216"></path>
-                    </svg>
-                </div>
-                <div class="certificate-topline">Modern Front End Tech</div>
-                <h3 id="certificate-title">Intermediate certificate</h3>
-                <p class="certificate-kicker">Awarded for successfully completing the HTML repair examination</p>
-                <p class="certificate-candidate-name" id="certificate-name"></p>
-                <p class="certificate-copy">This certifies that the candidate named above attempted and passed the exam by demonstrating practical skill in fixing broken HTML structures under timed conditions.</p>
-                <div class="certificate-meta">
-                    <div>
-                        <span>Exam score</span>
-                        <strong id="certificate-score"></strong>
-                    </div>
-                    <div>
-                        <span>Certificate level</span>
-                        <strong id="certificate-level"></strong>
-                    </div>
-                    <div>
-                        <span>Date</span>
-                        <strong id="certificate-date"></strong>
-                    </div>
-                    <div>
-                        <span>Certificate ID</span>
-                        <strong id="certificate-id"></strong>
-                    </div>
-                </div>
-                <div class="certificate-signoff">
-                    <div class="certificate-signature-block">
-                        <p class="certificate-signature-name">Divyansh</p>
-                        <p class="certificate-signature-label">Owner signature</p>
-                    </div>
-                </div>
-                <div class="certificate-actions">
-                    <button type="button" id="print-certificate-button">print certificate</button>
-                    <button type="button" class="secondary-action" id="download-certificate-button">download certificate</button>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <script src="nav.js"></script>
-    <script>
         const canUseExam = window.siteAuth?.requireAuth?.({
             title: "Sign in to take the HTML exam",
             message: "Students must sign in or create an account before starting the certification exam.",
@@ -234,7 +9,6 @@
             // Prevent exam setup and timers from starting for signed-out visitors.
         } else {
         const EXAM_STORAGE_KEY = "mft_html_exam_state_v1";
-        const FOCUSED_EXAM_URL = "exam-focused.html";
         const EXAM_DURATION_MINUTES = 180;
         const EXAM_DURATION_MS = EXAM_DURATION_MINUTES * 60 * 1000;
         const VOID_ELEMENTS = new Set(["area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"]);
@@ -918,11 +692,6 @@
                 return;
             }
 
-            if (!hasSubmitted) {
-                window.location.href = FOCUSED_EXAM_URL;
-                return;
-            }
-
             startCard.classList.add("hidden");
             examShell.classList.remove("hidden");
             renderQuestionNavigator();
@@ -989,7 +758,7 @@
             examState.deadlineAt = Date.now() + EXAM_DURATION_MS;
             examState.currentProblemId = problems[0].id;
             saveState("Exam started.");
-            window.location.href = FOCUSED_EXAM_URL;
+            renderView();
         });
 
         currentAnswerTextarea.addEventListener("input", (event) => {
@@ -1038,9 +807,4 @@
 
         renderView();
         }
-    </script>
-    <footer class="site-footer">
-        <p class="footer-note">This is not San Web Jose UI/UX Builder or FrontendTech.co.in. It is an HTML learning platform. To visit the UI/UX builder, go to <a href="https://frontendtech.com">frontendtech.com</a>.</p>
-    </footer>
-</body>
-</html>
+    

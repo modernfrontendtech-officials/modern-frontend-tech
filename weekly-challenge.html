@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>weekly html challenge</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .weekly-challenge-page {
+            display: grid;
+            gap: 22px;
+        }
+
+        .weekly-challenge-hero,
+        .weekly-challenge-status,
+        .weekly-challenge-list-card,
+        .weekly-challenge-brief,
+        .weekly-challenge-editor-card,
+        .weekly-challenge-preview-card {
+            border: 1px solid rgba(20, 33, 61, 0.12);
+            border-radius: 26px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(245,240,231,0.96));
+            box-shadow: 0 16px 34px rgba(20, 33, 61, 0.08);
+        }
+
+        .weekly-challenge-hero,
+        .weekly-challenge-status,
+        .weekly-challenge-list-card,
+        .weekly-challenge-brief,
+        .weekly-challenge-editor-card,
+        .weekly-challenge-preview-card {
+            padding: 22px;
+        }
+
+        .weekly-challenge-shell {
+            display: grid;
+            gap: 22px;
+            grid-template-columns: minmax(280px, 340px) minmax(0, 1fr);
+            align-items: start;
+        }
+
+        .weekly-challenge-sidebar {
+            display: grid;
+            gap: 18px;
+        }
+
+        .weekly-challenge-status-grid {
+            display: grid;
+            gap: 12px;
+            margin: 16px 0;
+        }
+
+        .weekly-challenge-status-item {
+            padding: 14px 16px;
+            border-radius: 18px;
+            background: rgba(20, 33, 61, 0.05);
+            border: 1px solid rgba(20, 33, 61, 0.08);
+        }
+
+        .weekly-challenge-status-item span,
+        .weekly-challenge-list-button span,
+        .weekly-challenge-brief .label,
+        .weekly-challenge-panel-label {
+            display: block;
+            font-size: 0.82rem;
+            font-weight: 800;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--ink-soft);
+        }
+
+        .weekly-challenge-status-item strong {
+            display: block;
+            margin-top: 4px;
+            font-size: 1.25rem;
+            color: var(--ink);
+        }
+
+        .weekly-challenge-list {
+            display: grid;
+            gap: 12px;
+        }
+
+        .weekly-challenge-list-button {
+            width: 100%;
+            display: grid;
+            gap: 6px;
+            padding: 14px 16px;
+            text-align: left;
+            border-radius: 18px;
+            border: 1px solid rgba(20, 33, 61, 0.12);
+            background: #fffdf8;
+            color: var(--ink);
+        }
+
+        .weekly-challenge-list-button:hover {
+            transform: none;
+        }
+
+        .weekly-challenge-list-button.is-active {
+            border-color: rgba(37, 99, 235, 0.3);
+            background: rgba(37, 99, 235, 0.08);
+        }
+
+        .weekly-challenge-list-button.is-started {
+            border-color: rgba(194, 84, 45, 0.26);
+        }
+
+        .weekly-challenge-workspace {
+            display: grid;
+            gap: 18px;
+        }
+
+        .weekly-challenge-checklist {
+            margin: 14px 0 0;
+            padding-left: 20px;
+        }
+
+        .weekly-challenge-panels {
+            display: grid;
+            gap: 18px;
+            grid-template-columns: minmax(0, 1fr) minmax(320px, 0.92fr);
+        }
+
+        .weekly-challenge-editor-card,
+        .weekly-challenge-preview-card {
+            display: grid;
+            gap: 14px;
+        }
+
+        .weekly-challenge-editor {
+            width: 100%;
+            min-height: 430px;
+            padding: 16px;
+            border: 1px solid rgba(20, 33, 61, 0.14);
+            border-radius: 18px;
+            background: #101c30;
+            color: #f7f2e8;
+            resize: vertical;
+            line-height: 1.55;
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 0.95rem;
+        }
+
+        .weekly-challenge-preview {
+            width: 100%;
+            min-height: 430px;
+            border: 1px solid rgba(20, 33, 61, 0.14);
+            border-radius: 18px;
+            background: #ffffff;
+        }
+
+        .weekly-challenge-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        @media (max-width: 980px) {
+            .weekly-challenge-shell,
+            .weekly-challenge-panels {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <button id="open">open <br>
+            navigation bar</button>
+        <nav id="site-nav">
+            <button id="close">close <br>
+                navigation bar</button><br><br>
+            <a href="index.html" class="nav-link">home</a>
+            <a href="editor.html" class="nav-link">text editor</a>
+            <a href="whatishtml.html" class="nav-link">our html course</a>
+            <a href="exam.html" class="nav-link">html exam</a>
+            <a href="https://forum.frontendtech.co.in/" class="nav-link" target="_blank" rel="noopener noreferrer">community</a>
+        </nav>
+        <img src="favicon.ico" alt="logo" height="75px" style="float: left;">
+        <p id="name">modern front end tech</p>
+        <h1>weekly html challenge</h1>
+        <p id="p">Get a fresh rotating set of coding prompts every week and practice building HTML without looking at the answer first.</p>
+    </header>
+
+    <main class="weekly-challenge-page">
+        <section class="weekly-challenge-hero">
+            <span class="label">Weekly practice</span>
+            <h2 id="weekly-challenge-headline">This week's HTML challenge pack</h2>
+            <p id="weekly-challenge-subtitle">The challenge list refreshes automatically every week so returning learners keep getting a new mix of prompts.</p>
+        </section>
+
+        <section class="weekly-challenge-shell">
+            <aside class="weekly-challenge-sidebar">
+                <section class="weekly-challenge-status">
+                    <span class="label">Challenge status</span>
+                    <h2 id="weekly-week-label">Current week</h2>
+                    <div class="weekly-challenge-status-grid">
+                        <div class="weekly-challenge-status-item">
+                            <span>Challenge pack</span>
+                            <strong id="weekly-pack-range">Loading...</strong>
+                        </div>
+                        <div class="weekly-challenge-status-item">
+                            <span>Challenges started</span>
+                            <strong id="weekly-started-count">0 / 4</strong>
+                        </div>
+                        <div class="weekly-challenge-status-item">
+                            <span>Refresh cadence</span>
+                            <strong>Every Monday</strong>
+                        </div>
+                    </div>
+                    <div class="weekly-challenge-actions">
+                        <button type="button" id="weekly-clear-button">clear this week</button>
+                    </div>
+                </section>
+
+                <section class="weekly-challenge-list-card">
+                    <span class="label">Current set</span>
+                    <h2>Challenge list</h2>
+                    <p>Pick a challenge, write your HTML, and use the live preview to test the structure immediately.</p>
+                    <div class="weekly-challenge-list" id="weekly-challenge-list"></div>
+                </section>
+            </aside>
+
+            <section class="weekly-challenge-workspace">
+                <article class="weekly-challenge-brief">
+                    <span class="label" id="weekly-active-level">Loading</span>
+                    <h2 id="weekly-active-title">Challenge title</h2>
+                    <p id="weekly-active-goal">Challenge goal</p>
+                    <ul class="weekly-challenge-checklist" id="weekly-active-checks"></ul>
+                    <p id="weekly-active-hint"></p>
+                </article>
+
+                <section class="weekly-challenge-panels">
+                    <article class="weekly-challenge-editor-card">
+                        <span class="weekly-challenge-panel-label">Your HTML answer</span>
+                        <textarea id="weekly-editor" class="weekly-challenge-editor" spellcheck="false" placeholder="Write your HTML challenge answer here."></textarea>
+                    </article>
+
+                    <article class="weekly-challenge-preview-card">
+                        <span class="weekly-challenge-panel-label">Live preview</span>
+                        <iframe id="weekly-preview" class="weekly-challenge-preview" title="Weekly challenge preview" sandbox="allow-scripts"></iframe>
+                    </article>
+                </section>
+            </section>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <p class="footer-note">This is not San Web Jose UI/UX Builder or FrontendTech.co.in. It is an HTML learning platform. To visit the UI/UX builder, go to <a href="https://frontendtech.com">frontendtech.com</a>.</p>
+    </footer>
+    <script src="nav.js"></script>
+    <script src="weekly-challenge.js"></script>
+    <script src="ai-widget.js"></script>
+</body>
+</html>

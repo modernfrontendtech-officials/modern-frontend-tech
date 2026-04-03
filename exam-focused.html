@@ -3,59 +3,378 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HTML final exam</title>
+    <title> exam</title>
     <link rel="icon" type="image/x-icon" href="favicon.ico"> 
     <link rel="stylesheet" href="styles.css">
+    <style>
+        body.exam-focused-screen {
+            margin: 0;
+            min-height: 100vh;
+            padding: 0;
+            background: #0a0a23;
+            color: #f5f6f7;
+        }
+
+        body.exam-focused-screen > main {
+            width: 100%;
+            margin: 0;
+        }
+
+        body.exam-focused-screen .exam-page {
+            gap: 0;
+            min-height: 100vh;
+        }
+
+        body.exam-focused-screen .exam-start-card,
+        body.exam-focused-screen .exam-sidebar-card,
+        body.exam-focused-screen .exam-problem-summary,
+        body.exam-focused-screen .exam-results,
+        body.exam-focused-screen .exam-problem-card,
+        body.exam-focused-screen .exam-preview-card,
+        body.exam-focused-screen .certificate-card {
+            border: 1px solid #3b3b4f;
+            border-radius: 0;
+            background: #1b1b32;
+            box-shadow: none;
+            color: #f5f6f7;
+        }
+
+        body.exam-focused-screen .exam-start-card {
+            max-width: 760px;
+            margin: 48px auto;
+            padding: 28px;
+            border-radius: 14px;
+        }
+
+        body.exam-focused-screen .exam-start-card p,
+        body.exam-focused-screen .exam-question-list-card p,
+        body.exam-focused-screen .exam-preview-head p,
+        body.exam-focused-screen .quiet-note,
+        body.exam-focused-screen .exam-current-prompt {
+            color: #d0d0d5;
+        }
+
+        body.exam-focused-screen .label,
+        body.exam-focused-screen .exam-stat-list span,
+        body.exam-focused-screen .exam-answer-panel span,
+        body.exam-focused-screen .exam-result-card span,
+        body.exam-focused-screen .certificate-meta span {
+            color: #99c9ff;
+        }
+
+        body.exam-focused-screen button {
+            border-radius: 6px;
+            border: 1px solid #f1be32;
+            background: #f1be32;
+            color: #0a0a23;
+            font-weight: 700;
+            box-shadow: none;
+        }
+
+        body.exam-focused-screen button:hover {
+            background: #f9aa23;
+            transform: none;
+        }
+
+        body.exam-focused-screen .secondary-action {
+            border-color: #3b3b4f;
+            background: transparent;
+            color: #f5f6f7;
+        }
+
+        body.exam-focused-screen .secondary-action:hover {
+            background: #2a2a40;
+        }
+
+        body.exam-focused-screen .exam-start-form input {
+            background: #0a0a23;
+            border-color: #3b3b4f;
+            color: #f5f6f7;
+        }
+
+        body.exam-focused-screen .exam-start-form input:focus,
+        body.exam-focused-screen .exam-answer-panel textarea:focus {
+            outline: 2px solid rgba(153, 201, 255, 0.38);
+            outline-offset: 0;
+        }
+
+        body.exam-focused-screen .exam-shell {
+            gap: 0;
+            min-height: 100vh;
+            grid-template-columns: 340px minmax(0, 1fr);
+            align-items: start;
+        }
+
+        body.exam-focused-screen .exam-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            min-height: 100vh;
+            height: auto;
+            background: #16162f;
+            border-right: 1px solid #3b3b4f;
+            overflow: hidden;
+        }
+
+        body.exam-focused-screen .exam-sticky {
+            position: sticky;
+            top: 0;
+            z-index: 2;
+            padding: 24px;
+            background: #16162f;
+            border-bottom: 1px solid #3b3b4f;
+        }
+
+        body.exam-focused-screen .exam-stat-list div {
+            background: #0a0a23;
+            border-color: #3b3b4f;
+        }
+
+        body.exam-focused-screen .exam-stat-list strong,
+        body.exam-focused-screen .exam-candidate {
+            color: #ffffff;
+        }
+
+        body.exam-focused-screen .exam-question-list-card {
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+            background: #16162f;
+            overflow: hidden;
+        }
+
+        body.exam-focused-screen .exam-question-list-card > .label,
+        body.exam-focused-screen .exam-question-list-card > h2,
+        body.exam-focused-screen .exam-question-list-card > p {
+            padding-left: 24px;
+            padding-right: 24px;
+        }
+
+        body.exam-focused-screen .exam-question-list-card > .label {
+            padding-top: 24px;
+        }
+
+        body.exam-focused-screen .exam-question-list-card > h2 {
+            margin-top: 6px;
+            margin-bottom: 12px;
+        }
+
+        body.exam-focused-screen .exam-question-list-card > p {
+            margin-bottom: 18px;
+        }
+
+        body.exam-focused-screen .exam-question-list {
+            height: auto;
+            max-height: 252px;
+            min-height: 252px;
+            padding: 0;
+            border-top: 1px solid #3b3b4f;
+            overflow: auto;
+        }
+
+        body.exam-focused-screen .exam-question-button {
+            padding: 14px 18px;
+            border: none;
+            border-bottom: 1px solid #2a2a40;
+            border-radius: 0;
+            background: #16162f;
+            color: #d0d0d5;
+        }
+
+        body.exam-focused-screen .exam-question-button:hover {
+            background: #2a2a40;
+            border-color: #2a2a40;
+        }
+
+        body.exam-focused-screen .exam-question-button-number {
+            background: #3b3b4f;
+            color: #ffffff;
+        }
+
+        body.exam-focused-screen .exam-question-button-copy {
+            display: -webkit-box;
+            overflow: hidden;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+
+        body.exam-focused-screen .exam-question-button.is-active {
+            background: #0a0a23;
+            border-left: 4px solid #f1be32;
+            padding-left: 14px;
+        }
+
+        body.exam-focused-screen .exam-question-button.is-answered {
+            background: #11233f;
+        }
+
+        body.exam-focused-screen .exam-question-button.is-correct {
+            background: #0f2f24;
+        }
+
+        body.exam-focused-screen .exam-question-button.is-incorrect {
+            background: #351d22;
+        }
+
+        body.exam-focused-screen .exam-workspace {
+            gap: 0;
+            grid-template-columns: minmax(0, 1.1fr) minmax(360px, 0.9fr);
+            align-items: stretch;
+            background: #ffffff;
+        }
+
+        body.exam-focused-screen .exam-problem-summary {
+            grid-column: 1 / -1;
+            padding: 18px 24px;
+            border: none;
+            border-bottom: 1px solid #3b3b4f;
+            background: #16162f;
+        }
+
+        body.exam-focused-screen .exam-problem-summary ul {
+            margin: 0;
+            padding-left: 20px;
+            color: #d0d0d5;
+        }
+
+        body.exam-focused-screen .exam-editor-card {
+            padding: 24px;
+            border: none;
+            border-right: 1px solid #3b3b4f;
+            background: #1b1b32;
+        }
+
+        body.exam-focused-screen .exam-problem-number,
+        body.exam-focused-screen .exam-problem-lesson {
+            border: 1px solid #3b3b4f;
+            background: #0a0a23;
+            color: #f1be32;
+        }
+
+        body.exam-focused-screen .exam-editor-actions {
+            justify-content: flex-start;
+        }
+
+        body.exam-focused-screen .exam-answer-panel textarea {
+            min-height: 70vh;
+            border-color: #3b3b4f;
+            background: #0a0a23;
+            color: #f5f6f7;
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 0.95rem;
+        }
+
+        body.exam-focused-screen .exam-feedback {
+            background: #2a2a40;
+            border-color: #4f4f66;
+        }
+
+        body.exam-focused-screen .exam-preview-card {
+            padding: 24px;
+            border: none;
+            background: #f5f6f7;
+            color: #0a0a23;
+        }
+
+        body.exam-focused-screen .exam-preview-head .label {
+            color: #3b3b4f;
+        }
+
+        body.exam-focused-screen .exam-preview-head h2,
+        body.exam-focused-screen .exam-preview-head p {
+            color: #0a0a23;
+        }
+
+        body.exam-focused-screen .exam-preview-frame {
+            min-height: 70vh;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            background: #ffffff;
+        }
+
+        body.exam-focused-screen .exam-results {
+            width: min(100% - 48px, 1240px);
+            margin: 0 auto;
+            margin-top: 32px;
+            margin-bottom: 32px;
+            border-radius: 14px;
+        }
+
+        body.exam-focused-screen .certificate-card {
+            border-radius: 14px;
+        }
+
+        @media (max-width: 1200px) {
+            body.exam-focused-screen .exam-workspace {
+                grid-template-columns: 1fr;
+            }
+
+            body.exam-focused-screen .exam-editor-card {
+                border-right: none;
+                border-bottom: 1px solid #3b3b4f;
+            }
+
+            body.exam-focused-screen .exam-preview-frame,
+            body.exam-focused-screen .exam-answer-panel textarea {
+                min-height: 48vh;
+            }
+        }
+
+        @media (max-width: 860px) {
+            body.exam-focused-screen {
+                padding: 0;
+            }
+
+            body.exam-focused-screen .exam-start-card {
+                margin: 18px;
+            }
+
+            body.exam-focused-screen .exam-shell {
+                grid-template-columns: 1fr;
+            }
+
+            body.exam-focused-screen .exam-sidebar {
+                min-height: auto;
+                height: auto;
+                border-right: none;
+                border-bottom: 1px solid #3b3b4f;
+                overflow: visible;
+            }
+
+            body.exam-focused-screen .exam-sticky {
+                position: static;
+            }
+
+            body.exam-focused-screen .exam-question-list {
+                max-height: 220px;
+                min-height: 220px;
+            }
+
+            body.exam-focused-screen .exam-results {
+                width: min(100% - 18px, 100%);
+            }
+
+            body.exam-focused-screen .exam-start-actions,
+            body.exam-focused-screen .exam-sidebar-actions,
+            body.exam-focused-screen .exam-editor-actions {
+                flex-direction: column;
+            }
+
+            body.exam-focused-screen .exam-start-actions > *,
+            body.exam-focused-screen .exam-sidebar-actions > *,
+            body.exam-focused-screen .exam-editor-actions > * {
+                width: 100%;
+            }
+        }
+    </style>
 </head>
-<body>
-    <header>
-        <button id="open">open <br>
-            navigation bar</button>
-        <nav id="site-nav">
-            <button id="close">close <br>
-                navigation bar</button><br><br>
-            <a href="index.html" class="nav-link">home</a>
-            <a href="editor.html" class="nav-link">text editor</a>
-            <a href="whatishtml.html" class="nav-link">our html course</a>
-            <a href="exam.html" class="nav-link">html exam</a>
-            <a href="https://forum.frontendtech.co.in/" class="nav-link" target="_blank" rel="noopener noreferrer">community</a>
-        </nav>
-        <img src="favicon.ico" alt="logo" height="75px" style="float: left;">
-        <p id="name">modern front end tech</p>
-        <h1>html certification exam</h1>
-        <p id="p">This is the hardest HTML repair exam on the site: 60 multi-step fixes across 20 lesson groups. Scores below 50% fail, 50% to 79.99% earn an Intermediate certificate, and 80% or more earn a Professional certificate.</p>
-    </header>
-
+<body class="exam-focused-screen">
     <main class="exam-page">
-        <section class="exam-hero">
-            <div>
-                <span class="label">Certification</span>
-                <h2>Repair broken HTML under exam conditions</h2>
-                <p>This is a full stress-test, not a quick quiz. Each problem starts with broken code, and most questions now combine several structural, nesting, and attribute mistakes before the HTML becomes valid.</p>
-            </div>
-            <div class="exam-rule-grid">
-                <article class="exam-rule-card">
-                    <strong>180 minutes</strong>
-                    <p>A countdown starts as soon as the student begins the attempt.</p>
-                </article>
-                <article class="exam-rule-card">
-                    <strong>60 problems</strong>
-                    <p>There are 3 repair tasks from each of the 20 lesson groups.</p>
-                </article>
-                <article class="exam-rule-card">
-                    <strong>Auto grading</strong>
-                    <p>Every answer is checked against a corrected HTML solution when the exam is submitted.</p>
-                </article>
-                <article class="exam-rule-card">
-                    <strong>Certificates</strong>
-                    <p>Passing students receive a certificate level based on the percentage they earn.</p>
-                </article>
-            </div>
-        </section>
-
         <section class="exam-start-card" id="exam-start-card">
+            <span class="label">Focused exam mode</span>
             <h2>Start exam</h2>
-            <p>Enter the student name before starting. When the exam begins, the student is moved into the focused exam editor page, and progress is saved in this browser so accidental refreshes do not erase the attempt.</p>
+            <p>Enter the student name and begin the focused exam screen. Once the attempt starts, this page only shows the timer, exam info, instructions, editor, and preview.</p>
             <form id="exam-start-form" class="exam-start-form">
                 <label for="student-name">Student name</label>
                 <input id="student-name" name="student-name" type="text" maxlength="80" placeholder="Enter full name" required>
@@ -221,20 +540,13 @@
             </div>
         </section>
     </main>
-
-    <script src="nav.js"></script>
     <script>
-        const canUseExam = window.siteAuth?.requireAuth?.({
-            title: "Sign in to take the HTML exam",
-            message: "Students must sign in or create an account before starting the certification exam.",
-            next: "exam.html"
-        }) ?? true;
+        const canUseExam = true;
 
         if (!canUseExam) {
             // Prevent exam setup and timers from starting for signed-out visitors.
         } else {
         const EXAM_STORAGE_KEY = "mft_html_exam_state_v1";
-        const FOCUSED_EXAM_URL = "exam-focused.html";
         const EXAM_DURATION_MINUTES = 180;
         const EXAM_DURATION_MS = EXAM_DURATION_MINUTES * 60 * 1000;
         const VOID_ELEMENTS = new Set(["area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"]);
@@ -918,11 +1230,6 @@
                 return;
             }
 
-            if (!hasSubmitted) {
-                window.location.href = FOCUSED_EXAM_URL;
-                return;
-            }
-
             startCard.classList.add("hidden");
             examShell.classList.remove("hidden");
             renderQuestionNavigator();
@@ -989,7 +1296,7 @@
             examState.deadlineAt = Date.now() + EXAM_DURATION_MS;
             examState.currentProblemId = problems[0].id;
             saveState("Exam started.");
-            window.location.href = FOCUSED_EXAM_URL;
+            renderView();
         });
 
         currentAnswerTextarea.addEventListener("input", (event) => {
@@ -1035,12 +1342,8 @@
         });
 
         downloadCertificateButton.addEventListener("click", downloadCertificate);
-
         renderView();
         }
     </script>
-    <footer class="site-footer">
-        <p class="footer-note">This is not San Web Jose UI/UX Builder or FrontendTech.co.in. It is an HTML learning platform. To visit the UI/UX builder, go to <a href="https://frontendtech.com">frontendtech.com</a>.</p>
-    </footer>
 </body>
 </html>

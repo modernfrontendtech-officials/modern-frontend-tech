@@ -346,6 +346,27 @@ function initNav() {
     });
 }
 
+function ensureWeeklyChallengeNavLink() {
+    const nav = document.getElementById('site-nav');
+    if (!nav) return;
+    if (nav.querySelector('a[href="weekly-challenge.html"]')) return;
+
+    const link = document.createElement('a');
+    link.href = 'weekly-challenge.html';
+    link.className = 'nav-link';
+    link.textContent = 'weekly challenge';
+    nav.appendChild(link);
+}
+
+function ensureLessonQuizScript() {
+    if (document.querySelector('script[data-lesson-quiz="true"]')) return;
+
+    const script = document.createElement('script');
+    script.src = 'lesson-quiz.js';
+    script.dataset.lessonQuiz = 'true';
+    document.body.appendChild(script);
+}
+
 function normalizeText(value) {
     return (value || '').replace(/\s+/g, ' ').trim().toLowerCase();
 }
@@ -545,6 +566,8 @@ document.addEventListener('DOMContentLoaded', () => {
     ensureFloatingAuthButton();
     protectNavigationLinks();
     initNav();
+    ensureWeeklyChallengeNavLink();
     enhanceCodeExamples();
+    ensureLessonQuizScript();
     window.addEventListener('resize', syncBannerOffset);
 });
