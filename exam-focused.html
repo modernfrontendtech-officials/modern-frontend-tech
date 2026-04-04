@@ -1260,6 +1260,68 @@
             startTimer();
         }
 
+        function getSavedAuthToken() {
+            try {
+                const rawState = window.localStorage.getItem("mft_auth_state_v1");
+                if (rawState) {
+                    const parsed = JSON.parse(rawState);
+                    if (parsed?.authToken) {
+                        return parsed.authToken;
+                    }
+                }
+
+                const legacy = window.localStorage.getItem("auth") || "";
+                return legacy.includes(".") ? legacy : "";
+            } catch {
+                return "";
+            }
+        }
+
+        function getApiBase() {
+            const isFile = window.location.protocol === "file:";
+            const isLocalPreviewHost = ["localhost", "127.0.0.1"].includes(window.location.hostname);
+            const isLocalApiHost = isLocalPreviewHost && window.location.port === "3000";
+            const isLocalPreview = isFile || (isLocalPreviewHost && !isLocalApiHost);
+
+            if (!isLocalPreview) {
+                return "";
+            }
+
+            try {
+                const saved = window.localStorage.getItem("mft_api_base") || "";
+                return saved || `${window.location.protocol}//${window.location.hostname || "localhost"}:3000`;
+            } catch {
+                return `${window.location.protocol}//${window.location.hostname || "localhost"}:3000`;
+            }
+        }
+
+        function trackExamResultOnProfile() {
+            const authToken = getSavedAuthToken();
+            if (!authToken || !examState.grading) {
+                return;
+            }
+
+            fetch(`${getApiBase()}/api/profile-activity`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${authToken}`
+                },
+                body: JSON.stringify({
+                    eventType: "exam_result",
+                    page: "exam-focused.html",
+                    studentName: examState.studentName,
+                    score: examState.grading.correctCount,
+                    total: 60,
+                    percentage: examState.grading.percentage,
+                    status: examState.grading.status,
+                    certificate: examState.grading.certificate,
+                    certificateId: examState.certificateId,
+                    submittedAt: examState.submittedAt
+                })
+            }).catch(() => {});
+        }
+
         function submitExam(fromTimer = false) {
             if (examState.submitted) {
                 return;
@@ -1276,6 +1338,7 @@
             examState.submittedAt = new Date().toISOString();
             examState.grading = gradeExam();
             examState.certificateId = examState.grading.certificate === "None" ? "" : buildCertificateId();
+            trackExamResultOnProfile();
             saveState(fromTimer ? "Time ended. Exam submitted automatically." : "Exam submitted.");
             renderView();
             resultsSection.scrollIntoView({ behavior: "smooth", block: "start" });

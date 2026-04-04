@@ -7,148 +7,258 @@
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="stylesheet" href="styles.css">
     <style>
+        body.weekly-challenge-theme {
+            --weekly-night: #0f1d34;
+            --weekly-night-soft: #18304f;
+            --weekly-glow: #f4c95d;
+            --weekly-paper: #fffaf1;
+            --weekly-surface: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(247, 241, 232, 0.98));
+        }
+
+        body.weekly-challenge-theme::after {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            background:
+                radial-gradient(circle at 16% 18%, rgba(244, 201, 93, 0.12), transparent 22%),
+                radial-gradient(circle at 82% 24%, rgba(194, 84, 45, 0.12), transparent 20%),
+                radial-gradient(circle at 68% 82%, rgba(36, 70, 102, 0.10), transparent 22%);
+            mix-blend-mode: multiply;
+        }
+
         .weekly-challenge-page {
+            position: relative;
+            overflow: hidden;
             display: grid;
-            gap: 22px;
+            gap: 26px;
+            padding: clamp(24px, 3.6vw, 36px);
+            background:
+                radial-gradient(circle at top right, rgba(244, 201, 93, 0.18), transparent 26%),
+                linear-gradient(180deg, rgba(255, 255, 255, 0.97), rgba(248, 242, 233, 0.99));
         }
 
-        .weekly-challenge-hero,
+        .weekly-challenge-page::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background:
+                linear-gradient(135deg, rgba(20, 33, 61, 0.025), transparent 34%),
+                linear-gradient(180deg, rgba(255, 255, 255, 0.34), transparent 28%);
+        }
+
+        .weekly-challenge-page > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .weekly-challenge-hero {
+            position: relative;
+            overflow: hidden;
+            display: grid;
+            gap: 24px;
+            grid-template-columns: minmax(0, 1.3fr) minmax(280px, 0.9fr);
+            padding: clamp(26px, 4vw, 38px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 32px;
+            background:
+                radial-gradient(circle at top right, rgba(244, 201, 93, 0.34), transparent 28%),
+                linear-gradient(135deg, rgba(10, 24, 43, 0.98), rgba(24, 48, 79, 0.96) 56%, rgba(194, 84, 45, 0.92));
+            color: #fdf8ef;
+            box-shadow: 0 30px 60px rgba(13, 24, 41, 0.22);
+        }
+
+        .weekly-challenge-hero::before,
+        .weekly-challenge-hero::after {
+            content: "";
+            position: absolute;
+            border-radius: 999px;
+            pointer-events: none;
+        }
+
+        .weekly-challenge-hero::before {
+            top: -120px;
+            right: -80px;
+            width: 280px;
+            height: 280px;
+            background: radial-gradient(circle, rgba(244, 201, 93, 0.36), rgba(244, 201, 93, 0));
+        }
+
+        .weekly-challenge-hero::after {
+            bottom: -150px;
+            left: -90px;
+            width: 260px;
+            height: 260px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0));
+        }
+
+        .weekly-challenge-hero-copy,
+        .weekly-challenge-hero-panel {
+            position: relative;
+            z-index: 1;
+        }
+
+        .weekly-challenge-kicker,
+        .weekly-challenge-meta-card span {
+            display: inline-flex;
+            align-items: center;
+            width: fit-content;
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.12);
+            color: #fff6dd !important;
+            letter-spacing: 0.14em;
+        }
+
+        #weekly-challenge-headline {
+            margin: 18px 0 14px;
+            color: #fffdf7 !important;
+            font-size: clamp(2.2rem, 5vw, 4.2rem) !important;
+            max-width: 11ch;
+        }
+
+        #weekly-challenge-subtitle {
+            margin: 0;
+            max-width: 58ch;
+            color: rgba(253, 248, 239, 0.84) !important;
+            font-size: clamp(1rem, 1.8vw, 1.14rem);
+        }
+
+        .weekly-challenge-hero-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 22px;
+        }
+
+        .weekly-challenge-hero-tags span {
+            padding: 10px 14px;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            background: rgba(255, 255, 255, 0.12);
+            color: #fffaf0;
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+
+        .weekly-challenge-hero-panel {
+            display: grid;
+            gap: 14px;
+            align-content: center;
+        }
+
+        .weekly-challenge-meta-card,
         .weekly-challenge-status,
         .weekly-challenge-list-card,
         .weekly-challenge-brief,
         .weekly-challenge-editor-card,
         .weekly-challenge-preview-card {
-            border: 1px solid rgba(20, 33, 61, 0.12);
-            border-radius: 26px;
-            background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(245,240,231,0.96));
-            box-shadow: 0 16px 34px rgba(20, 33, 61, 0.08);
+            position: relative;
+            overflow: hidden;
+            border-radius: 28px;
         }
 
-        .weekly-challenge-hero,
-        .weekly-challenge-status,
-        .weekly-challenge-list-card,
-        .weekly-challenge-brief,
-        .weekly-challenge-editor-card,
-        .weekly-challenge-preview-card {
-            padding: 22px;
+        .weekly-challenge-meta-card {
+            padding: 18px 18px 20px;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .weekly-challenge-meta-card strong {
+            display: block;
+            margin: 14px 0 8px;
+            color: #fffdf5;
+            font-size: 1.18rem;
+            line-height: 1.2;
+        }
+
+        .weekly-challenge-meta-card p {
+            margin: 0;
+            color: rgba(253, 248, 239, 0.8) !important;
+            font-size: 0.97rem;
         }
 
         .weekly-challenge-shell {
             display: grid;
-            gap: 22px;
-            grid-template-columns: minmax(280px, 340px) minmax(0, 1fr);
+            gap: 24px;
+            grid-template-columns: minmax(290px, 360px) minmax(0, 1fr);
             align-items: start;
         }
 
         .weekly-challenge-sidebar {
+            position: sticky;
+            top: 24px;
             display: grid;
             gap: 18px;
+        }
+
+        .weekly-challenge-status,
+        .weekly-challenge-list-card,
+        .weekly-challenge-brief,
+        .weekly-challenge-editor-card,
+        .weekly-challenge-preview-card {
+            padding: 24px;
+            border: 1px solid rgba(20, 33, 61, 0.1);
+            background: var(--weekly-surface);
+            box-shadow: 0 24px 44px rgba(20, 33, 61, 0.1);
+        }
+
+        .weekly-challenge-status {
+            background:
+                radial-gradient(circle at top right, rgba(244, 201, 93, 0.24), transparent 28%),
+                linear-gradient(180deg, rgba(15, 29, 52, 0.98), rgba(24, 48, 79, 0.96));
+            border-color: rgba(255, 255, 255, 0.08);
+            color: #fff8eb;
+        }
+
+        .weekly-challenge-status .label,
+        .weekly-challenge-status h2,
+        .weekly-challenge-status-item strong {
+            color: #fffaf1 !important;
+        }
+
+        .weekly-challenge-status h2 {
+            margin-bottom: 0;
+            max-width: 11ch;
         }
 
         .weekly-challenge-status-grid {
             display: grid;
             gap: 12px;
-            margin: 16px 0;
+            margin: 18px 0 20px;
         }
 
         .weekly-challenge-status-item {
-            padding: 14px 16px;
-            border-radius: 18px;
-            background: rgba(20, 33, 61, 0.05);
-            border: 1px solid rgba(20, 33, 61, 0.08);
+            padding: 16px 18px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
         }
 
         .weekly-challenge-status-item span,
         .weekly-challenge-list-button span,
         .weekly-challenge-brief .label,
-        .weekly-challenge-panel-label {
+        .weekly-challenge-panel-label,
+        .weekly-challenge-section-label {
             display: block;
-            font-size: 0.82rem;
+            font-size: 0.8rem;
             font-weight: 800;
-            letter-spacing: 0.06em;
+            letter-spacing: 0.12em;
             text-transform: uppercase;
-            color: var(--ink-soft);
+        }
+
+        .weekly-challenge-status-item span {
+            color: rgba(255, 248, 235, 0.74);
         }
 
         .weekly-challenge-status-item strong {
             display: block;
-            margin-top: 4px;
-            font-size: 1.25rem;
-            color: var(--ink);
-        }
-
-        .weekly-challenge-list {
-            display: grid;
-            gap: 12px;
-        }
-
-        .weekly-challenge-list-button {
-            width: 100%;
-            display: grid;
-            gap: 6px;
-            padding: 14px 16px;
-            text-align: left;
-            border-radius: 18px;
-            border: 1px solid rgba(20, 33, 61, 0.12);
-            background: #fffdf8;
-            color: var(--ink);
-        }
-
-        .weekly-challenge-list-button:hover {
-            transform: none;
-        }
-
-        .weekly-challenge-list-button.is-active {
-            border-color: rgba(37, 99, 235, 0.3);
-            background: rgba(37, 99, 235, 0.08);
-        }
-
-        .weekly-challenge-list-button.is-started {
-            border-color: rgba(194, 84, 45, 0.26);
-        }
-
-        .weekly-challenge-workspace {
-            display: grid;
-            gap: 18px;
-        }
-
-        .weekly-challenge-checklist {
-            margin: 14px 0 0;
-            padding-left: 20px;
-        }
-
-        .weekly-challenge-panels {
-            display: grid;
-            gap: 18px;
-            grid-template-columns: minmax(0, 1fr) minmax(320px, 0.92fr);
-        }
-
-        .weekly-challenge-editor-card,
-        .weekly-challenge-preview-card {
-            display: grid;
-            gap: 14px;
-        }
-
-        .weekly-challenge-editor {
-            width: 100%;
-            min-height: 430px;
-            padding: 16px;
-            border: 1px solid rgba(20, 33, 61, 0.14);
-            border-radius: 18px;
-            background: #101c30;
-            color: #f7f2e8;
-            resize: vertical;
-            line-height: 1.55;
-            font-family: Consolas, "Courier New", monospace;
-            font-size: 0.95rem;
-        }
-
-        .weekly-challenge-preview {
-            width: 100%;
-            min-height: 430px;
-            border: 1px solid rgba(20, 33, 61, 0.14);
-            border-radius: 18px;
-            background: #ffffff;
+            margin-top: 6px;
+            font-size: 1.28rem;
+            line-height: 1.2;
         }
 
         .weekly-challenge-actions {
@@ -157,15 +267,380 @@
             gap: 12px;
         }
 
+        .weekly-challenge-clear-button {
+            border: 1px solid rgba(255, 255, 255, 0.12) !important;
+            background: rgba(255, 255, 255, 0.12) !important;
+            color: #fff8ed !important;
+            box-shadow: none !important;
+        }
+
+        .weekly-challenge-clear-button:hover {
+            background: rgba(255, 255, 255, 0.18) !important;
+            box-shadow: none !important;
+        }
+
+        .weekly-challenge-list-card::before,
+        .weekly-challenge-brief::before,
+        .weekly-challenge-editor-card::before,
+        .weekly-challenge-preview-card::before {
+            content: "";
+            position: absolute;
+            inset: 0 0 auto;
+            height: 4px;
+            background: linear-gradient(90deg, rgba(194, 84, 45, 0.95), rgba(244, 201, 93, 0.85));
+        }
+
+        .weekly-challenge-list-card p,
+        .weekly-challenge-brief p,
+        .weekly-challenge-panel-head p {
+            margin: 0;
+        }
+
+        .weekly-challenge-list-intro {
+            margin: 0 0 18px;
+            padding: 14px 16px;
+            border-radius: 18px;
+            background: rgba(20, 33, 61, 0.04);
+            border: 1px solid rgba(20, 33, 61, 0.08);
+        }
+
+        .weekly-challenge-list-intro p {
+            color: var(--ink-soft) !important;
+            font-size: 0.96rem;
+        }
+
+        .weekly-challenge-list {
+            display: grid;
+            gap: 12px;
+        }
+
+        .weekly-challenge-list-button {
+            position: relative;
+            width: 100%;
+            display: grid;
+            gap: 8px;
+            padding: 18px 18px 18px 22px;
+            border-radius: 22px;
+            border: 1px solid rgba(20, 33, 61, 0.1);
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(250, 245, 237, 0.98));
+            color: var(--ink) !important;
+            text-align: left;
+            box-shadow: 0 14px 28px rgba(20, 33, 61, 0.06);
+            transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease, background 0.22s ease;
+        }
+
+        .weekly-challenge-list-button::before {
+            content: "";
+            position: absolute;
+            inset: 16px auto 16px 0;
+            width: 5px;
+            border-radius: 999px;
+            background: linear-gradient(180deg, rgba(20, 33, 61, 0.16), rgba(20, 33, 61, 0.04));
+        }
+
+        .weekly-challenge-list-button::after {
+            content: "Started";
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: rgba(194, 84, 45, 0.1);
+            color: var(--brand);
+            font-size: 0.72rem;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            opacity: 0;
+            transform: translateY(-4px);
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+
+        .weekly-challenge-list-button:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 22px 34px rgba(20, 33, 61, 0.1);
+        }
+
+        .weekly-challenge-list-button.is-active {
+            border-color: rgba(244, 201, 93, 0.24);
+            background:
+                radial-gradient(circle at top right, rgba(244, 201, 93, 0.2), transparent 30%),
+                linear-gradient(135deg, rgba(15, 29, 52, 0.98), rgba(31, 61, 96, 0.96));
+            box-shadow: 0 24px 36px rgba(15, 29, 52, 0.18);
+        }
+
+        .weekly-challenge-list-button.is-active::before {
+            background: linear-gradient(180deg, rgba(244, 201, 93, 1), rgba(194, 84, 45, 0.9));
+        }
+
+        .weekly-challenge-list-button.is-active span,
+        .weekly-challenge-list-button.is-active strong,
+        .weekly-challenge-list-button.is-active p {
+            color: #fff9ef !important;
+        }
+
+        .weekly-challenge-list-button.is-started {
+            border-color: rgba(194, 84, 45, 0.22);
+        }
+
+        .weekly-challenge-list-button.is-started::after {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .weekly-challenge-list-button span {
+            color: var(--ink-soft);
+        }
+
+        .weekly-challenge-list-button strong {
+            display: block;
+            margin-right: 84px;
+            color: var(--ink);
+            font-size: 1.1rem;
+            line-height: 1.25;
+        }
+
+        .weekly-challenge-list-button p {
+            margin: 0;
+            color: var(--ink-soft) !important;
+            font-size: 0.95rem !important;
+            line-height: 1.55;
+        }
+
+        .weekly-challenge-workspace {
+            display: grid;
+            gap: 18px;
+        }
+
+        .weekly-challenge-brief {
+            display: grid;
+            gap: 18px;
+            background:
+                radial-gradient(circle at top right, rgba(244, 201, 93, 0.14), transparent 28%),
+                linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(247, 242, 234, 0.98));
+        }
+
+        .weekly-challenge-brief-head {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 14px;
+            align-items: flex-start;
+        }
+
+        .weekly-challenge-brief-copy {
+            display: grid;
+            gap: 10px;
+        }
+
+        .weekly-challenge-brief-badge {
+            padding: 10px 14px;
+            border-radius: 999px;
+            background: rgba(194, 84, 45, 0.1);
+            border: 1px solid rgba(194, 84, 45, 0.16);
+            color: var(--brand-deep);
+            font-size: 0.88rem;
+            font-weight: 800;
+            line-height: 1.2;
+        }
+
+        .weekly-challenge-brief .label,
+        .weekly-challenge-panel-label,
+        .weekly-challenge-section-label {
+            color: var(--ink-soft);
+        }
+
+        .weekly-challenge-goal-card,
+        .weekly-challenge-check-card,
+        .weekly-challenge-tip-card {
+            padding: 18px;
+            border-radius: 22px;
+            border: 1px solid rgba(20, 33, 61, 0.08);
+            background: rgba(255, 255, 255, 0.68);
+        }
+
+        .weekly-challenge-goal-card {
+            background:
+                linear-gradient(135deg, rgba(255, 250, 240, 0.96), rgba(255, 255, 255, 0.84));
+        }
+
+        #weekly-active-goal {
+            margin-top: 10px;
+            color: var(--ink) !important;
+            font-size: 1.08rem;
+            line-height: 1.7;
+        }
+
+        .weekly-challenge-brief-grid {
+            display: grid;
+            gap: 18px;
+            grid-template-columns: minmax(0, 1.08fr) minmax(240px, 0.82fr);
+        }
+
+        .weekly-challenge-checklist {
+            margin: 12px 0 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .weekly-challenge-checklist li {
+            position: relative;
+            margin: 0;
+            padding: 10px 0 10px 34px;
+            border-bottom: 1px dashed rgba(20, 33, 61, 0.12);
+            color: var(--ink-soft);
+        }
+
+        .weekly-challenge-checklist li:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .weekly-challenge-checklist li::before {
+            content: "";
+            position: absolute;
+            top: 15px;
+            left: 0;
+            width: 18px;
+            height: 18px;
+            border-radius: 999px;
+            background:
+                radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.9), transparent 36%),
+                linear-gradient(135deg, rgba(194, 84, 45, 0.94), rgba(244, 201, 93, 0.94));
+            box-shadow: 0 6px 12px rgba(194, 84, 45, 0.18);
+        }
+
+        #weekly-active-hint {
+            margin-top: 10px;
+            color: var(--ink-soft) !important;
+        }
+
+        .weekly-challenge-panels {
+            display: grid;
+            gap: 18px;
+            grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.92fr);
+        }
+
+        .weekly-challenge-editor-card,
+        .weekly-challenge-preview-card {
+            display: grid;
+            gap: 16px;
+        }
+
+        .weekly-challenge-panel-head {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 14px;
+            align-items: flex-start;
+        }
+
+        .weekly-challenge-panel-head h3 {
+            margin: 8px 0 0;
+            color: var(--ink);
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: 1.35rem;
+            line-height: 1.1;
+        }
+
+        .weekly-challenge-panel-head p {
+            max-width: 27ch;
+            color: var(--ink-soft) !important;
+            font-size: 0.94rem;
+        }
+
+        .weekly-challenge-editor {
+            width: 100%;
+            min-height: 470px;
+            padding: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 22px;
+            background:
+                linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent 16%),
+                linear-gradient(180deg, #0f1d34, #132845);
+            color: #f8f3e7;
+            resize: vertical;
+            line-height: 1.6;
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 0.95rem;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 20px 38px rgba(15, 29, 52, 0.18);
+        }
+
+        .weekly-challenge-preview {
+            width: 100%;
+            min-height: 470px;
+            border: 1px solid rgba(20, 33, 61, 0.1);
+            border-radius: 22px;
+            background:
+                linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(250, 246, 239, 0.96));
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+        }
+
+        .weekly-challenge-list-button:focus-visible,
+        .weekly-challenge-clear-button:focus-visible,
+        .weekly-challenge-editor:focus-visible {
+            outline: 3px solid rgba(244, 201, 93, 0.7);
+            outline-offset: 3px;
+        }
+
+        @media (max-width: 1180px) {
+            .weekly-challenge-hero {
+                grid-template-columns: 1fr;
+            }
+
+            .weekly-challenge-sidebar {
+                position: static;
+            }
+
+            .weekly-challenge-brief-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
         @media (max-width: 980px) {
             .weekly-challenge-shell,
             .weekly-challenge-panels {
                 grid-template-columns: 1fr;
             }
         }
+
+        @media (max-width: 720px) {
+            .weekly-challenge-page {
+                padding: 20px;
+            }
+
+            .weekly-challenge-hero,
+            .weekly-challenge-status,
+            .weekly-challenge-list-card,
+            .weekly-challenge-brief,
+            .weekly-challenge-editor-card,
+            .weekly-challenge-preview-card {
+                padding: 20px;
+                border-radius: 24px;
+            }
+
+            .weekly-challenge-brief-badge,
+            .weekly-challenge-list-button::after {
+                position: static;
+            }
+
+            .weekly-challenge-list-button strong {
+                margin-right: 0;
+            }
+
+            .weekly-challenge-actions,
+            .weekly-challenge-clear-button {
+                width: 100%;
+            }
+
+            .weekly-challenge-editor,
+            .weekly-challenge-preview {
+                min-height: 360px;
+            }
+        }
     </style>
 </head>
-<body>
+<body class="weekly-challenge-theme">
     <header>
         <button id="open">open <br>
             navigation bar</button>
@@ -186,9 +661,30 @@
 
     <main class="weekly-challenge-page">
         <section class="weekly-challenge-hero">
-            <span class="label">Weekly practice</span>
-            <h2 id="weekly-challenge-headline">This week's HTML challenge pack</h2>
-            <p id="weekly-challenge-subtitle">The challenge list refreshes automatically every week so returning learners keep getting a new mix of prompts.</p>
+            <div class="weekly-challenge-hero-copy">
+                <span class="label weekly-challenge-kicker">Weekly practice</span>
+                <h2 id="weekly-challenge-headline">This week's HTML challenge pack</h2>
+                <p id="weekly-challenge-subtitle">The challenge list refreshes automatically every week so returning learners keep getting a new mix of prompts.</p>
+                <div class="weekly-challenge-hero-tags" aria-label="Weekly challenge features">
+                    <span>4 fresh prompts</span>
+                    <span>Auto-saved answers</span>
+                    <span>Instant preview</span>
+                </div>
+            </div>
+
+            <div class="weekly-challenge-hero-panel">
+                <article class="weekly-challenge-meta-card">
+                    <span>Practice rhythm</span>
+                    <strong>New challenge pack every Monday</strong>
+                    <p>Return each week for a different mix of forms, tables, semantic layouts, and other structure-focused prompts.</p>
+                </article>
+
+                <article class="weekly-challenge-meta-card">
+                    <span>How it works</span>
+                    <strong>Pick, build, preview</strong>
+                    <p>Choose one challenge, write raw HTML, and see the result update instantly while you practice without peeking.</p>
+                </article>
+            </div>
         </section>
 
         <section class="weekly-challenge-shell">
@@ -211,35 +707,68 @@
                         </div>
                     </div>
                     <div class="weekly-challenge-actions">
-                        <button type="button" id="weekly-clear-button">clear this week</button>
+                        <button type="button" id="weekly-clear-button" class="weekly-challenge-clear-button">Reset this week</button>
                     </div>
                 </section>
 
                 <section class="weekly-challenge-list-card">
                     <span class="label">Current set</span>
                     <h2>Challenge list</h2>
-                    <p>Pick a challenge, write your HTML, and use the live preview to test the structure immediately.</p>
+                    <div class="weekly-challenge-list-intro">
+                        <p>Pick any prompt, build it in plain HTML, and keep refining it with the live preview beside you.</p>
+                    </div>
                     <div class="weekly-challenge-list" id="weekly-challenge-list"></div>
                 </section>
             </aside>
 
             <section class="weekly-challenge-workspace">
                 <article class="weekly-challenge-brief">
-                    <span class="label" id="weekly-active-level">Loading</span>
-                    <h2 id="weekly-active-title">Challenge title</h2>
-                    <p id="weekly-active-goal">Challenge goal</p>
-                    <ul class="weekly-challenge-checklist" id="weekly-active-checks"></ul>
-                    <p id="weekly-active-hint"></p>
+                    <div class="weekly-challenge-brief-head">
+                        <div class="weekly-challenge-brief-copy">
+                            <span class="label" id="weekly-active-level">Loading</span>
+                            <h2 id="weekly-active-title">Challenge title</h2>
+                        </div>
+                        <div class="weekly-challenge-brief-badge">Checklist-based practice</div>
+                    </div>
+
+                    <section class="weekly-challenge-goal-card">
+                        <span class="weekly-challenge-section-label">Your mission</span>
+                        <p id="weekly-active-goal">Challenge goal</p>
+                    </section>
+
+                    <div class="weekly-challenge-brief-grid">
+                        <section class="weekly-challenge-check-card">
+                            <span class="weekly-challenge-section-label">Success checklist</span>
+                            <ul class="weekly-challenge-checklist" id="weekly-active-checks"></ul>
+                        </section>
+
+                        <section class="weekly-challenge-tip-card">
+                            <span class="weekly-challenge-section-label">Hint</span>
+                            <p id="weekly-active-hint"></p>
+                        </section>
+                    </div>
                 </article>
 
                 <section class="weekly-challenge-panels">
                     <article class="weekly-challenge-editor-card">
-                        <span class="weekly-challenge-panel-label">Your HTML answer</span>
+                        <div class="weekly-challenge-panel-head">
+                            <div>
+                                <span class="weekly-challenge-panel-label">Your HTML answer</span>
+                                <h3>Build the markup</h3>
+                            </div>
+                            <p>Everything you type is saved in this browser for the current week.</p>
+                        </div>
                         <textarea id="weekly-editor" class="weekly-challenge-editor" spellcheck="false" placeholder="Write your HTML challenge answer here."></textarea>
                     </article>
 
                     <article class="weekly-challenge-preview-card">
-                        <span class="weekly-challenge-panel-label">Live preview</span>
+                        <div class="weekly-challenge-panel-head">
+                            <div>
+                                <span class="weekly-challenge-panel-label">Live preview</span>
+                                <h3>See it render instantly</h3>
+                            </div>
+                            <p>Use the preview to check your structure, spacing, and semantic choices as you go.</p>
+                        </div>
                         <iframe id="weekly-preview" class="weekly-challenge-preview" title="Weekly challenge preview" sandbox="allow-scripts"></iframe>
                     </article>
                 </section>

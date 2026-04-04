@@ -5,70 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>modern frontend tech</title>
      <link rel="icon" type="image/x-icon" href="favicon.ico">
-    <style>
-        header{
-        padding: 10px;
-        margin: 0px;
-        background-color: rgb(191, 177, 21);
-        color: white;
-        font-style: italic;
-        font-family: "italic",cursive;
-        font-weight: bolder;
-        font-size: 36px;
-        text-align: center; 
-        }
-        #p{
-        padding: 20px;
-        margin: 0px;
-        background-color: rgb(13, 239, 115);
-        color: rgb(229, 255, 0);
-        font-style: italic;
-        font-family: "italic",cursive;
-        font-weight: bold;
-        font-size: 18px;
-        text-align: center; 
-        }
-        main{
-        padding: 8px;
-        background-color: rgb(0, 255, 251);
-        color: rgb(85, 0, 255);
-        font-style: oblique;
-        font-family: comic;
-        font-weight: light;
-        font-size: 18px;
-        }
-        h2#h2{
-        padding: 8px;
-        background-color: rgb(255, 0, 0);
-        color: rgb(255, 255, 0);
-        font-style: oblique;
-        font-family: algerian;
-        font-weight: bold;
-        font-size: 24px;
-        text-align: center;
-        }
-        #open{
-            padding: 8px;
-            background-color: rgb(233, 14, 225);
-            color: white;
-            font-style: oblique;
-            font-family: comic;
-            text-decoration: none;
-            border: none;
-            cursor: pointer;
-        }
-        a{
-            color: white;
-            background-color: purple;
-            padding: 8px;
-            font-style: oblique;
-            font-family: comic;
-            text-decoration: none;
-          }
-          body{
-            background-color: lightgray;
-          }
-    </style>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9222968440622686"
      crossorigin="anonymous"></script>
     <link rel="stylesheet" href="styles.css">
@@ -81,7 +17,7 @@
       gtag('config', 'G-SV4NF938ZR');
     </script>
 </head>
-<body>
+<body class="home-page">
     <header>
     
     <button id="open">open <br>
@@ -101,7 +37,49 @@
         <h1>learn html with lessons you can actually use</h1>
         <p id="p">Modern Front End Tech is a free HTML learning space with beginner-friendly lessons, practice ideas, and quick paths to start building.</p>
     </header>
-    <main class="home-layout home-action-grid">
+    <main class="home-layout">
+        <section class="home-spotlight">
+            <div class="hero-copy">
+                <span class="eyebrow">Free HTML learning platform</span>
+                <h2>Learn HTML by building, practicing, and fixing real markup.</h2>
+                <p>Modern Front End Tech gives beginners a clearer path: start with lessons, move into hands-on editing, test yourself with weekly challenges, and graduate into timed repair exams that feel like real work.</p>
+                <div class="hero-actions">
+                    <a href="whatishtml.html">start the course</a>
+                    <a href="editor.html" class="button-link secondary">open the editor</a>
+                    <a href="weekly-challenge.html" class="button-link secondary">try weekly challenges</a>
+                </div>
+            </div>
+            <div class="stat-grid">
+                <article class="stat-card">
+                    <span class="label">Lessons</span>
+                    <strong>20+</strong>
+                    <p>Beginner-friendly pages that move from first tags to tables, forms, multimedia, symbols, and semantic structure.</p>
+                </article>
+                <article class="stat-card">
+                    <span class="label">Practice</span>
+                    <strong>4 fresh prompts</strong>
+                    <p>A rotating weekly challenge pack gives returning learners a new set of build tasks every Monday.</p>
+                </article>
+                <article class="stat-card">
+                    <span class="label">Exam</span>
+                    <strong>60 repair tasks</strong>
+                    <p>The final certification exam checks whether students can repair broken HTML under real time pressure.</p>
+                </article>
+                <article class="stat-card">
+                    <span class="label">Access</span>
+                    <strong>Free to use</strong>
+                    <p>Lessons, editor, challenges, and the exam all live in one connected learning flow without paywalls.</p>
+                </article>
+            </div>
+        </section>
+
+        <section class="home-section-intro">
+            <span class="label">Explore the platform</span>
+            <h2>Choose the way you want to learn today</h2>
+            <p>Some learners want guided lessons. Some want a live editor. Others want challenge prompts or exam pressure. The homepage is organized so each path is clear and quick to open.</p>
+        </section>
+
+        <section class="home-action-grid">
         <section class="home-action-card">
             <span class="label">Build</span>
             <h2>go to the text editor</h2>
@@ -222,6 +200,7 @@
             </ul>
             <a href="https://forum.frontendtech.co.in">join the community</a>
         </section>
+        </section>
     </main>
     <footer class="site-footer">
         <p class="footer-note">This is not San Web Jose UI/UX Builder or FrontendTech.co.in. It is an HTML learning platform. To visit the UI/UX builder, go to <a href="https://frontendtech.com">frontendtech.com</a>.</p>
@@ -230,6 +209,3 @@
     <script src="ai-widget.js"></script>
 </body>
 </html> 
-
-
-

@@ -3,13 +3,35 @@
 
 const AUTH_STATE_KEY = 'mft_auth_state_v1';
 const BANNER_DISMISSED_KEY = 'mft_banner_dismissed_v1';
+const API_BASE_STORAGE_KEY = 'mft_api_base';
+const NON_LESSON_PAGES = new Set([
+    'index.html',
+    'auth.html',
+    'editor.html',
+    'exam.html',
+    'exam-focused.html',
+    'weekly-challenge.html',
+    'html-ai.html',
+    'profile.html',
+    'community.html'
+]);
 
 function readAuthState() {
     try {
         const raw = window.localStorage.getItem(AUTH_STATE_KEY);
         if (!raw) return null;
         const parsed = JSON.parse(raw);
-        return parsed && parsed.signedIn ? parsed : null;
+        if (!parsed || !parsed.signedIn) return null;
+        return {
+            signedIn: true,
+            userId: parsed.userId || '',
+            name: parsed.name || '',
+            email: parsed.email || '',
+            avatarUrl: parsed.avatarUrl || '',
+            authToken: parsed.authToken || '',
+            streak: parsed.streak && typeof parsed.streak === 'object' ? parsed.streak : null,
+            updatedAt: parsed.updatedAt || ''
+        };
     } catch {
         return null;
     }
@@ -21,15 +43,23 @@ function isAuthenticated() {
 
 function setAuthenticated(user = {}) {
     try {
+        const state = {
+            signedIn: true,
+            userId: user.id || user.userId || '',
+            name: user.name || '',
+            email: user.email || '',
+            avatarUrl: user.avatarUrl || '',
+            authToken: user.token || user.authToken || '',
+            streak: user.streak && typeof user.streak === 'object' ? user.streak : null,
+            updatedAt: new Date().toISOString()
+        };
         window.localStorage.setItem(
             AUTH_STATE_KEY,
-            JSON.stringify({
-                signedIn: true,
-                name: user.name || '',
-                email: user.email || '',
-                updatedAt: new Date().toISOString()
-            })
+            JSON.stringify(state)
         );
+        if (state.authToken) {
+            window.localStorage.setItem('auth', state.authToken);
+        }
     } catch {
         // Ignore storage failures and continue.
     }
@@ -42,6 +72,69 @@ function clearAuthenticated() {
     } catch {
         // Ignore storage failures and continue.
     }
+}
+
+function signOut(redirectTo = 'index.html') {
+    clearAuthenticated();
+    window.location.href = redirectTo;
+}
+
+function getAuthToken() {
+    const state = readAuthState();
+    if (state?.authToken) {
+        return state.authToken;
+    }
+
+    try {
+        const legacy = window.localStorage.getItem('auth') || '';
+        return legacy.includes('.') ? legacy : '';
+    } catch {
+        return '';
+    }
+}
+
+function normalizeApiBase(value) {
+    if (!value) return '';
+    try {
+        return new URL(value).origin;
+    } catch {
+        return '';
+    }
+}
+
+function getApiBase() {
+    const isFile = window.location.protocol === 'file:';
+    const isLocalPreviewHost = ['localhost', '127.0.0.1'].includes(window.location.hostname);
+    const isLocalApiHost = isLocalPreviewHost && window.location.port === '3000';
+    const isLocalPreview = isFile || (isLocalPreviewHost && !isLocalApiHost);
+
+    if (!isLocalPreview) {
+        return '';
+    }
+
+    try {
+        const stored = normalizeApiBase(window.localStorage.getItem(API_BASE_STORAGE_KEY));
+        return stored || `${window.location.protocol}//${window.location.hostname || 'localhost'}:3000`;
+    } catch {
+        return `${window.location.protocol}//${window.location.hostname || 'localhost'}:3000`;
+    }
+}
+
+async function apiRequest(path, options = {}) {
+    const authToken = getAuthToken();
+    const headers = new Headers(options.headers || {});
+    if (authToken) {
+        headers.set('Authorization', `Bearer ${authToken}`);
+    }
+
+    if (options.body && !headers.has('Content-Type')) {
+        headers.set('Content-Type', 'application/json');
+    }
+
+    return fetch(`${getApiBase()}${path}`, {
+        ...options,
+        headers
+    });
 }
 
 function getAuthRedirectTarget() {
@@ -68,6 +161,92 @@ function getCurrentPageTarget() {
     const search = window.location.search || '';
     const hash = window.location.hash || '';
     return `${path}${search}${hash}`;
+}
+
+function getCurrentPageFile() {
+    return (window.location.pathname.split('/').pop() || 'index.html').toLowerCase();
+}
+
+function isLessonPage() {
+    const page = getCurrentPageFile();
+    return page.endsWith('.html') && !NON_LESSON_PAGES.has(page);
+}
+
+function getPageHeading() {
+    const heading = document.querySelector('main h1, article h1, header h1, main h2, article h2');
+    return heading ? heading.textContent.trim() : document.title.trim();
+}
+
+function syncAuthStateFromProfile(profile) {
+    const state = readAuthState();
+    if (!state || !profile?.streak) return;
+    setAuthenticated({
+        ...state,
+        token: state.authToken,
+        streak: profile.streak
+    });
+    const existingProfileButton = document.querySelector('.site-floating-profile');
+    if (existingProfileButton) {
+        existingProfileButton.remove();
+    }
+    ensureFloatingAuthButton();
+}
+
+async function loadProfile() {
+    const response = await apiRequest('/api/profile', {
+        method: 'GET',
+        cache: 'no-store'
+    });
+
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) {
+        throw new Error(data.message || 'Unable to load profile.');
+    }
+
+    if (data?.profile) {
+        syncAuthStateFromProfile(data.profile);
+    }
+
+    return data;
+}
+
+async function trackProfileEvent(eventType, payload = {}) {
+    if (!isAuthenticated() || !getAuthToken()) {
+        return null;
+    }
+
+    try {
+        const response = await apiRequest('/api/profile-activity', {
+            method: 'POST',
+            body: JSON.stringify({
+                eventType,
+                ...payload
+            })
+        });
+        const data = await response.json().catch(() => ({}));
+        if (response.ok && data?.profile) {
+            syncAuthStateFromProfile(data.profile);
+        }
+        return data;
+    } catch {
+        return null;
+    }
+}
+
+function recordSignedInVisit() {
+    if (!isAuthenticated()) return;
+
+    trackProfileEvent('daily_visit', {
+        page: getCurrentPageFile()
+    });
+
+    if (!isLessonPage()) return;
+
+    trackProfileEvent('lesson_visit', {
+        page: getCurrentPageFile(),
+        title: document.title.trim(),
+        heading: getPageHeading()
+    });
 }
 
 function requireAuth(options = {}) {
@@ -222,15 +401,73 @@ function ensureGlobalBannerStyles() {
             background: #dbeafe;
         }
 
+        .site-floating-profile {
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            z-index: 1600;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px 10px 10px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.96);
+            color: #0f172a;
+            text-decoration: none;
+            box-shadow: 0 16px 32px rgba(15, 23, 42, 0.18);
+            backdrop-filter: blur(10px);
+        }
+
+        .site-floating-profile:hover {
+            background: #ffffff;
+            transform: translateY(-2px);
+        }
+
+        .site-floating-profile-avatar {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 38px;
+            height: 38px;
+            border-radius: 999px;
+            background: linear-gradient(135deg, #ef6b3d, #f4c95d);
+            color: #14213d;
+            font-size: 15px;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .site-floating-profile-copy {
+            display: grid;
+            gap: 2px;
+        }
+
+        .site-floating-profile-copy strong {
+            color: #0f172a;
+            font-size: 13px;
+            line-height: 1.1;
+        }
+
+        .site-floating-profile-copy span {
+            color: #475569;
+            font-size: 11px;
+            font-weight: 700;
+            line-height: 1.1;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
         nav {
             z-index: 2500 !important;
         }
 
-        body.has-site-banner .site-floating-auth {
+        body.has-site-banner .site-floating-auth,
+        body.has-site-banner .site-floating-profile {
             top: 72px;
         }
 
-        body.nav-open .site-floating-auth {
+        body.nav-open .site-floating-auth,
+        body.nav-open .site-floating-profile {
             opacity: 0;
             pointer-events: none;
         }
@@ -298,10 +535,38 @@ function ensureTopBanner() {
 }
 
 function ensureFloatingAuthButton() {
-    if (document.querySelector('.site-floating-auth')) return;
-    if (isAuthenticated()) return;
-
+    const existingAuthButton = document.querySelector('.site-floating-auth');
+    const existingProfileButton = document.querySelector('.site-floating-profile');
     ensureGlobalBannerStyles();
+
+    if (isAuthenticated()) {
+        if (existingAuthButton) {
+            existingAuthButton.remove();
+        }
+        if (existingProfileButton) {
+            return;
+        }
+
+        const state = readAuthState();
+        const button = document.createElement('a');
+        button.className = 'site-floating-profile';
+        button.href = 'profile.html';
+        button.setAttribute('aria-label', 'Open profile');
+        button.innerHTML = `
+            <span class="site-floating-profile-avatar">${(state?.name || state?.email || 'P').trim().charAt(0) || 'P'}</span>
+            <span class="site-floating-profile-copy">
+                <strong>Profile</strong>
+                <span>${state?.streak?.current ? `${state.streak.current} day streak` : 'Learning hub'}</span>
+            </span>
+        `;
+        document.body.appendChild(button);
+        return;
+    }
+
+    if (existingProfileButton) {
+        existingProfileButton.remove();
+    }
+    if (existingAuthButton) return;
 
     const path = window.location.pathname.toLowerCase();
     const isAuthPage = path.endsWith('/auth.html') || path.endsWith('auth.html');
@@ -355,6 +620,18 @@ function ensureWeeklyChallengeNavLink() {
     link.href = 'weekly-challenge.html';
     link.className = 'nav-link';
     link.textContent = 'weekly challenge';
+    nav.appendChild(link);
+}
+
+function ensureProfileNavLink() {
+    const nav = document.getElementById('site-nav');
+    if (!nav || !isAuthenticated()) return;
+    if (nav.querySelector('a[href="profile.html"]')) return;
+
+    const link = document.createElement('a');
+    link.href = 'profile.html';
+    link.className = 'nav-link';
+    link.textContent = 'my profile';
     nav.appendChild(link);
 }
 
@@ -552,13 +829,19 @@ function enhanceCodeExamples() {
 }
 
 window.siteAuth = {
+    apiRequest,
     buildAuthUrl,
     clearAuthenticated,
+    getApiBase,
+    getAuthToken,
     getAuthRedirectTarget,
     getCurrentPageTarget,
     isAuthenticated,
+    loadProfile,
     requireAuth,
-    setAuthenticated
+    signOut,
+    setAuthenticated,
+    trackProfileEvent
 };
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -567,7 +850,9 @@ document.addEventListener('DOMContentLoaded', () => {
     protectNavigationLinks();
     initNav();
     ensureWeeklyChallengeNavLink();
+    ensureProfileNavLink();
     enhanceCodeExamples();
     ensureLessonQuizScript();
+    recordSignedInVisit();
     window.addEventListener('resize', syncBannerOffset);
 });

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>my profile</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <button id="open">open <br>
+            navigation bar</button>
+        <nav id="site-nav">
+            <button id="close">close <br>
+                navigation bar</button><br><br>
+            <a href="index.html" class="nav-link">home</a>
+            <a href="editor.html" class="nav-link">text editor</a>
+            <a href="whatishtml.html" class="nav-link">our html course</a>
+            <a href="exam.html" class="nav-link">html exam</a>
+            <a href="weekly-challenge.html" class="nav-link">weekly challenge</a>
+            <a href="https://forum.frontendtech.co.in/" class="nav-link" target="_blank" rel="noopener noreferrer">community</a>
+        </nav>
+        <img src="favicon.ico" alt="logo" height="75px" style="float: left;">
+        <p id="name">modern front end tech</p>
+        <h1>your learning profile</h1>
+        <p id="p">Track lessons explored, quiz results, streak progress, challenge activity, and certificates from one place.</p>
+    </header>
+
+    <main class="profile-page" id="profile-page">
+        <section class="profile-hero">
+            <div>
+                <span class="label">Learner profile</span>
+                <div class="profile-identity">
+                    <div class="profile-avatar" id="profile-avatar">P</div>
+                    <div class="profile-identity-copy">
+                        <h2 id="profile-name">Loading profile</h2>
+                        <p id="profile-email">Checking saved account details...</p>
+                    </div>
+                </div>
+                <div class="profile-actions">
+                    <a href="editor.html">keep practicing</a>
+                    <a href="weekly-challenge.html" class="button-link secondary">open weekly challenge</a>
+                    <button type="button" class="profile-signout" id="profile-signout-button">sign out</button>
+                </div>
+            </div>
+
+            <aside class="profile-streak-panel">
+                <span class="label">Current streak</span>
+                <div class="profile-streak-ring">
+                    <div>
+                        <strong id="profile-current-streak">0</strong>
+                        <span>days</span>
+                    </div>
+                </div>
+                <p id="profile-streak-copy">Sign in and return daily to build your streak.</p>
+                <p class="profile-meta" id="profile-longest-streak">Longest streak: 0 days</p>
+            </aside>
+        </section>
+
+        <section class="profile-stats-grid">
+            <article class="profile-card">
+                <span class="label">Lessons</span>
+                <strong id="profile-lessons-count">0</strong>
+                <p>Lesson pages explored on this account.</p>
+            </article>
+            <article class="profile-card">
+                <span class="label">Quizzes</span>
+                <strong id="profile-quizzes-count">0</strong>
+                <p>Lesson quiz results saved to your profile.</p>
+            </article>
+            <article class="profile-card">
+                <span class="label">Challenges</span>
+                <strong id="profile-challenges-count">0</strong>
+                <p>Challenge packs with saved progress.</p>
+            </article>
+            <article class="profile-card">
+                <span class="label">Certificates</span>
+                <strong id="profile-certificates-count">0</strong>
+                <p>Certificates earned from exam performance.</p>
+            </article>
+        </section>
+
+        <section class="profile-section-grid">
+            <article class="profile-list-card">
+                <span class="label">Lessons explored</span>
+                <h2>Lessons</h2>
+                <div class="profile-list" id="profile-lessons-list"></div>
+            </article>
+
+            <article class="profile-list-card">
+                <span class="label">Quiz results</span>
+                <h2>Lesson quiz scores</h2>
+                <div class="profile-list" id="profile-quizzes-list"></div>
+            </article>
+
+            <article class="profile-list-card">
+                <span class="label">Challenges</span>
+                <h2>Challenge progress</h2>
+                <div class="profile-list" id="profile-challenges-list"></div>
+            </article>
+
+            <article class="profile-list-card">
+                <span class="label">Certificates</span>
+                <h2>Earned certificates</h2>
+                <div class="profile-list" id="profile-certificates-list"></div>
+            </article>
+
+            <article class="profile-list-card">
+                <span class="label">Exam results</span>
+                <h2>Exam history</h2>
+                <div class="profile-list" id="profile-exams-list"></div>
+            </article>
+
+            <article class="profile-activity-card">
+                <span class="label">Recent activity</span>
+                <h2>Activity feed</h2>
+                <div class="profile-activity-list" id="profile-activity-list"></div>
+            </article>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <p class="footer-note">This is not San Web Jose UI/UX Builder or FrontendTech.co.in. It is an HTML learning platform. To visit the UI/UX builder, go to <a href="https://frontendtech.com">frontendtech.com</a>.</p>
+    </footer>
+
+    <script src="nav.js"></script>
+    <script src="profile.js"></script>
+    <script src="ai-widget.js"></script>
+</body>
+</html>

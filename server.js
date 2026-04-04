@@ -5,6 +5,8 @@ const {
   handleHealthRequest,
   handleHtmlAssistantRequest,
   handleHtmlAssistantStatusRequest,
+  handleProfileActivityRequest,
+  handleProfileRequest,
   handleSigninRequest,
   handleSignupRequest,
   sendJson
@@ -21,6 +23,8 @@ app.all("/api/html-assistant-status", handleHtmlAssistantStatusRequest);
 app.all("/api/html-assistant", handleHtmlAssistantRequest);
 app.all("/api/signup", handleSignupRequest);
 app.all("/api/signin", handleSigninRequest);
+app.all("/api/profile", handleProfileRequest);
+app.all("/api/profile-activity", handleProfileActivityRequest);
 
 app.use(express.static(path.join(__dirname)));
 
@@ -34,5 +38,5 @@ app.use((err, req, res, next) => {
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
-  console.log("Vercel-compatible API routes are available at /api/health, /api/html-assistant-status, /api/html-assistant, /api/signup, and /api/signin");
+  console.log("Vercel-compatible API routes are available at /api/health, /api/html-assistant-status, /api/html-assistant, /api/signup, /api/signin, /api/profile, and /api/profile-activity");
 });

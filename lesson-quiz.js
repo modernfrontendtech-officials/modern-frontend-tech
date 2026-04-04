@@ -209,12 +209,25 @@ function init() {
       feedback.innerHTML = correct ? `<strong>Correct.</strong> ${note}` : `<strong>Answer:</strong> ${questions[i][1][answer]}. ${note}`;
     });
     score.textContent = s.checked ? `Score: ${total} / ${questions.length}` : '';
+    return total;
+  }
+
+  function currentScore() {
+    return questions.reduce((total, question, index) => {
+      return total + (Number(s.answers[index]) === Number(question[2]) ? 1 : 0);
+    }, 0);
   }
 
   check.addEventListener('click', () => {
     s.checked = true;
     save(p, s);
-    paint();
+    const total = paint();
+    window.siteAuth?.trackProfileEvent?.('lesson_quiz_result', {
+      page: p,
+      title,
+      score: total,
+      totalQuestions: questions.length
+    });
   });
 
   reset.addEventListener('click', () => {

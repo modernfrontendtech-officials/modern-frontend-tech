@@ -4,119 +4,89 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Auth - Modern Front End Tech</title>
-  <style>
-    :root {
-      --bg: #f3f4f6;
-      --card: #ffffff;
-      --text: #111827;
-      --accent: #2563eb;
-      --border: #d1d5db;
-    }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      display: grid;
-      place-items: center;
-      padding: 20px;
-    }
-    .wrap {
-      width: 100%;
-      max-width: 900px;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 16px;
-    }
-    .card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 20px;
-    }
-    h1 {
-      margin: 0 0 8px;
-      font-size: 1.35rem;
-    }
-    p {
-      margin: 0 0 14px;
-    }
-    label {
-      display: block;
-      margin: 10px 0 6px;
-      font-weight: 600;
-    }
-    input {
-      width: 100%;
-      padding: 10px;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      font-size: 0.95rem;
-    }
-    button {
-      margin-top: 14px;
-      width: 100%;
-      border: none;
-      background: var(--accent);
-      color: #fff;
-      padding: 11px;
-      border-radius: 8px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-    .status {
-      margin-top: 10px;
-      min-height: 20px;
-      font-size: 0.9rem;
-    }
-    .ok { color: #166534; }
-    .err { color: #b91c1c; }
-    .home {
-      text-decoration: none;
-      color: var(--accent);
-      font-weight: 700;
-    }
-  </style>
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="stylesheet" href="styles.css">
 </head>
-<body>
-  <div class="wrap">
-    <section class="card">
-      <h1>Create Account</h1>
-      <p>Sign up with your name, email and password.</p>
-      <form id="signup-form">
-        <label for="signup-name">Name</label>
-        <input id="signup-name" name="name" required>
+<body class="auth-page">
+  <header>
+    <button id="open">open <br>
+      navigation bar</button>
+    <nav id="site-nav">
+      <button id="close">close <br>
+        navigation bar</button><br><br>
+      <a href="index.html" class="nav-link">home</a>
+      <a href="editor.html" class="nav-link">text editor</a>
+      <a href="whatishtml.html" class="nav-link">our html course</a>
+      <a href="exam.html" class="nav-link">html exam</a>
+      <a href="auth.html" class="nav-link">login / signup</a>
+      <a href="https://forum.frontendtech.co.in/" class="nav-link" target="_blank" rel="noopener noreferrer">community</a>
+    </nav>
+    <img src="favicon.ico" alt="logo" height="75px" style="float: left;">
+    <p id="name">modern front end tech</p>
+    <h1>create your account or sign back in</h1>
+    <p id="p">Use the same site identity for the editor, lessons, challenges, and exam flow. The forms below connect to the local or deployed API depending on where you open the page.</p>
+  </header>
 
-        <label for="signup-email">Email</label>
-        <input id="signup-email" name="email" type="email" required>
+  <section class="auth-shell">
+    <article class="auth-intro">
+      <span class="label">Account access</span>
+      <h1>Keep your learning journey in one place.</h1>
+      <p>Sign up with your name, email, and password, or return with your existing account to continue moving through the platform without breaking your flow.</p>
+      <div class="auth-benefits">
+        <div class="auth-benefit">
+          <strong>One shared experience</strong>
+          <p>The auth flow is part of the same learning platform, not a separate disconnected tool.</p>
+        </div>
+        <div class="auth-benefit">
+          <strong>Works with local preview too</strong>
+          <p>If you are testing locally, the page will guide you when the API is unavailable or pointed at the wrong place.</p>
+        </div>
+        <div class="auth-benefit">
+          <strong>Fast return to learning</strong>
+          <p>Successful sign-in sends you back into the site so you can get straight into lessons, practice, or the exam.</p>
+        </div>
+      </div>
+    </article>
 
-        <label for="signup-password">Password</label>
-        <input id="signup-password" name="password" type="password" minlength="6" required>
+    <section class="auth-panel">
+      <div class="auth-grid">
+        <section class="auth-card">
+          <h2>Create account</h2>
+          <p>Sign up with your name, email, and password.</p>
+          <form id="signup-form">
+            <label for="signup-name">Name</label>
+            <input id="signup-name" name="name" required>
 
-        <button type="submit">Sign Up</button>
-      </form>
-      <div id="signup-status" class="status"></div>
+            <label for="signup-email">Email</label>
+            <input id="signup-email" name="email" type="email" required>
+
+            <label for="signup-password">Password</label>
+            <input id="signup-password" name="password" type="password" minlength="6" required>
+
+            <button type="submit">Sign Up</button>
+          </form>
+          <div id="signup-status" class="status"></div>
+        </section>
+
+        <section class="auth-card">
+          <h2>Sign in</h2>
+          <p>Use your registered email and password.</p>
+          <form id="signin-form">
+            <label for="signin-email">Email</label>
+            <input id="signin-email" name="email" type="email" required>
+
+            <label for="signin-password">Password</label>
+            <input id="signin-password" name="password" type="password" required>
+
+            <button type="submit">Sign In</button>
+          </form>
+          <div id="signin-status" class="status"></div>
+        </section>
+      </div>
+
+      <p id="server-hint" class="status quiet-note"></p>
     </section>
-
-    <section class="card">
-      <h1>Sign In</h1>
-      <p>Use your registered email and password.</p>
-      <form id="signin-form">
-        <label for="signin-email">Email</label>
-        <input id="signin-email" name="email" type="email" required>
-
-        <label for="signin-password">Password</label>
-        <input id="signin-password" name="password" type="password" required>
-
-        <button type="submit">Sign In</button>
-      </form>
-      <div id="signin-status" class="status"></div>
-    </section>
-  </div>
-
-  <div id="server-hint" class="status"></div>
+  </section>
 
   <script src="nav.js"></script>
   <script>
@@ -225,18 +195,16 @@
             form.reset();
             if (window.siteAuth?.setAuthenticated) {
               window.siteAuth.setAuthenticated({
+                id: data.user?.id || "",
                 email: data.user?.email || payload.email || "",
-                name: data.user?.name || payload.name || ""
+                name: data.user?.name || payload.name || "",
+                avatarUrl: data.user?.avatarUrl || "",
+                streak: data.user?.streak || null,
+                token: data.token || ""
               });
             }
-            // Save auth token for the site session.
-            if (data.user) {
-              const authToken = btoa(JSON.stringify({
-                id: data.user.id,
-                name: data.user.name,
-                email: data.user.email
-              }));
-              localStorage.setItem("auth", authToken);
+            if (data.token) {
+              localStorage.setItem("auth", data.token);
             }
             const redirectTarget = window.siteAuth?.getAuthRedirectTarget?.() || "index.html";
             window.location.href = redirectTarget;

@@ -129,6 +129,25 @@ function init() {
   function renderStatus() {
     const started = challenges.filter((challenge) => answerFor(challenge.id).trim().length > 0).length;
     startedCount.textContent = `${started} / ${challenges.length}`;
+    return started;
+  }
+
+  let profileSyncTimer = null;
+  function queueProfileSync() {
+    if (!window.siteAuth?.trackProfileEvent) return;
+    window.clearTimeout(profileSyncTimer);
+    profileSyncTimer = window.setTimeout(() => {
+      const started = challenges.filter((challenge) => answerFor(challenge.id).trim().length > 0).length;
+      window.siteAuth.trackProfileEvent('weekly_challenge_result', {
+        page: 'weekly-challenge.html',
+        challengeType: 'weekly',
+        challengeKey: token,
+        label: `Weekly challenge pack ${weekRangeLabel()}`,
+        startedCount: started,
+        totalCount: challenges.length,
+        completedCount: started
+      });
+    }, 450);
   }
 
   function render() {
@@ -151,6 +170,7 @@ function init() {
     preview.srcdoc = pageDoc(editor.value);
     renderStatus();
     renderList();
+    queueProfileSync();
   });
 
   clearButton.addEventListener('click', () => {
@@ -160,9 +180,11 @@ function init() {
     state.activeId = challenges[0].id;
     saveState(token, state);
     render();
+    queueProfileSync();
   });
 
   render();
+  queueProfileSync();
 }
 
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);

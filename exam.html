@@ -953,6 +953,24 @@
             startTimer();
         }
 
+        function trackExamResultOnProfile() {
+            if (!window.siteAuth?.trackProfileEvent || !examState.grading) {
+                return;
+            }
+
+            window.siteAuth.trackProfileEvent("exam_result", {
+                page: "exam.html",
+                studentName: examState.studentName,
+                score: examState.grading.correctCount,
+                total: 60,
+                percentage: examState.grading.percentage,
+                status: examState.grading.status,
+                certificate: examState.grading.certificate,
+                certificateId: examState.certificateId,
+                submittedAt: examState.submittedAt
+            });
+        }
+
         function submitExam(fromTimer = false) {
             if (examState.submitted) {
                 return;
@@ -969,6 +987,7 @@
             examState.submittedAt = new Date().toISOString();
             examState.grading = gradeExam();
             examState.certificateId = examState.grading.certificate === "None" ? "" : buildCertificateId();
+            trackExamResultOnProfile();
             saveState(fromTimer ? "Time ended. Exam submitted automatically." : "Exam submitted.");
             renderView();
             resultsSection.scrollIntoView({ behavior: "smooth", block: "start" });
